@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/asset"
+        android:icon="@drawable/icon_asset"
+        android:title="@string/navigation_asset_title" />
+
+    <item
+        android:id="@+id/transaction"
+        android:icon="@drawable/icon_transaction"
+        android:title="@string/navigation_transaction_title" />
+
+    <item
+        android:title=""
+        android:checkable="false"
+        android:enabled="false"/>
+
+    <item
+        android:id="@+id/find"
+        android:icon="@drawable/icon_find"
+        android:title="@string/navigation_find_title"/>
+
+    <item
+        android:id="@+id/user"
+        android:icon="@drawable/icon_wallet"
+        android:title="@string/navigation_user_title" />
+
+</menu>

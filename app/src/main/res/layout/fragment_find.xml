@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_find"
+    android:background="?colorDefault">
+
+    <FrameLayout
+        android:id="@+id/fragment_find_navtop"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_find_title"
+            android:textSize="@dimen/dimenDefault"
+            android:layout_gravity="center"
+            android:textColor="?colorDefault"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/navigation_find_title"
+        android:textColor="?colorPrimary"
+        android:textSize="@dimen/dimenDefault"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

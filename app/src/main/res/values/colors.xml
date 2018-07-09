@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDarkDefault">#558AEF</color>
+    <color name="colorPrimaryDefault">#558AEF</color>
+    <color name="colorLightDefault">#FFFFFF</color>
+    <color name="colorDarkDefault">#000000</color>
+    <color name="colorSecondaryDefault">#32DB64</color>
+    <color name="colorDangerDefault">#F53D3D</color>
+    <color name="colorDefaultDefault">#FFFFFF</color>
+    <color name="colorDefault2Default">#F9F9F9</color>
+    <color name="colorLineDefault">#EEEDEE</color>
+    <color name="colorLine2Default">#88ADF4</color>
+    <color name="colorFontDefault">#C81C1B2E</color>
+    <color name="colorFont2Default">#C6C6C6</color>
+    <color name="colorFont3Default">#8A8789</color>
+
+    <color name="colorPrimaryDarkNight">#5581D5</color>
+    <color name="colorPrimaryNight">#5581D5</color>
+    <color name="colorLightNight">#FFFFFF</color>
+    <color name="colorDarkNight">#000000</color>
+    <color name="colorSecondaryNight">#3E8FAD</color>
+    <color name="colorDangerNight">#B95858</color>
+    <color name="colorDefaultNight">#282939</color>
+    <color name="colorDefault2Night">#333448</color>
+    <color name="colorLineNight">#55566A</color>
+    <color name="colorLine2Night">#88ADF4</color>
+    <color name="colorFontNight">#C8FFFFFF</color>
+    <color name="colorFont2Night">#9398B2</color>
+    <color name="colorFont3Night">#595E79</color>
+</resources>

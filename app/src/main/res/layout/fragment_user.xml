@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_user"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorDefault"
+    tools:ignore="EllipsizeMaxLines,RtlHardcoded"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fragment_asset_navtop"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_user_title"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenDefault"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:background="?colorPrimary">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorDefault"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View style="@style/option_item_line_full"></View>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/fragment_user_setting"
+                        style="@style/option_item_rl">
+
+                        <ImageView
+                            android:src="@drawable/icon_setting"
+                            style="@style/option_item_img"/>
+
+                        <TextView
+                            android:text="@string/fragment_user_setting"
+                            style="@style/option_item_text"/>
+
+                        <ImageView
+                            android:src="@drawable/icon_arrowright"
+                            style="@style/option_item_imgarrow"/>
+                    </LinearLayout>
+
+                    <View
+                        style="@style/option_item_line"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/fragment_user_signout"
+                        style="@style/option_item_rl">
+
+                        <ImageView
+                            android:src="@drawable/icon_power"
+                            style="@style/option_item_img"
+                            android:tint="?colorDanger"/>
+
+                        <TextView
+                            android:text="@string/fragment_user_signout"
+                            style="@style/option_item_text"
+                            android:textColor="?colorDanger"/>
+                    </LinearLayout>
+
+                    <!--<View-->
+                    <!--style="@style/option_item_line"/>-->
+                </LinearLayout>
+
+                <View style="@style/option_item_line_full"></View>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

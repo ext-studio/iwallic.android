@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorSecondary" format="reference|color" />
+    <attr name="colorDanger" format="reference|color" />
+    <attr name="colorLine" format="reference|color" />
+    <attr name="colorLine2" format="reference|color" />
+    <attr name="colorFont" format="reference|color" />
+    <attr name="colorFont2" format="reference|color" />
+    <attr name="colorFont3" format="reference|color" />
+    <attr name="colorLight" format="reference|color" />
+    <attr name="colorDark" format="reference|color" />
+    <attr name="colorDefault" format="reference|color" />
+    <attr name="colorDefault2" format="reference|color" />
+    <attr name="selectorOptionItem" format="reference|color"></attr>
+</resources>

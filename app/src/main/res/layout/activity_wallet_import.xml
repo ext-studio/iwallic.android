@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".wallet.WalletImportActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/wallet_import_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|start"
+            android:clickable="true">
+            <ImageView
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:scaleType="fitXY"
+                android:tint="?colorDefault"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wallet_import"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimenSpace"
+            android:text="@string/wallet_import_tip"
+            android:background="?colorPrimary"
+            android:textColor="?colorDefault"/>
+
+        <EditText
+            android:id="@+id/wallet_import_wif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginTop="@dimen/dimenSpace"
+            android:inputType="textMultiLine"
+            android:background="?colorDefault"
+            android:textSize="@dimen/dimenDefault"
+            android:padding="@dimen/dimenSpace"
+            android:hint="@string/wallet_import_wif_hint"
+            android:textColor="?colorFont"
+            android:focusedByDefault="true"
+            android:minLines="3"
+            android:gravity="top|start"
+            tools:targetApi="o" />
+
+        <EditText
+            android:id="@+id/wallet_import_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginTop="@dimen/dimenSpace"
+            android:inputType="textPassword"
+            android:background="?colorDefault"
+            android:textSize="@dimen/dimenDefault"
+            android:padding="@dimen/dimenSpace"
+            android:hint="@string/wallet_create_pwd_hint"
+            android:textColor="?colorFont"
+            android:focusedByDefault="true"
+            tools:targetApi="o" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimenLine"
+            android:background="?colorLine"/>
+
+        <EditText
+            android:id="@+id/wallet_import_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/wallet_create_confirm_hint"
+            android:inputType="textPassword"
+            android:padding="@dimen/dimenSpace"
+            android:textSize="@dimen/dimenDefault"
+            android:background="?colorDefault"
+            android:textColor="?colorFont" />
+
+        <TextView
+            android:id="@+id/wallet_import_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingTop="@dimen/dimenSpace"
+            android:text="tip"
+            android:textColor="?colorDanger"
+            android:visibility="invisible"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimenSpace">
+            <Button
+                android:id="@+id/wallet_import_btn_wif"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:text="@string/wallet_import_btn_wif" />
+            <ProgressBar
+                android:id="@+id/wallet_import_load_wif"
+                android:visibility="invisible"
+                android:foregroundTint="?colorPrimary"
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:layout_gravity="center"
+                tools:targetApi="lollipop" />
+        </FrameLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/wallet_import_btn_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/dimenSpace"
+            android:textColor="?colorDefault"
+            android:text="@string/wallet_import_btn_file" />
+
+    </LinearLayout>
+</LinearLayout>

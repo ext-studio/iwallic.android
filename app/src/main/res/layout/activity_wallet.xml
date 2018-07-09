@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".wallet.WalletActivity"
+    android:background="?colorDefault">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/screen"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_vertical"
+        android:layout_marginStart="@dimen/dimenLarge"
+        android:layout_marginEnd="@dimen/dimenLarge"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/wallet_import_btn"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:textColor="?colorDefault"
+            android:text="@string/wallet_import"/>
+
+        <Button
+            android:id="@+id/wallet_create_btn"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:textColor="?colorDefault"
+            android:layout_marginTop="@dimen/dimenSpace"
+            android:text="@string/wallet_create"/>
+    </LinearLayout>
+</FrameLayout>

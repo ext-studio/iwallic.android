@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".base.MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/base_main_navigation"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenLine"
+        android:layout_above="@+id/base_main_navigation"
+        android:background="?colorLine"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:visibility="invisible"
+        android:id="@+id/base_main_fab_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_add"
+        android:layout_above="@id/base_main_fab"
+        android:layout_toLeftOf="@id/base_main_fab"
+        android:tint="?colorDefault"
+        app:backgroundTint="?colorPrimary"
+        android:clickable="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:visibility="invisible"
+        android:id="@+id/base_main_fab_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_add"
+        android:layout_above="@id/base_main_fab"
+        android:layout_toRightOf="@id/base_main_fab"
+        android:tint="?colorDefault"
+        app:backgroundTint="?colorPrimary"
+        android:clickable="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/base_main_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="end|center"
+        android:src="@drawable/icon_add"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_above="@id/base_main_navigation"
+        android:tint="?colorDefault"
+        app:backgroundTint="?colorPrimary"
+        android:clickable="true"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/base_main_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@drawable/selector_base_main_navigation"
+        app:itemTextColor="@drawable/selector_base_main_navigation"
+        app:elevation="@dimen/dimenMini"
+        app:menu="@menu/base_main_navigation"
+        android:background="?colorDefault"/>
+
+</RelativeLayout>
