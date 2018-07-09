@@ -1,6 +1,10 @@
 package com.iwallic.app.navigator
 
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -8,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.Toast
 import com.google.gson.Gson
 
 import com.iwallic.app.R
@@ -18,36 +23,43 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.pageData
 import com.iwallic.app.models.transactions
+import com.iwallic.app.services.new_block_action
+import com.iwallic.app.states.TransactionState
+import io.reactivex.functions.Consumer
 
 class TransactionFragment : Fragment() {
-    val gson = Gson()
-    var transactionLV: ListView? = null
-    companion object {
-        val TAG: String = TransactionFragment::class.java.simpleName
-        fun newInstance() = TransactionFragment()
-    }
+    private var txLV: ListView? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
-        transactionLV = view.findViewById(R.id.asset_list)
-        HttpClient.post("getaccounttxes", listOf(1, 10, WalletUtils.address(context!!)), fun(res: String) {
-            Log.i("交易列表", res)
-            val json = gson.fromJson<pageData<transactions>>(res, object: TypeToken<pageData<transactions>>() {}.type)
-            resolveList(json)
-        }, fun(err) {
+        txLV = view.findViewById(R.id.transaction_list)
 
+        TransactionState.list(WalletUtils.address(context!!)).subscribe(Consumer {resolveList(it)})
+        TransactionState.error().subscribe(Consumer {
+            Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
         })
-//        resolveList(arrayListOf(addrassets("测试1", "99999", "测试1", "测试1"),
-//                addrassets("测试1", "99999", "测试2", "测试1"),
-//                addrassets("测试1", "99999", "测试3", "测试1"),
-//                addrassets("测试1", "99999", "测试4", "测试1"),
-//                addrassets("测试1", "99999", "测试5", "测试1")))
+
+        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
         return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        context!!.unregisterReceiver(BlockListener)
+    }
+
     private fun resolveList(list: pageData<transactions>) {
-        Log.i("交易列表", list.data!!.size.toString())
-        val adapter = TransactionAdapter(context!!, R.layout.adapter_transaction_list, list.data!!)
-        transactionLV!!.adapter = adapter
+        val adapter = TransactionAdapter(context!!, R.layout.adapter_transaction_list, list.data)
+        txLV!!.adapter = adapter
+    }
+
+    companion object BlockListener: BroadcastReceiver() {
+        val TAG: String = TransactionFragment::class.java.simpleName
+        fun newInstance() = TransactionFragment()
+
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            Log.i("交易列表", "新区块到达，更新交易")
+            TransactionState.fetch()
+        }
     }
 }

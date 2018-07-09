@@ -39,8 +39,9 @@
         <activity android:name=".transaction.TransactionReceiveActivity" />
 
         <service
-            android:name=".services.BlockIntentService"
-            android:exported="false"/>
+            android:name=".services.BlockService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

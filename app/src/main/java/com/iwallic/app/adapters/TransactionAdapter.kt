@@ -12,18 +12,28 @@ import com.iwallic.app.models.transactions
 
 class TransactionAdapter(context: Context, layout: Int, list: ArrayList<transactions>): ArrayAdapter<transactions>(context, layout, list) {
 
-    var data = list
+    private var data = list
+    private val inflater = LayoutInflater.from(context)
     override fun getCount(): Int {
         return data.size
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        Log.i("交易列表", position.toString())
-        Log.i("交易列表数据", data[position].name)
-        val inflater = LayoutInflater.from(context)
-        val rowView = inflater.inflate(R.layout.adapter_transaction_list, parent, false)
-        rowView.findViewById<TextView>(R.id.transaction_list_name).text = data[position].name
-        rowView.findViewById<TextView>(R.id.transaction_list_txid).text = data[position].txid
-        return rowView
+        val holder: TransactionViewHolder?
+        var view: View? = convertView
+        if (view == null) {
+            holder = TransactionViewHolder()
+            view = inflater.inflate(R.layout.adapter_transaction_list, parent, false)
+            holder.nameTextView = view.findViewById(R.id.transaction_list_name)
+            holder.valueTextView = view.findViewById(R.id.transaction_list_value)
+            holder.txidTextView = view.findViewById(R.id.transaction_list_txid)
+            view.tag = holder
+        } else {
+            holder = view.tag as TransactionViewHolder
+        }
+        holder.nameTextView.text = data[position].txid
+        holder.valueTextView.text = data[position].value
+        holder.nameTextView.text = data[position].name
+        return view!!
     }
 
     override fun getItem(position: Int): transactions {
@@ -34,3 +44,10 @@ class TransactionAdapter(context: Context, layout: Int, list: ArrayList<transact
         return position.toLong()
     }
 }
+
+private class TransactionViewHolder {
+    lateinit var nameTextView: TextView
+    lateinit var valueTextView: TextView
+    lateinit var txidTextView: TextView
+}
+

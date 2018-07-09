@@ -5,17 +5,6 @@ import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
 import io.reactivex.Observable
 
-
-/**
- * snapshot of error code
- * 99999 未知错误
- * 99998 JSON解析错误
- * 99997 参数在API解析错误
- * 99996 Not Found
- * 99995 服务器内部错误
- * 99994 调用的method尚未支持
- */
-
 object HttpClient {
     private const val apiDomain = "https://api.iwallic.com/api/iwallic"
     private val gson = Gson()
@@ -29,16 +18,19 @@ object HttpClient {
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
-                            Log.i("IWALLIC-请求完成", "1")
+                            Log.i("网络请求", method)
                             ok(gson.toJson(rs.result))
                         }
+                        rs.code == 1000 -> {
+                            ok("")
+                        }
                         else -> {
-                            Log.i("IWALLIC-请求错误", rs.msg)
+                            Log.i("网络请求", rs.msg)
                             no(rs.code)
                         }
                     }
                 }, { err ->
-                    Log.i("IWALLIC-请求错误", err.toString())
+                    Log.i("网络请求", err.toString())
                     no(resolveError(err.response.statusCode))
                 })
             }

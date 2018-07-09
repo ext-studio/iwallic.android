@@ -1,8 +1,6 @@
 package com.iwallic.app.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +17,7 @@ class AssetAdapter(context: Context, layout: Int, list: ArrayList<addrassets>): 
         return data.size
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var holder: ViewHolder? = null
+        val holder: ViewHolder?
         var view: View? = convertView
         if (view == null) {
             holder = ViewHolder()
@@ -30,7 +28,7 @@ class AssetAdapter(context: Context, layout: Int, list: ArrayList<addrassets>): 
         } else {
             holder = view.tag as ViewHolder
         }
-        holder.nameTextView.text = data[position].name
+        holder.nameTextView.text = data[position].symbol
         holder.balanceTextView.text = data[position].balance
         return view!!
     }

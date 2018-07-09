@@ -8,14 +8,19 @@ data class addrassets (
 )
 
 data class pageData<T>(
-        val page: Int,
-        val pageSize: Int,
-        val total: Int,
-        val data: ArrayList<T>? = arrayListOf()
+    val page: Int,
+    val pageSize: Int,
+    val total: Int,
+    var data: ArrayList<T> = arrayListOf()
 )
 
 data class transactions (
-        val name: String,
-        val txid: String,
-        val value: Number
+    val name: String,
+    val txid: String,
+    val value: String
+)
+
+data class blocktime (
+    val lastBlockIndex: Long,
+    val time: Long
 )
