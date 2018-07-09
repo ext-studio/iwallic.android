@@ -21,16 +21,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?colorFont"
+            android:text="name"
             android:textSize="@dimen/dimenDefault"/>
         <TextView
             android:id="@+id/transaction_list_txid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorFont"/>
+            android:textColor="?colorFont"
+            android:text="txid"/>
         <TextView
             android:id="@+id/transaction_list_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorFont"/>
+            android:textColor="?colorFont"
+            android:text="value"/>
     </LinearLayout>
 </LinearLayout>

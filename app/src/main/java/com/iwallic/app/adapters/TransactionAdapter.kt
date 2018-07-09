@@ -30,9 +30,9 @@ class TransactionAdapter(context: Context, layout: Int, list: ArrayList<transact
         } else {
             holder = view.tag as TransactionViewHolder
         }
-        holder.nameTextView.text = data[position].txid
-        holder.valueTextView.text = data[position].value
         holder.nameTextView.text = data[position].name
+        holder.valueTextView.text = data[position].value
+        holder.txidTextView.text = data[position].txid
         return view!!
     }
 
