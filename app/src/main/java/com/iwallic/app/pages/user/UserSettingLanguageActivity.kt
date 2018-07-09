@@ -1,4 +1,4 @@
-package com.iwallic.app.user
+package com.iwallic.app.pages.user
 
 import android.os.Bundle
 import android.view.View

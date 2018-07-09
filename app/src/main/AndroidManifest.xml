@@ -24,19 +24,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".base.MainActivity" />
-        <activity android:name=".user.UserSettingActivity" />
-        <activity android:name=".user.UserSettingLanguageActivity" />
-        <activity android:name=".user.UserSettingThemeActivity" />
-        <activity android:name=".wallet.WalletActivity" />
-        <activity android:name=".wallet.WalletCreateActivity" />
-        <activity android:name=".wallet.WalletImportActivity" />
-        <activity android:name=".wallet.WalletBackupActivity" />
-        <activity android:name=".wallet.WalletVerifyActivity" />
-        <activity android:name=".transaction.TransactionTransferActivity" />
-        <activity android:name=".transaction.TransactionDetailActivity" />
-        <activity android:name=".asset.AssetDetailActivity" />
-        <activity android:name=".asset.AssetManageActivity" />
-        <activity android:name=".transaction.TransactionReceiveActivity" />
+        <activity android:name="com.iwallic.app.pages.user.UserSettingActivity" />
+        <activity android:name="com.iwallic.app.pages.user.UserSettingLanguageActivity" />
+        <activity android:name="com.iwallic.app.pages.user.UserSettingThemeActivity" />
+        <activity android:name="com.iwallic.app.pages.wallet.WalletActivity" />
+        <activity android:name="com.iwallic.app.pages.wallet.WalletCreateActivity" />
+        <activity android:name="com.iwallic.app.pages.wallet.WalletImportActivity" />
+        <activity android:name="com.iwallic.app.pages.wallet.WalletBackupActivity" />
+        <activity android:name="com.iwallic.app.pages.wallet.WalletVerifyActivity" />
+        <activity android:name="com.iwallic.app.pages.transaction.TransactionTransferActivity" />
+        <activity android:name="com.iwallic.app.pages.transaction.TransactionDetailActivity" />
+        <activity android:name="com.iwallic.app.pages.asset.AssetDetailActivity" />
+        <activity android:name="com.iwallic.app.pages.asset.AssetManageActivity" />
+        <activity android:name="com.iwallic.app.pages.transaction.TransactionReceiveActivity" />
 
         <service
             android:name=".services.BlockService"

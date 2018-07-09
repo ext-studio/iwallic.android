@@ -1,4 +1,4 @@
-package com.iwallic.app.wallet
+package com.iwallic.app.pages.wallet
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,14 +12,12 @@ import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
 import com.iwallic.app.utils.WalletUtils
 import com.yitimo.neon.wallet.Wallet
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import android.content.*
 import com.iwallic.app.base.BaseActivity
 import android.app.Activity
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
 
 

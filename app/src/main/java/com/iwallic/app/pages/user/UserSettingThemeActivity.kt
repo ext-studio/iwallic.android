@@ -1,4 +1,4 @@
-package com.iwallic.app.user
+package com.iwallic.app.pages.user
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,9 +8,7 @@ import android.widget.LinearLayout
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.base.MainActivity
-import com.iwallic.app.utils.LocaleUtils
 import com.iwallic.app.utils.SharedPrefUtils
-import java.util.*
 
 class UserSettingThemeActivity : BaseActivity() {
     var itemDefault: LinearLayout? = null

@@ -1,4 +1,4 @@
-package com.iwallic.app.navigator
+package com.iwallic.app.navigations
 
 
 import android.content.BroadcastReceiver
@@ -13,13 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
-import com.google.gson.Gson
 
 import com.iwallic.app.R
-import com.iwallic.app.adapters.AssetAdapter
-import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.WalletUtils
-import com.google.gson.reflect.TypeToken
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.pageData
 import com.iwallic.app.models.transactions

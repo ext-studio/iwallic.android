@@ -1,4 +1,4 @@
-package com.iwallic.app.wallet
+package com.iwallic.app.pages.wallet
 
 import android.app.Activity
 import android.content.Intent

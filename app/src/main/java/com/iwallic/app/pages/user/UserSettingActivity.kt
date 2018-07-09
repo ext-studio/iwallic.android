@@ -1,8 +1,7 @@
-package com.iwallic.app.user
+package com.iwallic.app.pages.user
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
 import android.widget.LinearLayout
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R

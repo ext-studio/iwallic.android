@@ -7,7 +7,7 @@
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".user.UserSettingThemeActivity">
+    tools:context=".pages.user.UserSettingThemeActivity">
 
     <FrameLayout
         android:layout_width="match_parent"

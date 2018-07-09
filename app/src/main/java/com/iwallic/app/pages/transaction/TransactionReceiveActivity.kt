@@ -1,13 +1,13 @@
-package com.iwallic.app.wallet
+package com.iwallic.app.pages.transaction
 
 import android.os.Bundle
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 
-class WalletBackupActivity : BaseActivity() {
+class TransactionReceiveActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wallet_backup)
+        setContentView(R.layout.activity_transaction_receive)
     }
 }

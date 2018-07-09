@@ -1,4 +1,4 @@
-package com.iwallic.app.navigator
+package com.iwallic.app.navigations
 
 
 import android.content.Intent
@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.iwallic.app.R
-import com.iwallic.app.user.UserSettingActivity
+import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
-import com.iwallic.app.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletActivity
 
 class UserFragment : Fragment() {
 

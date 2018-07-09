@@ -7,7 +7,7 @@
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".wallet.WalletCreateActivity">
+    tools:context=".pages.wallet.WalletCreateActivity">
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -2,14 +2,11 @@ package com.iwallic.app.base
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import com.iwallic.app.R
 import com.iwallic.app.utils.WalletUtils
-import com.iwallic.app.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletActivity
 import kotlinx.coroutines.experimental.launch
-import java.util.*
-import kotlin.concurrent.schedule
 
 class WelcomeActivity : BaseActivity() {
 

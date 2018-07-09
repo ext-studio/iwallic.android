@@ -1,4 +1,4 @@
-package com.iwallic.app.navigator
+package com.iwallic.app.navigations
 
 import android.annotation.SuppressLint
 import android.support.v4.app.Fragment

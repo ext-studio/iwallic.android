@@ -1,13 +1,13 @@
-package com.iwallic.app.asset
+package com.iwallic.app.pages.transaction
 
 import android.os.Bundle
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 
-class AssetDetailActivity : BaseActivity() {
+class TransactionDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_asset_detail)
+        setContentView(R.layout.activity_transaction_detail)
     }
 }

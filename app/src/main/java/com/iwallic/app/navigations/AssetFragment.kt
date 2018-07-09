@@ -1,4 +1,4 @@
-package com.iwallic.app.navigator
+package com.iwallic.app.navigations
 
 import android.content.BroadcastReceiver
 import android.content.Context
