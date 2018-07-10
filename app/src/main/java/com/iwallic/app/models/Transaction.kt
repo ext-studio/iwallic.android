@@ -1,5 +1,8 @@
 package com.iwallic.app.models
 
+import com.yitimo.neon.transaction.Script
+import com.yitimo.neon.transaction.Transaction
+import com.yitimo.neon.utils.Utils
 import com.yitimo.neon.wallet.Wallet
 
 const val ASSET_GAS = ""
@@ -67,21 +70,21 @@ class TransactionModel {
     var outputs: ArrayList<OutputModel> = arrayListOf()
     fun hash(): String {
         // todo need implement
+        // 对序列化结果进行hash
         return ""
     }
     fun serialize(): String {
         // todo need implement
+        // 序列化交易
         return ""
     }
     fun sign(wif: String) {
-        // todo need implement
-        val sign = hash()
+        val sign = "40" + Wallet.signature(hash(), wif)
         val verify = "21" + Wallet.priv2Pub(Wallet.wif2Priv(wif)) + "ac"
         scripts.add(ScriptModel(sign, verify))
     }
     fun remark(data: String) {
-        // todo data need to serielize
-        attributes.add(AttributeModel(AttrUsage.REMARK, data))
+        attributes.add(AttributeModel(AttrUsage.REMARK, Utils.string2Hex(data)))
     }
     companion object {
         fun forAsset(utxo: ArrayList<UtxoModel>, from: String, to: String, amount: Float, asset: String): TransactionModel? {
