@@ -14,6 +14,7 @@ import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.states.AssetState
 
 class UserFragment : Fragment() {
 
@@ -32,6 +33,7 @@ class UserFragment : Fragment() {
         view.findViewById<LinearLayout>(R.id.fragment_user_signout).setOnClickListener {
             DialogUtils.Dialog(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no, fun (confirm: Boolean) {
                 if (confirm) {
+                    AssetState.clear()
                     WalletUtils.close(context!!)
                     val intent = Intent(context, WalletActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

@@ -21,12 +21,14 @@ object TransactionState {
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     private val size = 10
+    private var fetching: Boolean = false
     fun list(addr: String = ""): Observable<pageData<transactions>> {
         if (addr.isNotEmpty() && addr != address) {
             fetch(addr)
         }
         if (cached != null) {
-            return _list.startWith(cached!!)
+            Log.i("交易状态", "缓存获取")
+            return _list.startWith(cached)
         }
         return _list
     }
@@ -34,10 +36,12 @@ object TransactionState {
         return _error
     }
     fun fetch(addr: String = "", page: Int = 1, pageSize: Int = size,  silent: Boolean = false) {
-        if (!addr.isEmpty()) {
-            address = addr
-        } else if (silent) {
+        if (fetching) {
             return
+        }
+        if (addr.isNotEmpty()) {
+            Log.i("交易状态", "设置地址")
+            address = addr
         }
         if (address.isEmpty()) {
             if (silent) {
@@ -45,7 +49,9 @@ object TransactionState {
             }
             _error.onNext(99899)
         }
+        fetching = true
         HttpClient.post("getaccounttxes", listOf(page, pageSize, address), fun (res) {
+            fetching = false
             if (res.isEmpty()) {
                 cached = pageData(page, pageSize, 0)
                 _list.onNext(cached!!)
@@ -62,7 +68,7 @@ object TransactionState {
                 _list.onNext(data)
             }
         }, fun (err) {
-            Log.i("交易状态", err.toString())
+            fetching = false
             if (silent) {
                 return
             }

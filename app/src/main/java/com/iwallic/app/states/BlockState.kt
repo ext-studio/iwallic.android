@@ -24,8 +24,8 @@ object BlockState {
         }
         loading = true
         HttpClient.post("getblocktime", emptyList(), fun (res) {
-            val blockData = gson.fromJson(res, blocktime::class.java)
             loading = false
+            val blockData = gson.fromJson(res, blocktime::class.java)
             if (blockData == null) {
                 _error.onNext(99998)
             } else {

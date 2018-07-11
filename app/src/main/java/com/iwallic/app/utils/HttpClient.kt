@@ -18,33 +18,33 @@ object HttpClient {
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
-                            Log.i("网络请求", method)
+                            Log.i("网络请求", "完成【${method}】")
                             ok(gson.toJson(rs.result))
                         }
                         rs.code == 1000 -> {
                             ok("")
                         }
                         else -> {
-                            Log.i("网络请求", rs.msg)
+                            Log.i("网络请求", "出错【${rs.msg}】")
                             no(rs.code)
                         }
                     }
-                }, { err ->
-                    Log.i("网络请求", err.toString())
+                }) { err ->
+                    Log.i("网络请求", "失败【${err}】")
                     no(resolveError(err.response.statusCode))
-                })
+                }
             }
     }
-    fun post(method: String, params: List<Any> = emptyList()): Observable<String> {
-        return Observable.create {
-            post(method, params, fun (ok) {
-                it.onNext(ok)
-                it.onComplete()
-            }, fun(no) {
-                it.onError(Throwable(no.toString()))
-            })
-        }
-    }
+//    fun post(method: String, params: List<Any> = emptyList()): Observable<String> {
+//        return Observable.create {
+//            post(method, params, fun (ok) {
+//                it.onNext(ok)
+//                it.onComplete()
+//            }, fun(no) {
+//                it.onError(Throwable(no.toString()))
+//            })
+//        }
+//    }
     private fun resolveError(status: Int): Int {
         return when (status) {
             400 -> 99997
