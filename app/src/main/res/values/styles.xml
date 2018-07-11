@@ -18,7 +18,7 @@
         <item name="selectorOptionItem">@drawable/selector_optionitem_default</item>
         <item name="colorButtonNormal">@color/colorPrimaryDefault</item>
         <item name="drawableAssetBg">@drawable/bg_asset</item>
-        <item name="drawableAssetDetailBg">@drawable/bg_asset_detail_dark</item>
+        <item name="drawableAssetDetailBg">@drawable/bg_asset_detail</item>
     </style>
 
     <style name="ThemeNight" parent="Theme.AppCompat.DayNight.NoActionBar">

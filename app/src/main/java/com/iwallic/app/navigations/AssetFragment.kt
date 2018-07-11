@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 
 import com.iwallic.app.R
@@ -34,6 +35,9 @@ class AssetFragment : Fragment() {
     private lateinit var assetSRL: SwipeRefreshLayout
     private lateinit var assetAdapter: RecyclerView.Adapter<*>
     private lateinit var assetManager: RecyclerView.LayoutManager
+    private lateinit var mainAssetTV: TextView
+    private lateinit var mainBalanceTV: TextView
+    private val mainAsset: String = "NEO"
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
@@ -41,12 +45,11 @@ class AssetFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
 
-        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         assetRV = view.findViewById(R.id.asset_list)
         assetSRL = view.findViewById(R.id.asset_list_refresh)
         assetSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        mainAssetTV = view.findViewById(R.id.fragment_asset_main_asset)
+        mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
 
         resolveList(arrayListOf())
 
@@ -81,6 +84,10 @@ class AssetFragment : Fragment() {
     }
 
     private fun resolveList(list: ArrayList<addrassets>) {
+        mainAssetTV.text = "NEO"
+        mainBalanceTV.text = list.find {
+            it.symbol == "NEO"
+        }?.balance
         assetManager = LinearLayoutManager(context!!)
         assetAdapter = AssetAdapter(list)
         assetRV.apply {

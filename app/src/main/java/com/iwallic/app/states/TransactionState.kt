@@ -17,14 +17,16 @@ import kotlin.collections.ArrayList
 object TransactionState {
     private var cached: pageData<transactions>? = null
     private var address: String = ""
+    private var assetId: String = ""
     private val _list = PublishSubject.create<pageData<transactions>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     private val size = 10
     private var fetching: Boolean = false
-    fun list(addr: String = ""): Observable<pageData<transactions>> {
-        if (addr.isNotEmpty() && addr != address) {
-            fetch(addr)
+    fun list(addr: String = "", asset: String? = null): Observable<pageData<transactions>> {
+        if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
+            fetch(addr, asset)
+            return _list
         }
         if (cached != null) {
             Log.i("交易状态", "缓存获取")
@@ -35,13 +37,17 @@ object TransactionState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun fetch(addr: String = "", page: Int = 1, pageSize: Int = size,  silent: Boolean = false) {
+    fun fetch(addr: String = "", asset: String? = null, page: Int = 1, pageSize: Int = size,  silent: Boolean = false) {
         if (fetching) {
             return
         }
         if (addr.isNotEmpty()) {
             Log.i("交易状态", "设置地址")
             address = addr
+        }
+        if (asset != null) {
+            Log.i("交易状态", "设置资产")
+            assetId = asset
         }
         if (address.isEmpty()) {
             if (silent) {
@@ -50,7 +56,7 @@ object TransactionState {
             _error.onNext(99899)
         }
         fetching = true
-        HttpClient.post("getaccounttxes", listOf(page, pageSize, address), fun (res) {
+        HttpClient.post(if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes", if (assetId.isNotEmpty()) listOf(page, pageSize, address, assetId) else listOf(page, pageSize, address), fun (res) {
             fetching = false
             if (res.isEmpty()) {
                 cached = pageData(page, pageSize, 0)

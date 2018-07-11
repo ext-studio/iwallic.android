@@ -16,7 +16,6 @@ import com.iwallic.app.R
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 
-
 class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private val currentNavigation = "currentNavigation"
     private var navPosition: NavigationPosition = NavigationPosition.ASSET
@@ -28,11 +27,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        // window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+
         restoreSaveInstanceState(savedInstanceState)
         setContentView(R.layout.activity_base_main)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
 
         initNavigation()
         initFragment(savedInstanceState)

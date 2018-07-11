@@ -36,16 +36,13 @@ class TransactionFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
 
-        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-        activity!!.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         txRV = view.findViewById(R.id.transaction_list)
         txSRL = view.findViewById(R.id.transaction_list_refresh)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         resolveList(arrayListOf())
 
-        listListen = TransactionState.list(WalletUtils.address(context!!)).subscribe({
+        listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
             resolveList(it.data)
             resolveRefreshed(true)
         }, {
@@ -61,7 +58,7 @@ class TransactionFragment : Fragment() {
         })
 
         txSRL.setOnRefreshListener {
-            TransactionState.fetch()
+            TransactionState.fetch(asset = "")
         }
 
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
@@ -100,7 +97,7 @@ class TransactionFragment : Fragment() {
         fun newInstance() = TransactionFragment()
 
         override fun onReceive(p0: Context?, p1: Intent?) {
-            TransactionState.fetch("", silent = true)
+            TransactionState.fetch("", "", silent = true)
         }
     }
 }

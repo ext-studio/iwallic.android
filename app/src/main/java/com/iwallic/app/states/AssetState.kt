@@ -22,6 +22,7 @@ object AssetState {
     fun list(addr: String = ""): Observable<ArrayList<addrassets>> {
         if (addr.isNotEmpty() && addr != address) {
             fetch(addr)
+            return _list
         }
         if (cached != null) {
             Log.i("资产状态", "缓存获取")
