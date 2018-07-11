@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_asset"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault"
+    android:background="?colorDefault2"
     android:orientation="vertical">
-
-    <FrameLayout
-        android:id="@+id/fragment_asset_navtop"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="?colorPrimary">
+        android:layout_height="wrap_content">
+        <ImageView
+            android:contentDescription="@null"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:src="?drawableAssetDetailBg"/>
 
         <ImageView
             android:id="@+id/fragment_asset_navtop_menu"
             android:layout_width="@dimen/dimenIcon"
             android:layout_height="@dimen/dimenIcon"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|start"
             android:contentDescription="@null"
             android:scaleType="fitXY"
             android:src="@drawable/icon_menu"
-            android:tint="?colorDefault"/>
+            android:tint="?colorDefault"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
             android:text="@string/fragment_asset_title"
             android:textColor="?colorDefault"
-            android:textSize="@dimen/dimenDefault" />
-
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="156dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_img_zichan" />
+            android:textSize="@dimen/dimenDefault"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+    </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/asset_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/asset_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

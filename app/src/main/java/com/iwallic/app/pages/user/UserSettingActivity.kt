@@ -13,7 +13,7 @@ class UserSettingActivity : BaseActivity() {
         setContentView(R.layout.activity_user_setting)
 
         findViewById<LinearLayout>(R.id.user_setting_back).setOnClickListener {
-            this.finish()
+            finish()
         }
 
         findViewById<LinearLayout>(R.id.user_setting_lang).setOnClickListener {

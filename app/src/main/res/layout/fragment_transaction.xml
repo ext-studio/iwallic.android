@@ -23,9 +23,10 @@
     </FrameLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/transaction_list_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

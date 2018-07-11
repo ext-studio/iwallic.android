@@ -13,7 +13,7 @@ import io.reactivex.subjects.Subject
 import kotlin.collections.ArrayList
 
 object AssetState {
-    private var cached: ArrayList<addrassets>? = null
+    var cached: ArrayList<addrassets>? = null
     private var address: String = ""
     private val _list = PublishSubject.create<ArrayList<addrassets>>()
     private val _error = PublishSubject.create<Int>()
@@ -28,6 +28,9 @@ object AssetState {
             return _list.startWith(cached)
         }
         return _list
+    }
+    fun get(id: String): addrassets? = cached?.find {
+        it.assetId == id
     }
     fun error(): Observable<Int> {
         return _error

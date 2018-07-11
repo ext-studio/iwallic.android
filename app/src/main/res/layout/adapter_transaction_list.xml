@@ -1,39 +1,50 @@
-<LinearLayout android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
     android:layout_height="wrap_content"
-    android:padding="@dimen/dimenSpace"
-    android:orientation="horizontal">
-    <ImageView
-        android:id="@+id/transaction_list_icon"
-        android:layout_width="@dimen/dimenLarge"
-        android:layout_height="@dimen/dimenLarge"
-        android:src="@drawable/icon_coin"
-        android:tint="?colorPrimary"
-        android:layout_margin="@dimen/dimenSpace"/>
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:focusable="true">
+    <LinearLayout android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/dimenSpace">
-        <TextView
-            android:id="@+id/transaction_list_name"
-            android:layout_width="wrap_content"
+        android:padding="@dimen/dimenSpace"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/transaction_list_icon"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
+            android:src="@drawable/icon_coin"
+            android:tint="?colorPrimary"
+            android:layout_margin="@dimen/dimenSpace"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?colorFont"
-            android:text="name"
-            android:textSize="@dimen/dimenDefault"/>
-        <TextView
-            android:id="@+id/transaction_list_txid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?colorFont"
-            android:text="txid"/>
-        <TextView
-            android:id="@+id/transaction_list_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?colorFont"
-            android:text="value"/>
+            android:orientation="vertical"
+            android:paddingStart="@dimen/dimenSpace">
+            <TextView
+                android:id="@+id/transaction_list_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorFont"
+                android:text="name"
+                android:textSize="@dimen/dimenDefault"/>
+            <TextView
+                android:id="@+id/transaction_list_txid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorFont"
+                android:text="txid"/>
+            <TextView
+                android:id="@+id/transaction_list_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorFont"
+                android:text="value"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground" />
+</FrameLayout>

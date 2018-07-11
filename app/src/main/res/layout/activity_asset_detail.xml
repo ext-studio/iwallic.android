@@ -1,8 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorDefault2"
+    android:orientation="vertical"
     tools:context=".pages.asset.AssetDetailActivity">
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:contentDescription="@null"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:src="?drawableAssetDetailBg"/>
+
+        <ImageView
+            android:id="@+id/fragment_asset_navtop_menu"
+            android:layout_width="@dimen/dimenIcon"
+            android:layout_height="@dimen/dimenIcon"
+            android:layout_gravity="center_vertical|start"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_menu"
+            android:tint="?colorDefault"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+
+        <TextView
+            android:id="@+id/asset_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:text="资产详情"
+            android:textColor="?colorDefault"
+            android:textSize="@dimen/dimenDefault"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+    </RelativeLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/asset_detail_list_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/asset_detail_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

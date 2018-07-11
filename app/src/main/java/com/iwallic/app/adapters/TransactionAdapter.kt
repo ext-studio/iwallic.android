@@ -1,53 +1,38 @@
 package com.iwallic.app.adapters
 
-import android.content.Context
-import android.util.Log
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.TextView
 import com.iwallic.app.R
 import com.iwallic.app.models.transactions
 
-class TransactionAdapter(context: Context, layout: Int, list: ArrayList<transactions>): ArrayAdapter<transactions>(context, layout, list) {
-
+class TransactionAdapter(list: ArrayList<transactions>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private var data = list
-    private val inflater = LayoutInflater.from(context)
-    override fun getCount(): Int {
-        return data.size
-    }
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val holder: TransactionViewHolder?
-        var view: View? = convertView
-        if (view == null) {
-            holder = TransactionViewHolder()
-            view = inflater.inflate(R.layout.adapter_transaction_list, parent, false)
-            holder.nameTextView = view.findViewById(R.id.transaction_list_name)
-            holder.valueTextView = view.findViewById(R.id.transaction_list_value)
-            holder.txidTextView = view.findViewById(R.id.transaction_list_txid)
-            view.tag = holder
-        } else {
-            holder = view.tag as TransactionViewHolder
-        }
-        holder.nameTextView.text = data[position].name
-        holder.valueTextView.text = data[position].value
-        holder.txidTextView.text = data[position].txid
-        return view!!
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_list, parent, false) as FrameLayout
+
+        return ViewHolder(view)
     }
 
-    override fun getItem(position: Int): transactions {
-        return data[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemView.findViewById<TextView>(R.id.transaction_list_txid).text = data[position].txid
+        holder.itemView.findViewById<TextView>(R.id.transaction_list_value).text = data[position].value
+        holder.itemView.findViewById<TextView>(R.id.transaction_list_name).text = data[position].name
+        holder.itemView.setOnClickListener {
+            // todo
+        }
     }
+
+    override fun getItemCount() = data.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
-}
 
-private class TransactionViewHolder {
-    lateinit var nameTextView: TextView
-    lateinit var valueTextView: TextView
-    lateinit var txidTextView: TextView
+    class ViewHolder(
+            listView: FrameLayout
+    ): RecyclerView.ViewHolder(listView)
 }
-

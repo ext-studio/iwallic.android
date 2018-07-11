@@ -3,12 +3,7 @@ package com.iwallic.app.utils
 import java.util.*
 import android.content.Context
 
-class SharedPrefUtils private constructor() {
-
-    init {
-        throw UnsupportedOperationException(
-                "Should not create instance of Util class. Please use as static..")
-    }
+class SharedPrefUtils {
 
     companion object {
 
