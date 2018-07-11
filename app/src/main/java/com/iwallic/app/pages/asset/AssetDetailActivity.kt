@@ -16,8 +16,8 @@ class AssetDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_detail)
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
 
         val assetId = intent.getStringExtra("asset")
         if (assetId.isEmpty()) {

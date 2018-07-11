@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import com.iwallic.app.navigations.*
 import com.iwallic.app.R
@@ -29,6 +30,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
         restoreSaveInstanceState(savedInstanceState)
         setContentView(R.layout.activity_base_main)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
 
         initNavigation()
         initFragment(savedInstanceState)
