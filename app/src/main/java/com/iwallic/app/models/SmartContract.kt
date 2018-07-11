@@ -1,6 +1,6 @@
 package com.iwallic.app.models
 
-import com.yitimo.neon.utils.Utils
+import com.yitimo.neon.hex.Hex
 import com.yitimo.neon.wallet.Wallet
 
 class SmartContract {
@@ -72,8 +72,8 @@ class SmartContract {
                 return add((PUSH1 - 1).toLong() + value)
             }
             else -> {
-                val hex = Utils.int2VarInt(value.toLong())
-                return addString(Utils.reverseHex("0".repeat(16 - hex.length)) + hex)
+                val hex = Hex.fromVarInt(value.toLong())
+                return addString(Hex.reverse("0".repeat(16 - hex.length)) + hex)
             }
         }
     }
@@ -84,25 +84,25 @@ class SmartContract {
         val size = value.length / 2
         when {
             size < PUSHBYTES75 -> {
-                result += Utils.int2Hex(size.toLong(), 1, false)
+                result += Hex.fromInt(size.toLong(), 1, false)
                 result += value
                 return
             }
             size < 0x100 -> {
                 add(PUSHDATA1)
-                result += Utils.int2Hex(size.toLong(), 1, true)
+                result += Hex.fromInt(size.toLong(), 1, true)
                 result += value
                 return
             }
             size < 0x10000 -> {
                 add(PUSHDATA2)
-                result += Utils.int2Hex(size.toLong(), 2, true)
+                result += Hex.fromInt(size.toLong(), 2, true)
                 result += value
                 return
             }
             size < 0x100000000 -> {
                 add(PUSHDATA4)
-                result += Utils.int2Hex(size.toLong(), 4, true)
+                result += Hex.fromInt(size.toLong(), 4, true)
                 result += value
                 return
             }

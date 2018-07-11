@@ -1,6 +1,6 @@
 package com.iwallic.app.models
 
-import com.yitimo.neon.utils.Utils
+import com.yitimo.neon.hex.Hex
 import com.yitimo.neon.wallet.Wallet
 
 const val ASSET_GAS = ""
@@ -62,21 +62,21 @@ class TransactionModel {
     var outputs: ArrayList<OutputModel> = arrayListOf()
     private var result: String = ""
     fun hash(): String {
-        return Utils.reverseHex(Utils.toHash256(serialize()))
+        return  Hex.reverse(Hex.hash256(serialize()))
     }
     fun serialize(signed: Boolean = false): String {
         result = ""
-        result += Utils.int2Hex(type.toLong(), 1, false)
-        result += Utils.int2Hex(version.toLong(), 1, false)
+        result += Hex.fromInt(type.toLong(), 1, false)
+        result += Hex.fromInt(version.toLong(), 1, false)
         result += resolveType()
         result += resolveAttrs()
         result += resolveInputs()
         result += resolveOutputs()
         if (signed && scripts.isNotEmpty()) {
-            result += Utils.int2VarInt(scripts.size.toLong())
+            result += Hex.fromVarInt(scripts.size.toLong())
             for (sc in scripts) {
-                result += Utils.int2VarInt((sc.invocation.length/2).toLong()) + sc.invocation +
-                        Utils.int2VarInt((sc.verification.length/2).toLong()) + sc.verification
+                result += Hex.fromVarInt((sc.invocation.length/2).toLong()) + sc.invocation +
+                        Hex.fromVarInt((sc.verification.length/2).toLong()) + sc.verification
             }
         }
         // 序列化交易
@@ -88,14 +88,14 @@ class TransactionModel {
         scripts.add(ScriptModel(sign, verify))
     }
     fun remark(data: String) {
-        attributes.add(AttributeModel(AttrUsageRemark, Utils.string2Hex(data)))
+        attributes.add(AttributeModel(AttrUsageRemark, Hex.fromString(data)))
     }
     private fun resolveType(): String {
         when (type) {
             TxTypeClaim -> {
-                var rs = Utils.int2VarInt(claims.size.toLong())
+                var rs = Hex.fromVarInt(claims.size.toLong())
                 for (claim in claims) {
-                    rs += Utils.reverseHex(claim.hash) + Utils.reverseHex(Utils.int2Hex(claim.index.toLong(), 2.toLong(), false))
+                    rs += Hex.reverse(claim.hash) + Hex.reverse(Hex.fromInt(claim.index.toLong(), 2.toLong(), false))
                 }
                 return rs
             }
@@ -103,11 +103,11 @@ class TransactionModel {
                 if (script.isEmpty()) {
                     return ""
                 }
-                var rs: String = Utils.int2VarInt((script.length/2).toLong())
+                var rs: String = Hex.fromVarInt((script.length/2).toLong())
                 rs += script
                 if (version >= 1) {
-                    val hex = Utils.int2VarInt((gas * 100000000).toLong())
-                    rs += Utils.reverseHex("0".repeat(16 - hex.length)) + hex
+                    val hex = Hex.fromVarInt((gas * 100000000).toLong())
+                    rs += Hex.reverse("0".repeat(16 - hex.length)) + hex
                 }
                 return rs
             }
@@ -117,19 +117,19 @@ class TransactionModel {
         }
     }
     private fun resolveAttrs(): String {
-        var rs = Utils.int2VarInt(attributes.size.toLong())
+        var rs = Hex.fromVarInt(attributes.size.toLong())
         for (attr in attributes) {
             if (attr.data.length > 65535) {
                 return "00"
             }
-            rs += Utils.int2Hex(attr.usage.toLong(), 1.toLong(), false)
+            rs += Hex.fromInt(attr.usage.toLong(), 1.toLong(), false)
             when {
                 attr.usage == 0x81 -> {
-                    rs += Utils.int2Hex((attr.data.length/2).toLong(), 1.toLong(), false)
+                    rs += Hex.fromInt((attr.data.length/2).toLong(), 1.toLong(), false)
                     rs += attr.data
                 }
                 attr.usage == 0x90 || attr.usage > 0xf0 -> {
-                    rs += Utils.int2VarInt((attr.data.length/2).toLong())
+                    rs += Hex.fromVarInt((attr.data.length/2).toLong())
                     rs += attr.data
                 }
                 attr.usage == 0x02 || attr.usage == 0x03 -> {
@@ -143,18 +143,18 @@ class TransactionModel {
         return rs
     }
     private fun resolveInputs(): String {
-        var rs: String = Utils.int2VarInt(inputs.size.toLong())
+        var rs: String = Hex.fromVarInt(inputs.size.toLong())
         for (input in inputs) {
-            rs += Utils.reverseHex(input.hash) + Utils.reverseHex(Utils.int2Hex(input.index.toLong(), 2.toLong(), false))
+            rs += Hex.reverse(input.hash) + Hex.reverse(Hex.fromInt(input.index.toLong(), 2.toLong(), false))
         }
         return rs
     }
     private fun resolveOutputs(): String {
-        var rs: String = Utils.int2VarInt(outputs.size.toLong())
+        var rs: String = Hex.fromVarInt(outputs.size.toLong())
         for (output in outputs) {
-            val hex = Utils.int2VarInt((output.value * 100000000).toLong())
-            val value = Utils.reverseHex("0".repeat(16 - hex.length)) + hex
-            rs += Utils.reverseHex(output.asset) + value + Utils.reverseHex(output.scriptHash)
+            val hex = Hex.fromVarInt((output.value * 100000000).toLong())
+            val value = Hex.reverse("0".repeat(16 - hex.length)) + hex
+            rs += Hex.reverse(output.asset) + value + Hex.reverse(output.scriptHash)
         }
         return rs
     }
