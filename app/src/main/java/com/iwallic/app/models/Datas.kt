@@ -28,5 +28,7 @@ data class blocktime (
 data class assetmanage (
     val assetId: String,
     val name: String,
-    val symbol: String
+    val symbol: String,
+    val balance: String = "0",
+    val active: Boolean = false
 )

@@ -13,9 +13,11 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
+import com.iwallic.app.models.addrassets
 import com.iwallic.app.models.assetmanage
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 
 class AssetManageActivity : BaseActivity() {
@@ -31,6 +33,7 @@ class AssetManageActivity : BaseActivity() {
     private var fetching: Boolean = false
     private val gson = Gson()
     private var cache: ArrayList<assetmanage>? = null
+    private lateinit var current: ArrayList<addrassets>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,7 @@ class AssetManageActivity : BaseActivity() {
         amSRL = findViewById(R.id.asset_manage_list_refresh)
         loadPB = findViewById(R.id.asset_manage_load)
         amSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        current = SharedPrefUtils.getAsset(this)
 
         resolveList(arrayListOf())
         resolveFetch()
@@ -58,7 +62,7 @@ class AssetManageActivity : BaseActivity() {
 
     private fun resolveList(list: ArrayList<assetmanage>) {
         amManager = LinearLayoutManager(this)
-        amAdapter = AssetManageAdapter(list)
+        amAdapter = AssetManageAdapter(list, current)
         amRV.apply {
             setHasFixedSize(true)
             layoutManager = amManager

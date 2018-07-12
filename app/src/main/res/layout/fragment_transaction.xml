@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
         <View
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="64dp"
             android:scaleType="fitXY"
             android:background="?colorPrimary"/>
 

@@ -25,6 +25,7 @@ import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
 
@@ -56,6 +57,14 @@ class AssetFragment : Fragment() {
         resolveList(arrayListOf())
 
         listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
+            val obList = SharedPrefUtils.getAsset(context!!)
+            obList.forEach {ob ->
+                if (it.indexOfFirst {aa ->
+                    aa.assetId == ob.assetId
+                } < 0) {
+                    it.add(ob)
+                }
+            }
             resolveList(it)
             resolveRefreshed(true)
         }, {
