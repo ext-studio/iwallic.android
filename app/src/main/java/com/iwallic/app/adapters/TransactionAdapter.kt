@@ -25,6 +25,7 @@ class TransactionAdapter(list: ArrayList<transactions>): RecyclerView.Adapter<Tr
         return ViewHolder(view)
     }
 
+    @Suppress("DEPRECATION")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val txidTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_txid)
         txidTV.text = data[position].txid

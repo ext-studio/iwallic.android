@@ -17,7 +17,7 @@ object AssetState {
     private var address: String = ""
     private val _list = PublishSubject.create<ArrayList<addrassets>>()
     private val _error = PublishSubject.create<Int>()
-    private var fetching: Boolean = false
+    var fetching: Boolean = false
     private val gson = Gson()
     fun list(addr: String = ""): Observable<ArrayList<addrassets>> {
         if (addr.isNotEmpty() && addr != address) {

@@ -22,7 +22,7 @@ object TransactionState {
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     private val size = 10
-    private var fetching: Boolean = false
+    var fetching: Boolean = false
     fun list(addr: String = "", asset: String? = null): Observable<pageData<transactions>> {
         if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
             fetch(addr, asset)

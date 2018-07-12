@@ -1,7 +1,7 @@
 package com.iwallic.app.models
 
-import com.yitimo.neon.hex.Hex
-import com.yitimo.neon.wallet.Wallet
+import com.iwallic.neon.hex.Hex
+import com.iwallic.neon.wallet.Wallet
 
 const val ASSET_GAS = ""
 

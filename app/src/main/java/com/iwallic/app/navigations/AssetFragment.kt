@@ -13,21 +13,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.ListView
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
 import com.iwallic.app.models.addrassets
-import com.iwallic.app.pages.asset.AssetDetailActivity
-import com.iwallic.app.pages.user.UserSettingActivity
+import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
-import com.iwallic.app.utils.RecyclerItemClickListener
+import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
-import com.iwallic.app.utils.affectOnItemClick
 import io.reactivex.disposables.Disposable
 
 class AssetFragment : Fragment() {
@@ -37,6 +35,8 @@ class AssetFragment : Fragment() {
     private lateinit var assetManager: RecyclerView.LayoutManager
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
+    private lateinit var loadPB: ProgressBar
+    private lateinit var manageIV: ImageView
     private val mainAsset: String = "NEO"
 
     private lateinit var listListen: Disposable
@@ -50,6 +50,8 @@ class AssetFragment : Fragment() {
         assetSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
         mainAssetTV = view.findViewById(R.id.fragment_asset_main_asset)
         mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
+        loadPB = view.findViewById(R.id.fragment_asset_load)
+        manageIV = view.findViewById(R.id.fragment_asset_manage)
 
         resolveList(arrayListOf())
 
@@ -62,14 +64,24 @@ class AssetFragment : Fragment() {
         })
         errorListen = AssetState.error().subscribe({
             resolveRefreshed()
-            Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
+            if (!DialogUtils.Error(context!!, it)) {
+                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
+            }
         }, {
             resolveRefreshed()
             Log.i("资产列表", "发生错误【${it}】")
         })
 
         assetSRL.setOnRefreshListener {
+            if (AssetState.fetching) {
+                assetSRL.isRefreshing = false
+                return@setOnRefreshListener
+            }
             AssetState.fetch()
+        }
+
+        manageIV.setOnClickListener {
+            activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
 
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
@@ -84,9 +96,9 @@ class AssetFragment : Fragment() {
     }
 
     private fun resolveList(list: ArrayList<addrassets>) {
-        mainAssetTV.text = "NEO"
+        mainAssetTV.text = mainAsset
         mainBalanceTV.text = list.find {
-            it.symbol == "NEO"
+            it.symbol == mainAsset
         }?.balance
         assetManager = LinearLayoutManager(context!!)
         assetAdapter = AssetAdapter(list)
@@ -97,7 +109,10 @@ class AssetFragment : Fragment() {
         }
     }
 
-    private fun resolveRefreshed(success: Boolean = true) {
+    private fun resolveRefreshed(success: Boolean = false) {
+        if (loadPB.visibility == View.VISIBLE) {
+            loadPB.visibility = View.GONE
+        }
         if (!assetSRL.isRefreshing) {
             return
         }

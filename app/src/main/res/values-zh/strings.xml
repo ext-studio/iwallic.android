@@ -13,6 +13,7 @@
     <string name="fragment_user_setting">常用设置</string>
     <string name="fragment_user_signout">关闭钱包</string>
     <string name="user_setting_language">显示语言</string>
+    <string name="asset_manage">资产管理</string>
     <string name="user_setting_skin">应用皮肤</string>
     <string name="user_setting_skin_default">默认</string>
     <string name="user_setting_skin_night">深色</string>

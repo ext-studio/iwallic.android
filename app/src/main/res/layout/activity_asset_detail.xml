@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/asset_detail_back"
-            android:layout_width="@dimen/dimenIcon"
-            android:layout_height="@dimen/dimenIcon"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
             android:layout_gravity="top|start"
             android:contentDescription="@null"
             android:scaleType="fitXY"
@@ -53,6 +53,15 @@
         </LinearLayout>
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/asset_detail_load"
+        android:visibility="visible"
+        android:layout_margin="@dimen/dimenSpace"
+        android:foregroundTint="?colorPrimary"
+        android:layout_width="@dimen/dimenLarge"
+        android:layout_height="@dimen/dimenLarge"
+        android:layout_gravity="center"
+        tools:targetApi="lollipop" />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/asset_detail_list_refresh"
         android:layout_width="match_parent"

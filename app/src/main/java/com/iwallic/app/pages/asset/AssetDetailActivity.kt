@@ -9,8 +9,10 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
@@ -21,6 +23,7 @@ import com.iwallic.app.models.transactions
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
 
@@ -29,6 +32,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var balanceTV: TextView
     private lateinit var backIV: ImageView
     private lateinit var asset: addrassets
+    private lateinit var loadPB: ProgressBar
 
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
@@ -50,6 +54,7 @@ class AssetDetailActivity : BaseActivity() {
         balanceTV = findViewById(R.id.asset_detail_balance)
         txRV = findViewById(R.id.asset_detail_list)
         txSRL = findViewById(R.id.asset_detail_list_refresh)
+        loadPB = findViewById(R.id.asset_detail_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         resolveBalance()
@@ -64,13 +69,19 @@ class AssetDetailActivity : BaseActivity() {
         })
         errorListen = TransactionState.error().subscribe({
             resolveRefreshed()
-            Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+            if (!DialogUtils.Error(this, it)) {
+                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+            }
         }, {
             resolveRefreshed()
             Log.i("资产详情", "发生错误【${it}】")
         })
         balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({}, {})
         txSRL.setOnRefreshListener {
+            if (TransactionState.fetching) {
+                txSRL.isRefreshing = false
+                return@setOnRefreshListener
+            }
             TransactionState.fetch()
         }
         backIV.setOnClickListener {
@@ -118,7 +129,10 @@ class AssetDetailActivity : BaseActivity() {
         }
     }
 
-    private fun resolveRefreshed(success: Boolean = true) {
+    private fun resolveRefreshed(success: Boolean = false) {
+        if (loadPB.visibility == View.VISIBLE) {
+            loadPB.visibility = View.GONE
+        }
         if (!txSRL.isRefreshing) {
             return
         }

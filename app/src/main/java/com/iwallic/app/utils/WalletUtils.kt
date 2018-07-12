@@ -6,7 +6,7 @@ import com.iwallic.app.models.AccountModel
 import com.iwallic.app.models.ContractModel
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.models.WalletModel
-import com.yitimo.neon.wallet.Wallet
+import com.iwallic.neon.wallet.Wallet
 
 object WalletUtils {
     private var cached: WalletModel? = null

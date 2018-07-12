@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.iwallic.app.R
@@ -22,11 +23,13 @@ import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.transactions
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.DialogUtils
 import io.reactivex.disposables.Disposable
 
 class TransactionFragment : Fragment() {
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
+    private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: RecyclerView.Adapter<*>
     private lateinit var txManager: RecyclerView.LayoutManager
 
@@ -38,6 +41,7 @@ class TransactionFragment : Fragment() {
 
         txRV = view.findViewById(R.id.transaction_list)
         txSRL = view.findViewById(R.id.transaction_list_refresh)
+        loadPB = view.findViewById(R.id.fragment_transaction_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         resolveList(arrayListOf())
@@ -51,13 +55,19 @@ class TransactionFragment : Fragment() {
         })
         errorListen = TransactionState.error().subscribe({
             resolveRefreshed()
-            Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
+            if (!DialogUtils.Error(context!!, it)) {
+                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
+            }
         }, {
             resolveRefreshed()
             Log.i("交易列表", "发生错误【${it}】")
         })
 
         txSRL.setOnRefreshListener {
+            if (TransactionState.fetching) {
+                txSRL.isRefreshing = false
+                return@setOnRefreshListener
+            }
             TransactionState.fetch(asset = "")
         }
 
@@ -82,7 +92,10 @@ class TransactionFragment : Fragment() {
         }
     }
 
-    private fun resolveRefreshed(success: Boolean = true) {
+    private fun resolveRefreshed(success: Boolean = false) {
+        if (loadPB.visibility == View.VISIBLE) {
+            loadPB.visibility = View.GONE
+        }
         if (!txSRL.isRefreshing) {
             return
         }

@@ -11,6 +11,7 @@
     <string name="fragment_user_title">User Center</string>
     <string name="fragment_user_setting">Settings</string>
     <string name="fragment_user_signout">Close wallet</string>
+    <string name="asset_manage">Assets manage</string>
     <string name="user_setting_language">Language</string>
     <string name="user_setting_skin">Theme</string>
     <string name="user_setting_skin_default">Default</string>

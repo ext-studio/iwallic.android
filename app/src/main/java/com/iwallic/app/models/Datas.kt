@@ -24,3 +24,9 @@ data class blocktime (
     val lastBlockIndex: Long,
     val time: Long
 )
+
+data class assetmanage (
+    val assetId: String,
+    val name: String,
+    val symbol: String
+)

@@ -2,19 +2,13 @@ package com.iwallic.app.utils
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import com.iwallic.app.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
-import kotlinx.coroutines.experimental.newCoroutineContext
 import android.widget.Toast
-import com.iwallic.app.base.MainActivity
 import android.content.DialogInterface
-import android.util.Log
-import android.widget.ListView
 
 object DialogUtils {
     fun Dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
@@ -60,6 +54,7 @@ object DialogUtils {
         }
         dialog.show()
     }
+
     fun DialogList(context: Context, title: Int? = null, list: Map<String, String>? = null, callback: ((String) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
         if (title != null) {
@@ -72,12 +67,30 @@ object DialogUtils {
             listValue[index] = list[key]
         }
         builder.setItems(listValue, DialogInterface.OnClickListener { _, i ->
-            if(callback != null) {
+            if (callback != null) {
                 callback(listKey[i].toString())
             }
         })
         val dialog = builder.create()
         dialog.window.setLayout(600, 700)
         dialog.show()
+    }
+
+    fun Error(context: Context, code: Int): Boolean {
+        when (code) {
+            99997, 99996 -> {
+                Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            99995 -> {
+                Toast.makeText(context, "服务器错误", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            99994 -> {
+                Toast.makeText(context, "网络连接超时", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return false
     }
 }

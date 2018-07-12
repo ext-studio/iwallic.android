@@ -35,21 +35,13 @@ object HttpClient {
                 }
             }
     }
-//    fun post(method: String, params: List<Any> = emptyList()): Observable<String> {
-//        return Observable.create {
-//            post(method, params, fun (ok) {
-//                it.onNext(ok)
-//                it.onComplete()
-//            }, fun(no) {
-//                it.onError(Throwable(no.toString()))
-//            })
-//        }
-//    }
     private fun resolveError(status: Int): Int {
+        Log.i("网络请求", "返回状态码【$status】")
         return when (status) {
             400 -> 99997
             404 -> 99996
             500, 501, 502,  503 -> 99995
+            -1 -> 99994
             else -> 99999
         }
     }
