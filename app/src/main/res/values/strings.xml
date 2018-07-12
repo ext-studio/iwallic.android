@@ -38,6 +38,10 @@
     <string name="wallet_import_btn_file">Import wallet file</string>
     <string name="wallet_import_error_wif">Invalid WIF key, please check</string>
     <string name="wallet_backup">Wallet backup</string>
+    <string name="wallet_backup_copy">Copy WIF</string>
+    <string name="wallet_backup_save">Export file</string>
+    <string name="wallet_backup_gate">Verify first to show your WIF key.</string>
+    <string name="wallet_backup_toggle">Your WIF</string>
     <string name="transaction_transfer">Transfer</string>
     <string name="transaction_transfer_chooseAsset">Choose Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
@@ -52,6 +56,7 @@
     <string name="dialog_no">Cancel</string>
     <string name="dialog_content_signout">Sure to close current wallet?</string>
     <string name="dialog_content_noAsset">No Asset</string>
+    <string name="load_load">Loading, please wait</string>
     <string name="wallet_create_dialog_enter">Have you backed up your new wallet and sure to enter?</string>
     <string name="dialog_password_title">Verify password</string>
     <string name="error_incoming">Coming soon!</string>

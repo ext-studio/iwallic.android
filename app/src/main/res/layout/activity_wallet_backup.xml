@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault"
+    android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -44,7 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="?colorDefault"
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,9 +53,10 @@
             <RelativeLayout
                 android:id="@+id/wallet_backup_box"
                 android:layout_marginTop="@dimen/dimenLarge"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:background="?colorDefault2">
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:padding="@dimen/dimenSmall"
+                android:background="?colorDefault">
                 <ImageView
                     android:id="@+id/wallet_backup_click"
                     android:contentDescription="@null"
@@ -82,11 +82,11 @@
                 android:textColor="?colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="私钥已隐藏，点击验证"/>
+                android:text="@string/wallet_backup_gate"/>
 
             <LinearLayout
                 android:id="@+id/wallet_backup_result"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -102,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="你的私钥"/>
+                        android:text="@string/wallet_backup_toggle"/>
                     <ImageView
                         android:id="@+id/wallet_backup_eye"
                         android:contentDescription="@null"
@@ -111,6 +111,7 @@
                         android:layout_gravity="center"
                         android:layout_width="@dimen/dimenLarge"
                         android:layout_height="@dimen/dimenLarge"
+                        android:scaleType="fitXY"
                         android:src="@drawable/icon_eye"/>
                 </LinearLayout>
 
@@ -118,9 +119,32 @@
                     android:id="@+id/wallet_backup_wif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/dimenSpace"
+                    android:background="?colorDefault"
                     android:maxWidth="260dp"
                     android:text="**********************************************"
                     android:layout_margin="@dimen/dimenSpace"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/wallet_backup_copy"
+                        android:width="134dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?colorDefault"
+                        android:text="@string/wallet_backup_copy"/>
+
+                    <Button
+                        android:id="@+id/wallet_backup_save"
+                        android:width="134dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?colorDefault"
+                        android:text="@string/wallet_backup_save"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
