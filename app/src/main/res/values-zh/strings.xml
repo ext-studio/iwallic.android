@@ -12,6 +12,7 @@
     <string name="fragment_user_title">用户中心</string>
     <string name="fragment_user_setting">常用设置</string>
     <string name="fragment_user_signout">关闭钱包</string>
+    <string name="fragment_user_backup">备份钱包</string>
     <string name="user_setting_language">显示语言</string>
     <string name="asset_manage">资产管理</string>
     <string name="asset_manage_save">保存</string>
@@ -37,6 +38,7 @@
     <string name="wallet_import_btn_wif">导入</string>
     <string name="wallet_import_btn_file">导入钱包文件</string>
     <string name="wallet_import_error_wif">请输入正确的WIF私钥</string>
+    <string name="wallet_backup">备份钱包</string>
     <string name="transaction_transfer">转账</string>
     <string name="transaction_transfer_chooseAsset">选择资产</string>
     <string name="transaction_transfer_target_hint">收款地址</string>
@@ -51,6 +53,7 @@
     <string name="dialog_no">取消</string>
     <string name="dialog_content_signout">确定要关闭当前钱包?</string>
     <string name="dialog_content_noAsset">暂无资产</string>
+    <string name="dialog_password_title">验证密码</string>
     <string name="wallet_create_dialog_enter">你是否已经完成了钱包备份，并确认要进入钱包?</string>
     <string name="error_incoming">此功能即将完成</string>
     <string name="error_failed">操作失败</string>

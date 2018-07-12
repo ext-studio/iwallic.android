@@ -11,6 +11,7 @@
     <string name="fragment_user_title">User Center</string>
     <string name="fragment_user_setting">Settings</string>
     <string name="fragment_user_signout">Close wallet</string>
+    <string name="fragment_user_backup">Backup wallet</string>
     <string name="asset_manage">Assets manage</string>
     <string name="asset_manage_save">Save</string>
     <string name="user_setting_language">Language</string>
@@ -36,6 +37,7 @@
     <string name="wallet_import_btn_wif">Import</string>
     <string name="wallet_import_btn_file">Import wallet file</string>
     <string name="wallet_import_error_wif">Invalid WIF key, please check</string>
+    <string name="wallet_backup">Wallet backup</string>
     <string name="transaction_transfer">Transfer</string>
     <string name="transaction_transfer_chooseAsset">Choose Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
@@ -51,6 +53,7 @@
     <string name="dialog_content_signout">Sure to close current wallet?</string>
     <string name="dialog_content_noAsset">No Asset</string>
     <string name="wallet_create_dialog_enter">Have you backed up your new wallet and sure to enter?</string>
+    <string name="dialog_password_title">Verify password</string>
     <string name="error_incoming">Coming soon!</string>
     <string name="error_failed">Operation failed</string>
     <string name="error_copied">Copied!</string>

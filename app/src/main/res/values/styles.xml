@@ -73,7 +73,6 @@
         <item name="android:layout_height">@dimen/dimenIcon</item>
         <item name="android:layout_marginRight">@dimen/dimenSpace</item>
         <item name="android:contentDescription">@null</item>
-        <item name="android:tint">?colorFont3</item>
         <item name="android:scaleType">fitXY</item>
     </style>
 

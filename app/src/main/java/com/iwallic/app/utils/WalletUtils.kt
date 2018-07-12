@@ -142,4 +142,9 @@ object WalletUtils {
         cached = null
         return true
     }
+
+    fun verify(context: Context, pwd: String): String {
+        val account = account(context) ?: return ""
+        return Wallet.neP2Decode(account.key, pwd)
+    }
 }

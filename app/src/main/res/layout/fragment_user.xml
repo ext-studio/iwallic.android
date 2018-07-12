@@ -29,78 +29,100 @@
             android:layout_marginTop="@dimen/dimenLarge"/>
     </RelativeLayout>
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?colorDefault"
-        android:orientation="vertical">
+        android:scrollbars="none">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View style="@style/option_item_line_full"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <View style="@style/option_item_line_full"></View>
-
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:id="@+id/fragment_user_backup"
+                    style="@style/option_item_rl">
 
-                    <LinearLayout
-                        android:id="@+id/fragment_user_setting"
-                        style="@style/option_item_rl">
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_backup"
+                        style="@style/option_item_img"/>
 
-                        <ImageView
-                            android:src="@drawable/icon_setting"
-                            style="@style/option_item_img"/>
+                    <TextView
+                        android:text="@string/fragment_user_backup"
+                        style="@style/option_item_text"/>
 
-                        <TextView
-                            android:text="@string/fragment_user_setting"
-                            style="@style/option_item_text"/>
-
-                        <ImageView
-                            android:src="@drawable/icon_arrowright"
-                            style="@style/option_item_imgarrow"/>
-                    </LinearLayout>
-
-                    <View
-                        style="@style/option_item_line"/>
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_arrowright"
+                        style="@style/option_item_imgarrow"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/fragment_user_signout"
-                        style="@style/option_item_rl">
-
-                        <ImageView
-                            android:src="@drawable/icon_power"
-                            style="@style/option_item_img"
-                            android:tint="?colorDanger"/>
-
-                        <TextView
-                            android:text="@string/fragment_user_signout"
-                            style="@style/option_item_text"
-                            android:textColor="?colorDanger"/>
-                    </LinearLayout>
-
-                    <!--<View-->
-                    <!--style="@style/option_item_line"/>-->
-                </LinearLayout>
-
-                <View style="@style/option_item_line_full"></View>
-
+                <View
+                    style="@style/option_item_line"/>
             </LinearLayout>
 
-        </ScrollView>
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/fragment_user_setting"
+                    style="@style/option_item_rl">
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_setting"
+                        style="@style/option_item_img"/>
+
+                    <TextView
+                        android:text="@string/fragment_user_setting"
+                        style="@style/option_item_text"/>
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_arrowright"
+                        style="@style/option_item_imgarrow"/>
+                </LinearLayout>
+
+                <View
+                    style="@style/option_item_line"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/fragment_user_signout"
+                    style="@style/option_item_rl">
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_signout"
+                        style="@style/option_item_img"/>
+
+                    <TextView
+                        android:text="@string/fragment_user_signout"
+                        style="@style/option_item_text"
+                        android:textColor="?colorDanger"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View style="@style/option_item_line_full"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

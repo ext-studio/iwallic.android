@@ -1,9 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorDefault"
+    tools:ignore="EllipsizeMaxLines,RtlHardcoded"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
     tools:context=".pages.wallet.WalletBackupActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/wallet_backup_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|left"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:contentDescription="@null"
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:scaleType="fitXY"
+                android:tint="?colorDefault"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wallet_backup"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="?colorDefault"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+            <RelativeLayout
+                android:id="@+id/wallet_backup_box"
+                android:layout_marginTop="@dimen/dimenLarge"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:background="?colorDefault2">
+                <ImageView
+                    android:id="@+id/wallet_backup_click"
+                    android:contentDescription="@null"
+                    android:visibility="visible"
+                    android:src="@drawable/icon_click"
+                    android:scaleType="fitXY"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:contentDescription="@null"
+                    android:visibility="invisible"
+                    android:id="@+id/wallet_backup_qrcode"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/wallet_backup_gate"
+                android:visibility="visible"
+                android:layout_margin="@dimen/dimenLarge"
+                android:textSize="@dimen/dimenDefault"
+                android:textColor="?colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="私钥已隐藏，点击验证"/>
+
+            <LinearLayout
+                android:id="@+id/wallet_backup_result"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/dimenLarge">
+                <LinearLayout
+                    android:id="@+id/wallet_backup_toggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="你的私钥"/>
+                    <ImageView
+                        android:id="@+id/wallet_backup_eye"
+                        android:contentDescription="@null"
+                        android:layout_marginStart="@dimen/dimenSpace"
+                        android:layout_marginEnd="@dimen/dimenSpace"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/dimenLarge"
+                        android:layout_height="@dimen/dimenLarge"
+                        android:src="@drawable/icon_eye"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/wallet_backup_wif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="260dp"
+                    android:text="**********************************************"
+                    android:layout_margin="@dimen/dimenSpace"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

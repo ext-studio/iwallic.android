@@ -15,6 +15,7 @@ import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletBackupActivity
 import com.iwallic.app.states.AssetState
 
 class UserFragment : Fragment() {
@@ -26,6 +27,10 @@ class UserFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
+
+        view.findViewById<LinearLayout>(R.id.fragment_user_backup).setOnClickListener {
+            activity!!.startActivity(Intent(context, WalletBackupActivity::class.java))
+        }
 
         view.findViewById<LinearLayout>(R.id.fragment_user_setting).setOnClickListener {
             activity!!.startActivity(Intent(context, UserSettingActivity::class.java))

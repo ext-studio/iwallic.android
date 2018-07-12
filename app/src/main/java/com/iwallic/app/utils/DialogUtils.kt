@@ -9,6 +9,10 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import android.content.DialogInterface
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import io.reactivex.Observable
 
 import android.util.Log
 import android.widget.ListView
@@ -60,6 +64,33 @@ object DialogUtils {
         dialog.show()
     }
 
+    fun Password(context: Context): Observable<String> {
+        return Observable.create { observer ->
+            val builder = AlertDialog.Builder(context)
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.dialog_password, null)
+            val inputET = view.findViewById<EditText>(R.id.dialog_password)
+            val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
+            builder.setView(view)
+            val dialog = builder.create()
+            var rs: String = ""
+            inputET.addTextChangedListener(object: TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                    rs = p0.toString()
+                }
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            })
+            confirm.setOnClickListener {
+                observer.onNext(rs)
+                dialog.dismiss()
+            }
+            dialog.setOnDismissListener {
+                observer.onComplete()
+            }
+            dialog.show()
+        }
+    }
 
     fun DialogList(context: Context, title: Int? = null, list: List<addrassets> ?= null, callback: ((String) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
