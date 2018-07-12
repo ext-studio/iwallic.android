@@ -186,7 +186,7 @@ class TransactionModel {
             newTX.type = TxTypeInvocation
             newTX.version = TxVersionInvocation
             newTX.script = SmartContract.forNEP5(token, from, to, amount).serielize()
-            newTX.attributes.add(AttributeModel(AttrUsageNep5, ""))
+            newTX.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
             return null
         }
         fun forClaim(claims: ArrayList<InputModel>, value: Float, to: String): TransactionModel? {
