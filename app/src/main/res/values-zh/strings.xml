@@ -35,8 +35,14 @@
     <string name="wallet_import_btn_wif">导入</string>
     <string name="wallet_import_btn_file">导入钱包文件</string>
     <string name="wallet_import_error_wif">请输入正确的WIF私钥</string>
+    <string name="transaction_transfer">转账</string>
+    <string name="transaction_transfer_chooseAsset">选择资产</string>
+    <string name="transaction_transfer_target_hint">收款地址</string>
+    <string name="transaction_transfer_amount_hint">打款数量</string>
+    <string name="transaction_transfer_btn_submit">提交</string>
     <string name="dialog_title_primary">注意</string>
     <string name="dialog_title_warn">警告</string>
+    <string name="dialog_title_choose">选择</string>
     <string name="dialog_ok">确认</string>
     <string name="dialog_ok_enter">进入</string>
     <string name="dialog_no">取消</string>

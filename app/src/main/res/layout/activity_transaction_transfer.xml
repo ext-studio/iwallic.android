@@ -1,9 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".pages.transaction.TransactionTransferActivity">
+    android:background="?colorDefault2"
+    tools:ignore="EllipsizeMaxLines,RtlHardcoded"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    tools:context=".transaction.TransactionTransferActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/transaction_transfer_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|left"
+            android:clickable="true">
+            <ImageView
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:scaleType="fitXY"
+                android:tint="?colorDefault"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_transfer"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/transaction_transfer_step_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:id="@+id/transaction_transfer_choose_asset"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="?colorDefault"
+                    android:clickable="true">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="0.5"
+                        android:padding="@dimen/dimenSpace"
+                        android:gravity="right"
+                        android:text="@string/transaction_transfer_chooseAsset" />
+
+                    <TextView
+                        android:id="@+id/asset_choose_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="1"
+                        android:layout_toStartOf="@id/imageView"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/icon_arrowright" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimenLine"
+                    android:background="?colorLine" />
+
+                <EditText
+                    android:id="@+id/transaction_transfer_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?colorDefault"
+                    android:ems="10"
+                    android:focusedByDefault="true"
+                    android:hint="@string/transaction_transfer_target_hint"
+                    android:padding="@dimen/dimenSpace"
+                    android:textColor="?colorFont"
+                    android:textSize="@dimen/dimenDefault"
+                    tools:targetApi="o" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimenLine"
+                    android:background="?colorLine" />
+
+                <EditText
+                    android:id="@+id/transaction_transfer_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?colorDefault"
+                    android:ems="10"
+                    android:hint="@string/transaction_transfer_amount_hint"
+                    android:padding="@dimen/dimenSpace"
+                    android:textColor="?colorFont"
+                    android:textSize="@dimen/dimenDefault"
+                    android:inputType="number"/>
+
+                <TextView
+                    android:id="@+id/transaction_transfer_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/dimenSpace"
+                    android:paddingTop="@dimen/dimenSpace"
+                    android:text="tip"
+                    android:textColor="?colorDanger"
+                    android:visibility="invisible" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimenSpace">
+
+                    <Button
+                        android:id="@+id/transaction_transfer_btn_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/transaction_transfer_btn_submit"
+                        android:textColor="?colorDefault"
+                        android:visibility="visible" />
+
+                    <ProgressBar
+                        android:id="@+id/transaction_transfer_load_create"
+                        android:layout_width="@dimen/dimenLarge"
+                        android:layout_height="@dimen/dimenLarge"
+                        android:layout_gravity="center"
+                        android:foregroundTint="?colorPrimary"
+                        android:visibility="invisible"
+                        tools:targetApi="lollipop" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/transaction_transfer_step_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="invisible">
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -34,8 +34,14 @@
     <string name="wallet_import_btn_wif">Import</string>
     <string name="wallet_import_btn_file">Import wallet file</string>
     <string name="wallet_import_error_wif">Invalid WIF key, please check</string>
+    <string name="transaction_transfer">Transfer</string>
+    <string name="transaction_transfer_chooseAsset">Choose Asset</string>
+    <string name="transaction_transfer_target_hint">Target</string>
+    <string name="transaction_transfer_amount_hint">Amount</string>
+    <string name="transaction_transfer_btn_submit">Submit</string>
     <string name="dialog_title_primary">Notice</string>
     <string name="dialog_title_warn">Warning</string>
+    <string name="dialog_title_choose">Choose</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_ok_enter">Enter</string>
     <string name="dialog_no">Cancel</string>

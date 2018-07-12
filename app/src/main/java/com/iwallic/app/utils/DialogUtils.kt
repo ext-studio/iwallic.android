@@ -9,6 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import kotlinx.coroutines.experimental.newCoroutineContext
+import android.widget.Toast
+import com.iwallic.app.base.MainActivity
+import android.content.DialogInterface
+import android.util.Log
+import android.widget.ListView
 
 object DialogUtils {
     fun Dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
@@ -52,6 +58,26 @@ object DialogUtils {
         } else {
             noTV.visibility = View.GONE
         }
+        dialog.show()
+    }
+    fun DialogList(context: Context, title: Int? = null, list: Map<String, String>? = null, callback: ((String) -> Unit)? = null) {
+        val builder = AlertDialog.Builder(context)
+        if (title != null) {
+            builder.setTitle(title)
+        }
+        var listValue = arrayOfNulls<String>(list!!.size)
+        var listKey = arrayOfNulls<String>(list!!.size)
+        for ((index, key) in list!!.keys.withIndex()) {
+            listKey[index] = key
+            listValue[index] = list[key]
+        }
+        builder.setItems(listValue, DialogInterface.OnClickListener { _, i ->
+            if(callback != null) {
+                callback(listKey[i].toString())
+            }
+        })
+        val dialog = builder.create()
+        dialog.window.setLayout(600, 700)
         dialog.show()
     }
 }
