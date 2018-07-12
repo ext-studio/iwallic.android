@@ -41,6 +41,7 @@
     <string name="transaction_transfer_chooseAsset">选择资产</string>
     <string name="transaction_transfer_target_hint">收款地址</string>
     <string name="transaction_transfer_amount_hint">打款数量</string>
+    <string name="transaction_transfer_balance_hint">可用余额</string>
     <string name="transaction_transfer_btn_submit">提交</string>
     <string name="dialog_title_primary">注意</string>
     <string name="dialog_title_warn">警告</string>
@@ -49,6 +50,7 @@
     <string name="dialog_ok_enter">进入</string>
     <string name="dialog_no">取消</string>
     <string name="dialog_content_signout">确定要关闭当前钱包?</string>
+    <string name="dialog_content_noAsset">暂无资产</string>
     <string name="wallet_create_dialog_enter">你是否已经完成了钱包备份，并确认要进入钱包?</string>
     <string name="error_incoming">此功能即将完成</string>
     <string name="error_failed">操作失败</string>

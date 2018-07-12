@@ -40,6 +40,7 @@
     <string name="transaction_transfer_chooseAsset">Choose Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
     <string name="transaction_transfer_amount_hint">Amount</string>
+    <string name="transaction_transfer_balance_hint">Balance</string>
     <string name="transaction_transfer_btn_submit">Submit</string>
     <string name="dialog_title_primary">Notice</string>
     <string name="dialog_title_warn">Warning</string>
@@ -48,6 +49,7 @@
     <string name="dialog_ok_enter">Enter</string>
     <string name="dialog_no">Cancel</string>
     <string name="dialog_content_signout">Sure to close current wallet?</string>
+    <string name="dialog_content_noAsset">No Asset</string>
     <string name="wallet_create_dialog_enter">Have you backed up your new wallet and sure to enter?</string>
     <string name="error_incoming">Coming soon!</string>
     <string name="error_failed">Operation failed</string>

@@ -10,6 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import android.content.DialogInterface
 
+import android.util.Log
+import android.widget.ListView
+import com.iwallic.app.models.addrassets
+
+
 object DialogUtils {
     fun Dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
@@ -55,25 +60,32 @@ object DialogUtils {
         dialog.show()
     }
 
-    fun DialogList(context: Context, title: Int? = null, list: Map<String, String>? = null, callback: ((String) -> Unit)? = null) {
+
+    fun DialogList(context: Context, title: Int? = null, list: List<addrassets> ?= null, callback: ((String) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
         if (title != null) {
             builder.setTitle(title)
         }
-        var listValue = arrayOfNulls<String>(list!!.size)
-        var listKey = arrayOfNulls<String>(list!!.size)
-        for ((index, key) in list!!.keys.withIndex()) {
-            listKey[index] = key
-            listValue[index] = list[key]
-        }
-        builder.setItems(listValue, DialogInterface.OnClickListener { _, i ->
-            if (callback != null) {
-                callback(listKey[i].toString())
+        if(list != null) {
+            var listValue = arrayOfNulls<String>(list!!.size)
+            var listKey = arrayOfNulls<String>(list!!.size)
+            for ((index, i) in list!!.iterator().withIndex()) {
+                listKey[index] = i.assetId
+                listValue[index] = i.symbol
             }
-        })
-        val dialog = builder.create()
-        dialog.window.setLayout(600, 700)
-        dialog.show()
+            builder.setItems(listValue) { _, i ->
+                if (callback != null) {
+                    callback(listKey[i].toString())
+                }
+            }
+            val dialog = builder.create()
+            dialog.window.setLayout(600, 700)
+            dialog.show()
+        } else {
+            Dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
+                return
+            })
+        }
     }
 
     fun Error(context: Context, code: Int): Boolean {

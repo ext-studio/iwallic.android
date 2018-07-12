@@ -116,17 +116,34 @@
                     android:layout_height="@dimen/dimenLine"
                     android:background="?colorLine" />
 
-                <EditText
-                    android:id="@+id/transaction_transfer_amount"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?colorDefault"
-                    android:ems="10"
-                    android:hint="@string/transaction_transfer_amount_hint"
-                    android:padding="@dimen/dimenSpace"
-                    android:textColor="?colorFont"
-                    android:textSize="@dimen/dimenDefault"
-                    android:inputType="number"/>
+                    android:layout_height="44dp"
+                    android:background="?colorDefault">
+
+                    <EditText
+                        android:id="@+id/transaction_transfer_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/transaction_transfer_balance"
+                        android:background="?colorDefault"
+                        android:ems="10"
+                        android:hint="@string/transaction_transfer_amount_hint"
+                        android:inputType="number"
+                        android:padding="@dimen/dimenSpace"
+                        android:textColor="?colorFont"
+                        android:textSize="@dimen/dimenDefault" />
+
+                    <TextView
+                        android:id="@+id/transaction_transfer_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:padding="@dimen/dimenSpace"
+                        android:text="@string/transaction_transfer_balance_hint"
+                        android:visibility="gone"/>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/transaction_transfer_error"
@@ -144,7 +161,7 @@
                     android:layout_margin="@dimen/dimenSpace">
 
                     <Button
-                        android:id="@+id/transaction_transfer_btn_create"
+                        android:id="@+id/transaction_transfer_btn_submit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -153,7 +170,7 @@
                         android:visibility="visible" />
 
                     <ProgressBar
-                        android:id="@+id/transaction_transfer_load_create"
+                        android:id="@+id/transaction_transfer_load_submit"
                         android:layout_width="@dimen/dimenLarge"
                         android:layout_height="@dimen/dimenLarge"
                         android:layout_gravity="center"
