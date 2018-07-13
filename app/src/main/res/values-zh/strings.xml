@@ -51,6 +51,9 @@
     <string name="transaction_transfer_target_hint">收款地址</string>
     <string name="transaction_transfer_amount_hint">打款数量</string>
     <string name="transaction_transfer_balance_hint">可用余额</string>
+    <string name="transaction_transfer_tips_noChooseAsset">请选择资产</string>
+    <string name="transaction_transfer_tips_target_error">请填写正确地址</string>
+    <string name="transaction_transfer_tips_amount_error">请填写正确金额</string>
     <string name="transaction_transfer_btn_submit">提交</string>
     <string name="transaction_receive_">收款</string>
     <string name="transaction_receive_address_copy">复制地址</string>

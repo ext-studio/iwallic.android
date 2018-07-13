@@ -8,7 +8,7 @@
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".transaction.TransactionTransferActivity">
+    tools:context=".pages.transaction.TransactionTransferActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                         android:background="?colorDefault"
                         android:ems="10"
                         android:hint="@string/transaction_transfer_amount_hint"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:padding="@dimen/dimenSpace"
                         android:textColor="?colorFont"
                         android:textSize="@dimen/dimenDefault" />

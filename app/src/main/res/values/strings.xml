@@ -51,6 +51,9 @@
     <string name="transaction_transfer_amount_hint">Amount</string>
     <string name="transaction_transfer_balance_hint">Balance</string>
     <string name="transaction_transfer_btn_submit">Submit</string>
+    <string name="transaction_transfer_tips_noChooseAsset_error">Please choose asset</string>
+    <string name="transaction_transfer_tips_target_error">Address Error</string>
+    <string name="transaction_transfer_tips_amount_error">Amount Error</string>
     <string name="transaction_receive">Receive</string>
     <string name="transaction_receive_address_copy">Copy Address</string>
     <string name="dialog_title_primary">Notice</string>
