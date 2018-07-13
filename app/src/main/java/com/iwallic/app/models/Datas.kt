@@ -32,3 +32,14 @@ data class assetmanage (
     val balance: String = "0",
     val active: Boolean = false
 )
+
+data class OldConfig (
+    val version_android: VersionAndroid?
+)
+
+data class VersionAndroid (
+    val code: String,
+    val tag: String,
+    val url: String,
+    val info: Map<String, String> = emptyMap()
+)

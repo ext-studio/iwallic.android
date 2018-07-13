@@ -66,6 +66,8 @@
     <string name="dialog_content_signout">确定要关闭当前钱包?</string>
     <string name="dialog_content_noAsset">暂无资产</string>
     <string name="dialog_password_title">验证密码</string>
+    <string name="dialog_version_ok">更新</string>
+    <string name="dialog_version_new_body">发现新版本，是否现在更新？</string>
     <string name="toast_refreshed">已刷新!</string>
     <string name="load_load">请稍等…</string>
     <string name="wallet_create_dialog_enter">你是否已经完成了钱包备份，并确认要进入钱包?</string>

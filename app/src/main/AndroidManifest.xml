@@ -27,17 +27,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".base.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
 
-                <data
-                    android:host="api.iwallic.com"
-                    android:pathPrefix="/api/iwallic"
-                    android:scheme="https" />
-            </intent-filter>
+                <!--<data-->
+                    <!--android:host="api.iwallic.com"-->
+                    <!--android:pathPrefix="/api/iwallic"-->
+                    <!--android:scheme="https" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
@@ -52,7 +52,8 @@
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
-        <activity android:name=".pages.user.UserSettingNetActivity"/>
+        <activity android:name=".pages.user.UserSettingNetActivity" />
+
         <service
             android:name=".services.BlockService"
             android:enabled="true" />
@@ -60,6 +61,10 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
+
+        <service
+            android:name=".services.UpdateIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
