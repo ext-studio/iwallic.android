@@ -52,6 +52,18 @@
         </LinearLayout>
     </FrameLayout>
 
+    <TextView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
+        android:gravity="center"
+        android:background="?colorPrimary"
+        android:focusable="true"
+        android:clickable="true"
+        android:textColor="?colorDefault"
+        android:text="Claim 99999999.99999999 GAS"/>
+
     <ProgressBar
         android:id="@+id/fragment_asset_load"
         android:layout_margin="@dimen/dimenSpace"

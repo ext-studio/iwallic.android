@@ -52,7 +52,7 @@
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
-
+        <activity android:name=".pages.user.UserSettingNetActivity"/>
         <service
             android:name=".services.BlockService"
             android:enabled="true" />
@@ -60,8 +60,6 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
-
-        <activity android:name=".pages.user.UserSettingNetActivity"></activity>
     </application>
 
 </manifest>

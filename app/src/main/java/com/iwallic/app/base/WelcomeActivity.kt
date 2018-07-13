@@ -44,7 +44,7 @@ class WelcomeActivity : BaseActivity() {
 
     private fun resolveConfig() {
         // request for latest config, or use local config
-        ConfigUtils.set(SharedPrefUtils.getNet(this), "https://api.iwallic.com/api/iwallic", "https://teapi.iwallic.com/api/iwallic")
+        ConfigUtils.set(SharedPrefUtils.getNet(this), "http://101.132.97.9:8001/api/iwallic", "http://101.132.97.9:8002/api/iwallic")
     }
 }
 
