@@ -127,7 +127,7 @@ class AssetFragment : Fragment() {
         }
         assetSRL.isRefreshing = false
         if (success) {
-            Toast.makeText(context!!, "数据已更新", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context!!, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
         }
     }
 

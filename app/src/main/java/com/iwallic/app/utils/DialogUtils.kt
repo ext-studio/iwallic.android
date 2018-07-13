@@ -91,6 +91,7 @@ object DialogUtils {
                 observer.onComplete()
             }
             dialog.show()
+            inputET.requestFocus()
         }
     }
 

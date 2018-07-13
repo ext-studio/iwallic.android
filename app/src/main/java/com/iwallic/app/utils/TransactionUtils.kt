@@ -7,3 +7,7 @@ package com.iwallic.app.utils
  * 3. sign tx by sign() method in tx data
  * 4. send serialized raw transaction
  */
+
+object TransactionUtils {
+
+}

@@ -138,7 +138,7 @@ class AssetDetailActivity : BaseActivity() {
         }
         txSRL.isRefreshing = false
         if (success) {
-            Toast.makeText(this, "数据已更新", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
         }
     }
 

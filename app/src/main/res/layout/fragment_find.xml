@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_find"
@@ -26,13 +26,14 @@
             android:layout_marginStart="@dimen/dimenSmall"
             android:layout_marginTop="@dimen/dimenLarge"/>
     </RelativeLayout>
-
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_find_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/navigation_find_title"
-        android:textColor="?colorPrimary"
-        android:textSize="@dimen/dimenDefault"
-        android:layout_gravity="center"/>
-
-</FrameLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <WebView
+            android:id="@+id/fragment_find_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>
