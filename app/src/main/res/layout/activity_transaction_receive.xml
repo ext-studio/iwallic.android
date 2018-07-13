@@ -7,8 +7,88 @@
     android:fitsSystemWindows="true"
     tools:context=".pages.transaction.TransactionReceiveActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shap_receive_bg"/>
+        android:background="@drawable/shap_receive_bg"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="33dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="32dp">
+
+            <LinearLayout
+                android:id="@+id/transaction_receive_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="@dimen/dimenSmall"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="@dimen/dimenLarge"
+                    android:layout_height="@dimen/dimenLarge"
+                    android:contentDescription="@string/wallet_import"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_back"
+                    android:tint="?colorDefault" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/transaction_receive"
+                    android:textColor="?colorDefault"
+                    android:textSize="@dimen/dimenDefault" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/transaction_receive_qrcode_box"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="53dp"
+                android:background="@color/colorDefaultDefault"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <ImageView
+                    android:id="@+id/transaction_receive_qrcode"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/transaction_receive_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/transaction_receive_address_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/transaction_receive_qrcode_box"
+                android:layout_centerHorizontal="true"
+                android:text="@string/transaction_receive_address_copy"
+                android:textColor="?colorDefault"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

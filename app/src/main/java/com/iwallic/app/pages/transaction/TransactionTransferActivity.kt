@@ -13,7 +13,6 @@ import android.widget.*
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.HttpClient
-import com.iwallic.app.utils.TransactionUtils
 import com.iwallic.app.utils.WalletUtils
 import org.w3c.dom.Text
 

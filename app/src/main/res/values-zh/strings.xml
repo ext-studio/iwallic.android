@@ -49,6 +49,8 @@
     <string name="transaction_transfer_amount_hint">打款数量</string>
     <string name="transaction_transfer_balance_hint">可用余额</string>
     <string name="transaction_transfer_btn_submit">提交</string>
+    <string name="transaction_receive_">收款</string>
+    <string name="transaction_receive_address_copy">复制地址</string>
     <string name="dialog_title_primary">注意</string>
     <string name="dialog_title_warn">警告</string>
     <string name="dialog_title_choose">选择</string>
