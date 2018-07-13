@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.addrassets
 import com.iwallic.app.models.pageData
 import com.iwallic.app.models.transactions
+import com.iwallic.app.utils.ConfigUtils
 import com.iwallic.app.utils.HttpClient
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
@@ -80,5 +81,12 @@ object TransactionState {
             }
             _error.onNext(err)
         })
+    }
+
+    fun clear() {
+        cached = null
+        address = ""
+        assetId = ""
+        fetching = false
     }
 }

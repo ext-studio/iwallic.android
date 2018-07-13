@@ -20,6 +20,9 @@
     <string name="user_setting_skin_default">默认</string>
     <string name="user_setting_skin_night">深色</string>
     <string name="user_setting_save">保存</string>
+    <string name="user_setting_net">区块网络</string>
+    <string name="user_setting_net_main">主网</string>
+    <string name="user_setting_net_test">测试网</string>
     <string name="wallet_import">导入钱包</string>
     <string name="wallet_create">创建钱包</string>
     <string name="wallet_create_tip">你必须设置一个密码来保证你私钥的安全。iWallic不会收集你的密码，也无法帮助你找回密码。所以请牢记你的密码。</string>

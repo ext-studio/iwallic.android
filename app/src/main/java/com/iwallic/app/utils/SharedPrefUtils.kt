@@ -84,7 +84,7 @@ class SharedPrefUtils {
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", newList.toSet()).apply()
         }
         fun getNet(context: Context): String {
-            return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("chosen_address", "main")
+            return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("net", "main")
         }
         fun setNet(context: Context, net: String) {
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("net", if (net == "main") "main" else "test").apply()

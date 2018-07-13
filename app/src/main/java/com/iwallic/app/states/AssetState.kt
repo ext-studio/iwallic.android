@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.addrassets
+import com.iwallic.app.utils.ConfigUtils
 import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable

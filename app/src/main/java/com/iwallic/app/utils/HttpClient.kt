@@ -6,11 +6,10 @@ import com.google.gson.Gson
 import io.reactivex.Observable
 
 object HttpClient {
-    private fun apiDomain(net: String) = if (net == "main") "https://api.iwallic.com/api/iwallic" else "https://teapi.iwallic.com/api/iwallic"
     private val gson = Gson()
     @Suppress("UNCHECKED_CAST")
-    fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit, net: String = "main") {
-        Fuel.post(apiDomain(net))
+    fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
+        Fuel.post(ConfigUtils.api())
             .body(gson.toJson(RequestModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->

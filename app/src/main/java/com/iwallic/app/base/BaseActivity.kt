@@ -15,12 +15,13 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        when (SharedPrefUtils.getSkin(this)) {
-            "default" -> setTheme(R.style.ThemeDefault)
-            "night" -> setTheme(R.style.ThemeNight)
-            else -> setTheme(R.style.ThemeDefault)
-        }
-        startService(Intent(this, BlockService::class.java))
+        ConfigUtils.listen().subscribe({
+            if (it) {
+                startService(Intent(this, BlockService::class.java))
+            }
+        }, {
+            Log.i("基活动", "配置失败，服务将不启动")
+        })
     }
 
     override fun attachBaseContext(base: Context) {

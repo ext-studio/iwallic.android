@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorDefault"
+    tools:ignore="EllipsizeMaxLines,RtlHardcoded"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical"
+    tools:context=".pages.user.UserSettingThemeActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="?colorPrimary">
+
+        <LinearLayout
+            android:id="@+id/user_setting_net_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|left"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:contentDescription="@null"
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:scaleType="fitXY"
+                android:tint="?colorDefault"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_setting_net"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/user_setting_net_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimenSpace"
+            android:layout_gravity="center_vertical|right"
+            android:padding="@dimen/dimenSmall"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_setting_save"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorDefault"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View style="@style/option_item_line_full"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/user_setting_net_main"
+                        style="@style/option_item_rl">
+
+                        <TextView
+                            android:text="@string/user_setting_net_main"
+                            style="@style/option_item_text"
+                            tools:ignore="HardcodedText" />
+
+                        <ImageView
+                            android:contentDescription="@null"
+                            android:id="@+id/user_setting_net_main_chosen"
+                            android:visibility="invisible"
+                            android:src="@drawable/icon_done"
+                            style="@style/option_item_imgarrow"/>
+                    </LinearLayout>
+
+                    <View
+                        style="@style/option_item_line"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/user_setting_net_test"
+                        style="@style/option_item_rl">
+
+                        <TextView
+                            android:text="@string/user_setting_net_test"
+                            style="@style/option_item_text"
+                            tools:ignore="HardcodedText" />
+
+                        <ImageView
+                            android:contentDescription="@null"
+                            android:id="@+id/user_setting_net_test_chosen"
+                            android:visibility="invisible"
+                            android:src="@drawable/icon_done"
+                            style="@style/option_item_imgarrow"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View style="@style/option_item_line_full"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

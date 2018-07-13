@@ -3,7 +3,9 @@
     package="com.iwallic.app">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="19" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -27,33 +29,39 @@
         <activity android:name=".base.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="api.iwallic.com"
-                    android:pathPrefix="/api/iwallic" />
+                    android:pathPrefix="/api/iwallic"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name="com.iwallic.app.pages.user.UserSettingActivity" />
-        <activity android:name="com.iwallic.app.pages.user.UserSettingLanguageActivity" />
-        <activity android:name="com.iwallic.app.pages.user.UserSettingThemeActivity" />
-        <activity android:name="com.iwallic.app.pages.wallet.WalletActivity" />
-        <activity android:name="com.iwallic.app.pages.wallet.WalletCreateActivity" />
-        <activity android:name="com.iwallic.app.pages.wallet.WalletImportActivity" />
-        <activity android:name="com.iwallic.app.pages.wallet.WalletBackupActivity" />
-        <activity android:name="com.iwallic.app.pages.wallet.WalletVerifyActivity" />
-        <activity android:name="com.iwallic.app.pages.transaction.TransactionTransferActivity" />
-        <activity android:name="com.iwallic.app.pages.transaction.TransactionDetailActivity" />
-        <activity android:name="com.iwallic.app.pages.asset.AssetDetailActivity" />
-        <activity android:name="com.iwallic.app.pages.asset.AssetManageActivity" />
-        <activity android:name="com.iwallic.app.pages.transaction.TransactionReceiveActivity" />
+        <activity android:name=".pages.user.UserSettingActivity" />
+        <activity android:name=".pages.user.UserSettingLanguageActivity" />
+        <activity android:name=".pages.user.UserSettingThemeActivity" />
+        <activity android:name=".pages.wallet.WalletActivity" />
+        <activity android:name=".pages.wallet.WalletCreateActivity" />
+        <activity android:name=".pages.wallet.WalletImportActivity" />
+        <activity android:name=".pages.wallet.WalletBackupActivity" />
+        <activity android:name=".pages.wallet.WalletVerifyActivity" />
+        <activity android:name=".pages.transaction.TransactionTransferActivity" />
+        <activity android:name=".pages.transaction.TransactionDetailActivity" />
+        <activity android:name=".pages.asset.AssetDetailActivity" />
+        <activity android:name=".pages.asset.AssetManageActivity" />
+        <activity android:name=".pages.transaction.TransactionReceiveActivity" />
 
         <service
             android:name=".services.BlockService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
-        <meta-data android:name="android.max_aspect"
-            android:value="2.1"/>
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
+        <activity android:name=".pages.user.UserSettingNetActivity"></activity>
     </application>
 
 </manifest>

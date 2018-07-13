@@ -19,6 +19,9 @@
     <string name="user_setting_skin_default">Default</string>
     <string name="user_setting_skin_night">Dark</string>
     <string name="user_setting_save">Save</string>
+    <string name="user_setting_net">Chain net</string>
+    <string name="user_setting_net_main">Main net</string>
+    <string name="user_setting_net_test">Test net</string>
     <string name="wallet_import">Import wallet</string>
     <string name="wallet_create">Create wallet</string>
     <string name="wallet_create_tip">You need to set a cipher to keep your private key and transactions in safe. iWallic will never save your cipher, nor to help you find it back. So do keep it in mind.</string>

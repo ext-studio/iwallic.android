@@ -3,6 +3,7 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.iwallic.app.models.blocktime
+import com.iwallic.app.utils.ConfigUtils
 import com.iwallic.app.utils.HttpClient
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -40,5 +41,9 @@ object BlockState {
             loading = false
             _error.onNext(err)
         })
+    }
+    fun clear() {
+        height = 0
+        loading = false
     }
 }

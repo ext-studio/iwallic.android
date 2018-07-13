@@ -120,7 +120,7 @@
                         style="@style/option_item_img"/>
 
                     <TextView
-                        android:text="@string/user_setting_skin"
+                        android:text="@string/user_setting_net"
                         style="@style/option_item_text"/>
 
                     <ImageView

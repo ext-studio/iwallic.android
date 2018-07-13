@@ -23,5 +23,9 @@ class UserSettingActivity : BaseActivity() {
         findViewById<LinearLayout>(R.id.user_setting_skin).setOnClickListener {
             startActivity(Intent(this, UserSettingThemeActivity::class.java))
         }
+
+        findViewById<LinearLayout>(R.id.user_setting_net).setOnClickListener {
+            startActivity(Intent(this, UserSettingNetActivity::class.java))
+        }
     }
 }
