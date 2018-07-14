@@ -18,27 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeDefault">
         <activity
-            android:name=".base.WelcomeActivity"
-            android:theme="@style/PageFullScreen">
+            android:name=".base.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".base.MainActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-
-                <!--<data-->
-                    <!--android:host="api.iwallic.com"-->
-                    <!--android:pathPrefix="/api/iwallic"-->
-                    <!--android:scheme="https" />-->
-            <!--</intent-filter>-->
-        </activity>
+        <activity android:name=".base.MainActivity"/>
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
         <activity android:name=".pages.user.UserSettingThemeActivity" />
@@ -62,9 +49,6 @@
             android:name="android.max_aspect"
             android:value="2.1" />
 
-        <service
-            android:name=".services.UpdateIntentService"
-            android:exported="false"></service>
     </application>
 
 </manifest>

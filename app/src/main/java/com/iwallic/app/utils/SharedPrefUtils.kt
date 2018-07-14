@@ -33,7 +33,11 @@ class SharedPrefUtils {
             }).apply()
         }
         fun getLocale(context: Context): Locale {
-            return when (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getInt("language", 0)) {
+            return when (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getInt("language", -1)) {
+                -1 -> {
+                    // if pick system default filt unsupported some to English
+                    resolveLocale(Locale.getDefault())
+                }
                 0 -> Locale.ENGLISH
                 1 -> Locale.SIMPLIFIED_CHINESE
                 else -> Locale.ENGLISH
@@ -88,6 +92,13 @@ class SharedPrefUtils {
         }
         fun setNet(context: Context, net: String) {
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("net", if (net == "main") "main" else "test").apply()
+        }
+
+        private fun resolveLocale(default: Locale): Locale {
+            return when (default) {
+                Locale.CHINESE, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE, Locale.CHINA -> Locale.SIMPLIFIED_CHINESE
+                else -> Locale.ENGLISH
+            }
         }
     }
 }

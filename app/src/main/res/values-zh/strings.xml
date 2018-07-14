@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">爱我钱包</string>
-    <string name="welcome_title">各位好啊!</string>
+    <string name="welcome_enter">进入钱包</string>
     <string name="navigation_asset_title">资产</string>
     <string name="navigation_transaction_title">交易</string>
     <string name="navigation_find_title">发现</string>

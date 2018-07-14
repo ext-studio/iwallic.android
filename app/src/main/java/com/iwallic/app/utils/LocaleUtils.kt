@@ -14,7 +14,7 @@ object LocaleUtils {
 
     fun OnAttach(context: Context): Context {
         val locale = SharedPrefUtils.getLocale(context)
-        return this.SetLocale(context, locale)
+        return SetLocale(context, locale)
     }
 
     fun SetLocale(context: Context, locale: Locale): Context {
