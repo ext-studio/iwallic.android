@@ -2,8 +2,10 @@ package com.iwallic.app.base
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.Nullable
+import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.iwallic.app.R
@@ -15,6 +17,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        resolveTheme()
         ConfigUtils.listen().subscribe({
             if (it) {
                 startService(Intent(this, BlockService::class.java))
@@ -41,5 +44,19 @@ open class BaseActivity : AppCompatActivity() {
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
         overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+    }
+
+    private fun resolveTheme() {
+        when (SharedPrefUtils.getSkin(this)) {
+            "default" -> {
+                setTheme(R.style.ThemeDefault)
+            }
+            "night" -> {
+                setTheme(R.style.ThemeNight)
+            }
+            else -> {
+                setTheme(R.style.ThemeDefault)
+            }
+        }
     }
 }

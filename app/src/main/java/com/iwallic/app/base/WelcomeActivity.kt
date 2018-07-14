@@ -28,7 +28,6 @@ class WelcomeActivity : BaseActivity() {
         setContentView(R.layout.activity_base_welcome)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        resolveTheme()
         resolveConfig()
         UpdateIntentService.versionCheck(this)
         resolveWallet()
@@ -36,14 +35,6 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onBackPressed() {
         return
-    }
-
-    private fun resolveTheme() {
-        when (SharedPrefUtils.getSkin(this)) {
-            "default" -> setTheme(R.style.ThemeDefault)
-            "night" -> setTheme(R.style.ThemeNight)
-            else -> setTheme(R.style.ThemeDefault)
-        }
     }
 
     private fun resolveConfig() {

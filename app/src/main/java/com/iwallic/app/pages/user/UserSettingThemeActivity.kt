@@ -37,7 +37,7 @@ class UserSettingThemeActivity : BaseActivity() {
 
     private fun initClick() {
         this.backBtn!!.setOnClickListener{
-            this.finish()
+            finish()
         }
         this.itemDefault!!.setOnClickListener{
             this.chosenSkin = "default"
@@ -57,7 +57,7 @@ class UserSettingThemeActivity : BaseActivity() {
                 this.finish()
                 return@setOnClickListener
             } else {
-                SharedPrefUtils.setSkin(this, this.chosenSkin!!)
+                SharedPrefUtils.setSkin(this, chosenSkin!!)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 this.startActivity(intent);
@@ -67,9 +67,9 @@ class UserSettingThemeActivity : BaseActivity() {
 
     private fun initSkin() {
         this.chosenSkin = SharedPrefUtils.getSkin(this)
-        when (this.chosenSkin) {
-            "default" -> this.itemDefaultChosen!!.visibility = View.VISIBLE
-            "night" -> this.itemNightChosen!!.visibility = View.VISIBLE
+        when (chosenSkin) {
+            "default" -> itemDefaultChosen!!.visibility = View.VISIBLE
+            "night" -> itemNightChosen!!.visibility = View.VISIBLE
         }
     }
 }

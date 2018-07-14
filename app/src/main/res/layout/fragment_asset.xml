@@ -24,7 +24,7 @@
             android:contentDescription="@null"
             android:scaleType="fitXY"
             android:src="@drawable/icon_asset_manage"
-            android:tint="?colorDefault"
+            android:tint="?colorLight"
             android:layout_marginEnd="@dimen/dimenSpace"
             android:layout_marginBottom="@dimen/dimenSpace"/>
 
@@ -37,14 +37,14 @@
             android:layout_marginTop="@dimen/dimenSpace">
             <TextView
                 android:id="@+id/fragment_asset_main_asset"
-                android:textColor="?colorDefault"
+                android:textColor="?colorLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dimenLarge"
                 android:text="NEO"/>
             <TextView
                 android:id="@+id/fragment_asset_main_balance"
-                android:textColor="?colorDefault"
+                android:textColor="?colorLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/dimenDefault"
