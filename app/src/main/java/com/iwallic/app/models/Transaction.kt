@@ -1,5 +1,7 @@
 package com.iwallic.app.models
 
+import android.util.Log
+import com.google.gson.annotations.SerializedName
 import com.iwallic.neon.hex.Hex
 import com.iwallic.neon.wallet.Wallet
 
@@ -25,7 +27,7 @@ data class InputModel(
 data class OutputModel(
     val asset: String,
     val scriptHash: String,
-    val value: Float
+    val value: Double
 )
 
 data class ScriptModel(
@@ -39,10 +41,10 @@ data class AttributeModel(
 )
 
 data class UtxoModel(
-    val index: Int,
-    val hash: String,
-    val value: Float,
-    val asset: String
+    @SerializedName("n") val index: Int,
+    @SerializedName("txid") val hash: String,
+    @SerializedName("value") val value: Double,
+    @SerializedName("assetId") val asset: String
 )
 
 data class ClaimModel(
@@ -55,7 +57,7 @@ class TransactionModel {
     var version: Int = TxVersionContract
     var claims: ArrayList<InputModel> = arrayListOf()
     var attributes: ArrayList<AttributeModel> = arrayListOf()
-    var gas: Float = 0f
+    var gas: Double = 0.toDouble()
     var script: String = ""
     var scripts: ArrayList<ScriptModel> = arrayListOf()
     var inputs: ArrayList<InputModel> = arrayListOf()
@@ -79,12 +81,14 @@ class TransactionModel {
                         Hex.fromVarInt((sc.verification.length/2).toLong()) + sc.verification
             }
         }
+        Log.i("序列化交易", result)
         // 序列化交易
         return result
     }
     fun sign(wif: String) {
-        val sign = "40" + Wallet.signature(hash(), wif)
+        val sign = "40" + Wallet.signature(serialize(), wif)
         val verify = "21" + Wallet.priv2Pub(Wallet.wif2Priv(wif)) + "ac"
+        Log.i("签名交易", Wallet.signature(hash(), wif))
         scripts.add(ScriptModel(sign, verify))
     }
     fun remark(data: String) {
@@ -145,26 +149,28 @@ class TransactionModel {
     private fun resolveInputs(): String {
         var rs: String = Hex.fromVarInt(inputs.size.toLong())
         for (input in inputs) {
-            rs += Hex.reverse(input.hash) + Hex.reverse(Hex.fromInt(input.index.toLong(), 2.toLong(), false))
+            val tx = if (input.hash.startsWith("0x")) input.hash.substring(2) else input.hash
+            rs += Hex.reverse(tx) + Hex.reverse(Hex.fromInt(input.index.toLong(), 2.toLong(), false))
         }
         return rs
     }
     private fun resolveOutputs(): String {
         var rs: String = Hex.fromVarInt(outputs.size.toLong())
         for (output in outputs) {
-            val hex = Hex.fromVarInt((output.value * 100000000).toLong())
-            val value = Hex.reverse("0".repeat(16 - hex.length)) + hex
-            rs += Hex.reverse(output.asset) + value + Hex.reverse(output.scriptHash)
+            val asset = if (output.asset.startsWith("0x")) output.asset.substring(2) else output.asset
+            val value = Hex.toFixedNum(output.value.toDouble(),8)
+            val hash = if (output.scriptHash.startsWith("0x")) output.scriptHash.substring(2) else output.scriptHash
+            rs += Hex.reverse(asset) + value + hash
         }
         return rs
     }
     companion object {
-        fun forAsset(utxo: ArrayList<UtxoModel>, from: String, to: String, amount: Float, asset: String): TransactionModel? {
+        fun forAsset(utxo: ArrayList<UtxoModel>, from: String, to: String, amount: Double, asset: String): TransactionModel? {
             val fromScript = Wallet.addr2Script(from)
             val toScript = Wallet.addr2Script(to)
             val newTX = TransactionModel()
             newTX.outputs.add(OutputModel(asset, toScript, amount))
-            var curr = 0f
+            var curr = 0.0
             for (tx in utxo) {
                 curr += tx.value
                 newTX.inputs.add(InputModel(tx.hash, tx.index))
@@ -181,7 +187,7 @@ class TransactionModel {
             }
             return newTX
         }
-        fun forToken(token: String, from: String, to: String, amount: Float): TransactionModel? {
+        fun forToken(token: String, from: String, to: String, amount: Double): TransactionModel? {
             val newTX = TransactionModel()
             newTX.type = TxTypeInvocation
             newTX.version = TxVersionInvocation
@@ -189,7 +195,7 @@ class TransactionModel {
             newTX.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
             return null
         }
-        fun forClaim(claims: ArrayList<InputModel>, value: Float, to: String): TransactionModel? {
+        fun forClaim(claims: ArrayList<InputModel>, value: Double, to: String): TransactionModel? {
             val newTX = TransactionModel()
             newTX.type = TxTypeClaim
             newTX.version = TxVersionClaim

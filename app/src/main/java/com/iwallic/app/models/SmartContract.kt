@@ -12,6 +12,9 @@ class SmartContract {
         result = ""
         args.forEach {
             when {
+                it is Double -> {
+                    addDouble(it)
+                }
                 it is Float -> {
                     addFloat(it)
                 }
@@ -39,7 +42,7 @@ class SmartContract {
         return result
     }
     companion object {
-        fun forNEP5(hash: String, from: String, to: String, value: Float): SmartContract {
+        fun forNEP5(hash: String, from: String, to: String, value: Double): SmartContract {
             val sc = SmartContract()
             sc.scriptHash = hash
             sc.method = "transfer"
@@ -76,6 +79,9 @@ class SmartContract {
                 return addString(Hex.reverse("0".repeat(16 - hex.length)) + hex)
             }
         }
+    }
+    private fun addDouble(value: Double) {
+        addLong((value * 100000000).toLong())
     }
     private fun addFloat(value: Float) {
         addLong((value * 100000000).toLong())

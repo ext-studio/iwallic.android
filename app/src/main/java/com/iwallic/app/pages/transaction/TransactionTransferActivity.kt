@@ -25,15 +25,15 @@ import org.w3c.dom.Text
 
 class TransactionTransferActivity : BaseActivity() {
 
-    private var backL: LinearLayout ?= null
-    private var chooseAssetR: RelativeLayout ?= null
-    private var targetTV: EditText ?= null
-    private var amountTV: EditText ?= null
-    private var assetNameTV: TextView ?= null
-    private var balanceTV: TextView ?= null
-    private var submitBT: Button ?= null
-    private var submitPB: ProgressBar ?= null
-    private var tipTV: TextView ?= null
+    private lateinit var backL: LinearLayout
+    private lateinit var chooseAssetR: RelativeLayout
+    private lateinit var targetTV: EditText
+    private lateinit var amountTV: EditText
+    private lateinit var assetNameTV: TextView
+    private lateinit var balanceTV: TextView
+    private lateinit var submitBT: Button
+    private lateinit var submitPB: ProgressBar
+    private lateinit var tipTV: TextView
     private val gson = Gson()
     private var wif: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,13 +59,13 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun initClick() {
         var chooseAssetId = ""
-        var address = WalletUtils.address(this)
+        val address = WalletUtils.address(this)
         var target = ""
-        var amount: Float = 0F
-        backL!!.setOnClickListener {
+        var amount = 0.0
+        backL.setOnClickListener {
             this.finish()
         }
-        chooseAssetR!!.setOnClickListener {
+        chooseAssetR.setOnClickListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, 0)
             val list = AssetState.cached?.filter {
@@ -73,74 +73,75 @@ class TransactionTransferActivity : BaseActivity() {
             }
             DialogUtils.DialogList(this, R.string.dialog_title_choose, list, fun(confirm: String) {
                 chooseAssetId = confirm
-                amountTV?.isEnabled = true
+                amountTV.isEnabled = true
                 val chooseAsset = list?.find {
                     it.assetId == confirm
                 }
-                assetNameTV!!.text = chooseAsset?.symbol
-                balanceTV?.text ="${resources.getText(R.string.transaction_transfer_balance_hint)}: ${chooseAsset?.balance}"
+                assetNameTV.text = chooseAsset?.symbol
+                balanceTV.text ="${resources.getText(R.string.transaction_transfer_balance_hint)}: ${chooseAsset?.balance}"
             })
         }
 
-        submitBT!!.setOnClickListener {
-            target = this.targetTV?.text.toString()
-            if(amountTV?.text.toString() != "") {
-                amount = amountTV?.text.toString().toFloat()
+        submitBT.setOnClickListener {
+            target = this.targetTV.text.toString()
+            if(amountTV.text.isNotEmpty()) {
+                amount = amountTV.text.toString().toDouble()
             }
-            if(chooseAssetId === "") {
-                this.tipTV?.text = resources.getText(R.string.transaction_transfer_tips_noChooseAsset_error)
-                this.tipTV?.visibility = View.VISIBLE
-            } else if(target === "") {
-                this.tipTV?.text = resources.getText(R.string.transaction_transfer_tips_target_error)
-                this.tipTV?.visibility = View.VISIBLE
-            } else if(amount <= 0) {
-                this.tipTV?.text = resources.getText(R.string.transaction_transfer_tips_amount_error)
-                this.tipTV?.visibility = View.VISIBLE
-            } else {
-                target = targetTV?.text.toString()
-                amount = amountTV?.text.toString().toFloat()
-                this.tipTV?.visibility = View.INVISIBLE
-                it.visibility = View.GONE
-                submitPB?.visibility = View.VISIBLE
-                this.resolveVerify(address, target, chooseAssetId, amount)
+            when {
+                chooseAssetId.isEmpty() -> {
+                    tipTV.text = resources.getText(R.string.transaction_transfer_tips_noChooseAsset_error)
+                    tipTV.visibility = View.VISIBLE
+                }
+                target.isEmpty() -> {
+                    tipTV.text = resources.getText(R.string.transaction_transfer_tips_target_error)
+                    tipTV.visibility = View.VISIBLE
+                }
+                amount <= 0 -> {
+                    tipTV.text = resources.getText(R.string.transaction_transfer_tips_amount_error)
+                    tipTV.visibility = View.VISIBLE
+                }
+                else -> {
+                    target = targetTV.text.toString()
+                    amount = amountTV.text.toString().toDouble()
+                    tipTV.visibility = View.INVISIBLE
+                    it.visibility = View.GONE
+                    submitPB.visibility = View.VISIBLE
+                    resolveVerify(address, target, chooseAssetId, amount)
+                }
             }
-
         }
     }
 
     private  fun initInput() {
-        amountTV?.isEnabled = false
-        amountTV?.setOnFocusChangeListener {_, hasFocus ->
+        amountTV.isEnabled = false
+        amountTV.setOnFocusChangeListener {_, hasFocus ->
             if(hasFocus) {
-                balanceTV?.visibility = View.VISIBLE
+                balanceTV.visibility = View.VISIBLE
             } else {
-                balanceTV?.visibility = View.GONE
+                balanceTV.visibility = View.GONE
             }
         }
     }
 
-    private fun send(from: String, to: String, assetId: String, amount: Float) {
+    private fun send(from: String, to: String, assetId: String, amount: Double) {
         var asset: String = ""
-        if (assetId.length === 64) {
-            asset = "0x $assetId"
-        }else if (assetId.length === 42) {
+        if (assetId.length == 64) {
+            asset = "0x$assetId"
+        }else if (assetId.length == 42) {
             asset = assetId.substring(2, assetId.length)
         } else {
             asset = assetId
         }
-        Log.i("asset",asset)
         if(WalletUtils.check(assetId, "asset")) {
             HttpClient.post("getutxoes", listOf(from, asset), fun(res) {
-                Log.i("UTXO", res.toString())
                 val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
-                Log.i("UTXO",data.toString())
                 val newTx = TransactionModel.forAsset(data, from, to, amount, asset)
                 newTx?.sign(wif)
-                HttpClient.post("sendv4rawtransaction", listOf(newTx!!.serialize(true)), fun(res) {
-                    Log.i("transaction",res.toString())
-                }, fun(err) {
-
-                })
+//                HttpClient.post("sendv4rawtransaction", listOf(newTx!!.serialize(true)), fun(res) {
+//                    Log.i("transaction",res.toString())
+//                }, fun(err) {
+//
+//                })
             }, fun(err) {
 
             })
@@ -149,7 +150,7 @@ class TransactionTransferActivity : BaseActivity() {
         }
     }
 
-    private fun resolveVerify(from: String, to: String, assetId: String, amount: Float) {
+    private fun resolveVerify(from: String, to: String, assetId: String, amount: Double) {
         DialogUtils.Password(this).subscribe {
             if (it.isEmpty()) {
                 return@subscribe
