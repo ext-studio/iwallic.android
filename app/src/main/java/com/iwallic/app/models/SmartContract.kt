@@ -46,7 +46,7 @@ class SmartContract {
             val sc = SmartContract()
             sc.scriptHash = hash
             sc.method = "transfer"
-            sc.args = arrayListOf(value, Wallet.addr2Script(from), Wallet.addr2Script(to))
+            sc.args = arrayListOf(Hex.toFixedNum(value, 8), Wallet.addr2Script(from), Wallet.addr2Script(to))
             return sc
         }
     }
@@ -75,7 +75,7 @@ class SmartContract {
                 return add((PUSH1 - 1).toLong() + value)
             }
             else -> {
-                val hex = Hex.fromVarInt(value.toLong())
+                val hex = Hex.fromVarInt(value)
                 return addString(Hex.reverse("0".repeat(16 - hex.length)) + hex)
             }
         }

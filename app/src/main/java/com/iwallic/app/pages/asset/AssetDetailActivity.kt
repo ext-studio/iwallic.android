@@ -18,6 +18,7 @@ import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.models.PageData
 import com.iwallic.app.models.addrassets
 import com.iwallic.app.models.transactions
 import com.iwallic.app.services.new_block_action
@@ -58,10 +59,10 @@ class AssetDetailActivity : BaseActivity() {
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         resolveBalance()
-        resolveList(arrayListOf())
+        resolveList(PageData<transactions>())
 
         listListen = TransactionState.list(WalletUtils.address(this), asset.assetId).subscribe({
-            resolveList(it.data)
+            resolveList(it)
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
@@ -119,9 +120,9 @@ class AssetDetailActivity : BaseActivity() {
         titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
     }
-    private fun resolveList(list: ArrayList<transactions>) {
+    private fun resolveList(data: PageData<transactions>) {
         txManager = LinearLayoutManager(this)
-        txAdapter = TransactionAdapter(list)
+        txAdapter = TransactionAdapter(data, txRV)
         txRV.apply {
             setHasFixedSize(true)
             layoutManager = txManager
@@ -145,7 +146,7 @@ class AssetDetailActivity : BaseActivity() {
     companion object BlockListener: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             AssetState.fetch("", silent = true)
-            TransactionState.fetch("", silent = true)
+            // TransactionState.fetch("", silent = true)
         }
     }
 }

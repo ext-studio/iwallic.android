@@ -20,6 +20,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.models.PageData
 import com.iwallic.app.models.transactions
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
@@ -44,10 +45,10 @@ class TransactionFragment : Fragment() {
         loadPB = view.findViewById(R.id.fragment_transaction_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
-        resolveList(arrayListOf())
+        resolveList(PageData<transactions>())
 
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
-            resolveList(it.data)
+            resolveList(it)
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
@@ -82,14 +83,10 @@ class TransactionFragment : Fragment() {
         context!!.unregisterReceiver(BlockListener)
     }
 
-    private fun resolveList(list: ArrayList<transactions>) {
-        txManager = LinearLayoutManager(context!!)
-        txAdapter = TransactionAdapter(list)
-        txRV.apply {
-            setHasFixedSize(true)
-            layoutManager = txManager
-            adapter = txAdapter
-        }
+    private fun resolveList(data: PageData<transactions>) {
+        txRV.layoutManager =LinearLayoutManager(context!!)
+        txAdapter = TransactionAdapter(data, txRV)
+        txRV.adapter = txAdapter
     }
 
     private fun resolveRefreshed(success: Boolean = false) {
@@ -110,7 +107,7 @@ class TransactionFragment : Fragment() {
         fun newInstance() = TransactionFragment()
 
         override fun onReceive(p0: Context?, p1: Intent?) {
-            TransactionState.fetch("", "", silent = true)
+            // TransactionState.fetch("", "", silent = true)
         }
     }
 }

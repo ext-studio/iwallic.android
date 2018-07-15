@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -79,7 +80,7 @@ class AssetManageActivity : BaseActivity() {
         }
         amSRL.isRefreshing = false
         if (success) {
-            Toast.makeText(this, "数据已更新", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -92,13 +93,16 @@ class AssetManageActivity : BaseActivity() {
             fetching = false
             val data = gson.fromJson<ArrayList<assetmanage>>(res, object: TypeToken<ArrayList<assetmanage>>() {}.type)
             if (data == null) {
-                if (!DialogUtils.Error(this, 99998)) {
-                    Toast.makeText(this, "请求失败", Toast.LENGTH_SHORT).show()
-                }
+                DialogUtils.Error(this, 99998)
                 resolveRefreshed()
             } else {
-                cache = data
-                resolveList(data)
+                cache = ArrayList(data.filterNot {
+                    listOf("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b",
+                            "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7",
+                            "e8f98440ad0d7a6e76d84fb1c3d3f8a16e162e97",
+                            "81c089ab996fc89c468a26c0a88d23ae2f34b5c0").contains(it.assetId)
+                })
+                resolveList(cache!!)
                 resolveRefreshed(true)
             }
         }, fun (err) {

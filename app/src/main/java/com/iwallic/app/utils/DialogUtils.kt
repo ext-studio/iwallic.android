@@ -64,6 +64,11 @@ object DialogUtils {
         }
         dialog.show()
         dialog.window.setLayout(800, WindowManager.LayoutParams.WRAP_CONTENT)
+        dialog.setOnDismissListener {
+            if (callback != null) {
+                callback(false)
+            }
+        }
     }
 
     fun Password(context: Context): Observable<String> {
@@ -115,9 +120,9 @@ object DialogUtils {
             builder.setTitle(title)
         }
         if(list != null) {
-            var listValue = arrayOfNulls<String>(list!!.size)
-            var listKey = arrayOfNulls<String>(list!!.size)
-            for ((index, i) in list!!.iterator().withIndex()) {
+            val listValue = arrayOfNulls<String>(list.size)
+            val listKey = arrayOfNulls<String>(list.size)
+            for ((index, i) in list.iterator().withIndex()) {
                 listKey[index] = i.assetId
                 listValue[index] = i.symbol
             }
@@ -127,8 +132,8 @@ object DialogUtils {
                 }
             }
             val dialog = builder.create()
-            dialog.window.setLayout(600, 700)
             dialog.show()
+            dialog.window.setLayout(600, 700)
         } else {
             Dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
                 return
@@ -138,6 +143,10 @@ object DialogUtils {
 
     fun Error(context: Context, code: Int): Boolean {
         when (code) {
+            99998 -> {
+                Toast.makeText(context, "数据解析出错", Toast.LENGTH_SHORT).show()
+                return true
+            }
             99997, 99996 -> {
                 Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show()
                 return true

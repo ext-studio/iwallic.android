@@ -7,10 +7,10 @@ data class addrassets (
     val symbol: String
 )
 
-data class pageData<T>(
-    val page: Int,
-    val pageSize: Int,
-    val total: Int,
+data class PageData<T>(
+    var page: Int = 1,
+    var pageSize: Int = 10,
+    var total: Int = 0,
     var data: ArrayList<T> = arrayListOf()
 )
 

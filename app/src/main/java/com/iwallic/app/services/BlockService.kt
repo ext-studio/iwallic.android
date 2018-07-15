@@ -18,6 +18,7 @@ class BlockService : Service() {
     private var timer: Timer? = null
     private val peried: Long = 60000
     private lateinit var blockListen: Disposable
+    private lateinit var errorListen: Disposable
 
     override fun onCreate() {
         super.onCreate()
@@ -27,10 +28,16 @@ class BlockService : Service() {
             BlockState.fetch()
         }
         blockListen = BlockState.data().subscribe({
-            Log.i("区块服务", "新区块【"+it.lastBlockIndex+"】已到达")
+            Log.i("区块服务", "新区块【${it.lastBlockIndex}】已到达")
             sendBroadcast(newBlock)
         }, {
-            Log.i("区块服务", "发生错误【"+it.toString()+"】")
+            Log.i("区块服务", "发生错误【$it】")
+        })
+        errorListen = BlockState.error().subscribe({
+            Log.i("区块服务", "发生错误【$it】")
+            sendBroadcast(newBlock)
+        }, {
+            Log.i("区块服务", "发生错误【$it】")
         })
     }
 

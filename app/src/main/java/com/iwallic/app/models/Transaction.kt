@@ -188,12 +188,12 @@ class TransactionModel {
             return newTX
         }
         fun forToken(token: String, from: String, to: String, amount: Double): TransactionModel? {
-            val newTX = TransactionModel()
-            newTX.type = TxTypeInvocation
-            newTX.version = TxVersionInvocation
-            newTX.script = SmartContract.forNEP5(token, from, to, amount).serielize()
-            newTX.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
-            return null
+            val newTx = TransactionModel()
+            newTx.type = TxTypeInvocation
+            newTx.version = TxVersionInvocation
+            newTx.script = SmartContract.forNEP5(token, from, to, amount).serielize()
+            newTx.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
+            return newTx
         }
         fun forClaim(claims: ArrayList<InputModel>, value: Double, to: String): TransactionModel? {
             val newTX = TransactionModel()

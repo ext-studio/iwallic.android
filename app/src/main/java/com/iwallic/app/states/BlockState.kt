@@ -16,8 +16,10 @@ object BlockState {
     private var loading: Boolean = false
     private val gson = Gson()
     fun data(): Observable<blocktime> {
-        Log.i("区块状态", "订阅区块")
         return _data
+    }
+    fun error(): Observable<Int> {
+        return _error
     }
     fun fetch() {
         if (loading) {

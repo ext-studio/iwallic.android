@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,8 +21,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimenSmall"
             android:layout_gravity="center_vertical|left"
-            android:clickable="true">
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
+                android:contentDescription="@null"
                 android:layout_width="@dimen/dimenLarge"
                 android:layout_height="@dimen/dimenLarge"
                 android:scaleType="fitXY"
@@ -45,7 +47,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -55,43 +57,38 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/transaction_transfer_choose_asset"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:background="?colorDefault"
-                    android:clickable="true">
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <TextView
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_weight="0.5"
                         android:padding="@dimen/dimenSpace"
-                        android:gravity="right"
+                        android:gravity="start"
+                        android:layout_gravity="center_vertical"
                         android:text="@string/transaction_transfer_chooseAsset" />
 
                     <TextView
                         android:id="@+id/asset_choose_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_weight="1"
-                        android:layout_toStartOf="@id/imageView"
+                        android:layout_gravity="center_vertical"
                         android:text="" />
 
                     <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/icon_arrowright" />
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_arrowright"
+                        style="@style/option_item_imgarrow"
+                        android:layout_gravity="center_vertical"/>
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -109,7 +106,8 @@
                     android:padding="@dimen/dimenSpace"
                     android:textColor="?colorFont"
                     android:textSize="@dimen/dimenDefault"
-                    tools:targetApi="o" />
+                    tools:targetApi="o"
+                    android:inputType="text" />
 
                 <View
                     android:layout_width="match_parent"
@@ -150,6 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/dimenSpace"
+                    android:paddingEnd="@dimen/dimenSpace"
                     android:paddingTop="@dimen/dimenSpace"
                     android:text="tip"
                     android:textColor="?colorDanger"

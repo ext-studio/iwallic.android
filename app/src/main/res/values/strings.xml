@@ -64,6 +64,7 @@
     <string name="dialog_no">Cancel</string>
     <string name="dialog_content_signout">Sure to close current wallet?</string>
     <string name="dialog_content_noAsset">No Asset</string>
+    <string name="dialog_content_nobalance">You do not own any asset currently, tap to go back.</string>
     <string name="toast_refreshed">Refreshed!</string>
     <string name="dialog_version_ok">Update</string>
     <string name="dialog_version_new_body">Find new version for iWallic, update now?</string>
@@ -74,4 +75,7 @@
     <string name="error_failed">Operation failed</string>
     <string name="error_copied">Copied!</string>
     <string name="error_empty">Please fill inputs.</string>
+    <string name="list_loadmore">load more</string>
+    <string name="list_nomore">no more</string>
+    <string name="list_loading">loading</string>
 </resources>

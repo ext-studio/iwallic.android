@@ -65,6 +65,7 @@
     <string name="dialog_no">取消</string>
     <string name="dialog_content_signout">确定要关闭当前钱包?</string>
     <string name="dialog_content_noAsset">暂无资产</string>
+    <string name="dialog_content_nobalance">您当前没有可用资产，点击返回</string>
     <string name="dialog_password_title">验证密码</string>
     <string name="dialog_version_ok">更新</string>
     <string name="dialog_version_new_body">发现新版本，是否现在更新？</string>
@@ -75,4 +76,7 @@
     <string name="error_failed">操作失败</string>
     <string name="error_copied">已复制</string>
     <string name="error_empty">请不要留空</string>
+    <string name="list_loadmore">加载更多数据</string>
+    <string name="list_nomore">没有更多数据</string>
+    <string name="list_loading">努力加载中</string>
 </resources>
