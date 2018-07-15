@@ -5,23 +5,11 @@ import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
 import io.reactivex.Observable
 
-
-/**
- * snapshot of error code
- * 99999 未知错误
- * 99998 JSON解析错误
- * 99997 参数在API解析错误
- * 99996 Not Found
- * 99995 服务器内部错误
- * 99994 调用的method尚未支持
- */
-
 object HttpClient {
-    private const val apiDomain = "https://api.iwallic.com/api/iwallic"
     private val gson = Gson()
     @Suppress("UNCHECKED_CAST")
     fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
-        Fuel.post(apiDomain)
+        Fuel.post(ConfigUtils.api())
             .body(gson.toJson(RequestModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->
@@ -29,35 +17,30 @@ object HttpClient {
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
-                            Log.i("IWALLIC-请求完成", "1")
+                            Log.i("网络请求", "完成【${method}】")
                             ok(gson.toJson(rs.result))
                         }
+                        rs.code == 1000 -> {
+                            ok("")
+                        }
                         else -> {
-                            Log.i("IWALLIC-请求错误", rs.msg)
+                            Log.i("网络请求", "出错【${rs.msg}】")
                             no(rs.code)
                         }
                     }
-                }, { err ->
-                    Log.i("IWALLIC-请求错误", err.toString())
+                }) { err ->
+                    Log.i("网络请求", "失败【${err}】")
                     no(resolveError(err.response.statusCode))
-                })
+                }
             }
     }
-    fun post(method: String, params: List<Any> = emptyList()): Observable<String> {
-        return Observable.create {
-            post(method, params, fun (ok) {
-                it.onNext(ok)
-                it.onComplete()
-            }, fun(no) {
-                it.onError(Throwable(no.toString()))
-            })
-        }
-    }
     private fun resolveError(status: Int): Int {
+        Log.i("网络请求", "返回状态码【$status】")
         return when (status) {
             400 -> 99997
             404 -> 99996
             500, 501, 502,  503 -> 99995
+            -1 -> 99994
             else -> 99999
         }
     }

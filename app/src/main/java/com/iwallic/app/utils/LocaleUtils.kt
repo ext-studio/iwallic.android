@@ -14,7 +14,7 @@ object LocaleUtils {
 
     fun OnAttach(context: Context): Context {
         val locale = SharedPrefUtils.getLocale(context)
-        return this.SetLocale(context, locale)
+        return SetLocale(context, locale)
     }
 
     fun SetLocale(context: Context, locale: Locale): Context {
@@ -42,9 +42,7 @@ object LocaleUtils {
 
         val configuration = resources.configuration
         configuration.locale = locale
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            configuration.setLayoutDirection(locale)
-        }
+        configuration.setLayoutDirection(locale)
 
         resources.updateConfiguration(configuration, resources.displayMetrics)
 

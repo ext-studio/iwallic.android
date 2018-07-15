@@ -7,7 +7,7 @@
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:context=".wallet.WalletCreateActivity">
+    tools:context=".pages.wallet.WalletCreateActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,6 +22,7 @@
             android:layout_gravity="center_vertical|left"
             android:clickable="true">
             <ImageView
+                android:contentDescription="@string/wallet_create"
                 android:layout_width="@dimen/dimenLarge"
                 android:layout_height="@dimen/dimenLarge"
                 android:scaleType="fitXY"
@@ -40,16 +41,17 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/wallet_create_step_1"
                 android:visibility="visible"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -128,7 +130,7 @@
                 android:visibility="invisible"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -229,6 +231,6 @@
                         tools:targetApi="lollipop" />
                 </FrameLayout>
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 </LinearLayout>

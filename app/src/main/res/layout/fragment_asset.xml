@@ -4,46 +4,82 @@
     android:id="@+id/fragment_asset"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault"
+    android:background="?colorDefault2"
     android:orientation="vertical">
-
     <FrameLayout
-        android:id="@+id/fragment_asset_navtop"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="?colorPrimary">
+        android:layout_height="200dp">
+        <ImageView
+            android:contentDescription="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="?drawableAssetBg"/>
 
         <ImageView
-            android:id="@+id/fragment_asset_navtop_menu"
-            android:layout_width="@dimen/dimenIcon"
-            android:layout_height="@dimen/dimenIcon"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginStart="@dimen/dimenSmall"
+            android:id="@+id/fragment_asset_manage"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
+            android:layout_gravity="bottom|end"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_menu"
-            android:tint="?colorDefault"/>
+            android:src="@drawable/icon_asset_manage"
+            android:tint="?colorLight"
+            android:layout_marginEnd="@dimen/dimenSpace"
+            android:layout_marginBottom="@dimen/dimenSpace"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/fragment_asset_title"
-            android:textColor="?colorDefault"
-            android:textSize="@dimen/dimenDefault" />
-
+            android:orientation="vertical"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimenSpace">
+            <TextView
+                android:id="@+id/fragment_asset_main_asset"
+                android:textColor="?colorLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimenLarge"
+                android:text="NEO"/>
+            <TextView
+                android:id="@+id/fragment_asset_main_balance"
+                android:textColor="?colorLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimenDefault"
+                android:text="999999999"/>
+        </LinearLayout>
     </FrameLayout>
 
-    <ImageView
+    <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="156dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_img_zichan" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
+        android:gravity="center"
+        android:background="?colorPrimary"
+        android:focusable="true"
+        android:clickable="true"
+        android:textColor="?colorDefault"
+        android:text="Claim 99999999.99999999 GAS"/>
+
+    <ProgressBar
+        android:id="@+id/fragment_asset_load"
+        android:layout_margin="@dimen/dimenSpace"
+        android:foregroundTint="?colorPrimary"
+        android:layout_width="@dimen/dimenLarge"
+        android:layout_height="@dimen/dimenLarge"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        tools:targetApi="lollipop" />
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/asset_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/asset_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

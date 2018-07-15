@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:background="?colorDefault"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/dimenSpace"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <ProgressBar
+        android:foregroundTint="?colorPrimary"
+        android:layout_width="@dimen/dimenLarge"
+        android:layout_height="@dimen/dimenLarge"
+        tools:targetApi="lollipop"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/load_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
+        android:textColor="?colorFont"
+        android:textStyle="bold"
+        android:text="@string/load_load"
+        android:layout_gravity="center"/>
+</LinearLayout>

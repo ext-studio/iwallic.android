@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_transaction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?colorDefault"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/fragment_transaction_navtop"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="?colorPrimary">
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:scaleType="fitXY"
+            android:background="?colorPrimary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
             android:text="@string/fragment_transaction_title"
+            android:textColor="?colorDefault"
             android:textSize="@dimen/dimenDefault"
-            android:layout_gravity="center"
-            android:textColor="?colorDefault"/>
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+    </RelativeLayout>
 
-    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/fragment_transaction_load"
+        android:visibility="visible"
+        android:layout_margin="@dimen/dimenSpace"
+        android:foregroundTint="?colorPrimary"
+        android:layout_width="@dimen/dimenLarge"
+        android:layout_height="@dimen/dimenLarge"
+        android:layout_gravity="center"
+        tools:targetApi="lollipop" />
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/asset_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/transaction_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/transaction_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

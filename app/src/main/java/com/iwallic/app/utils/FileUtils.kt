@@ -8,7 +8,7 @@ import java.io.PrintWriter
 
 object FileUtils {
     fun readWalletFile(context: Context, name: String): String? {
-        var walletFile: File? = null
+        val walletFile: File?
         try {
             walletFile = File(context.filesDir, name)
         } catch (e: Throwable) {

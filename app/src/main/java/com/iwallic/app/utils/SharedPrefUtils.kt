@@ -2,13 +2,12 @@ package com.iwallic.app.utils
 
 import java.util.*
 import android.content.Context
+import android.util.Log
+import com.iwallic.app.models.addrassets
+import com.iwallic.app.models.assetmanage
+import kotlin.collections.ArrayList
 
-class SharedPrefUtils private constructor() {
-
-    init {
-        throw UnsupportedOperationException(
-                "Should not create instance of Util class. Please use as static..")
-    }
+class SharedPrefUtils {
 
     companion object {
 
@@ -34,7 +33,11 @@ class SharedPrefUtils private constructor() {
             }).apply()
         }
         fun getLocale(context: Context): Locale {
-            return when (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getInt("language", 0)) {
+            return when (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getInt("language", -1)) {
+                -1 -> {
+                    // if pick system default filt unsupported some to English
+                    resolveLocale(Locale.getDefault())
+                }
                 0 -> Locale.ENGLISH
                 1 -> Locale.SIMPLIFIED_CHINESE
                 else -> Locale.ENGLISH
@@ -48,6 +51,54 @@ class SharedPrefUtils private constructor() {
         }
         fun rmAddress(context: Context) {
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().remove("chosen_wallet").remove("chosen_address").apply()
+        }
+        fun addAsset(context: Context, data: addrassets) {
+            val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", emptySet()).toMutableSet()
+            tryGet.add(arrayOf(data.assetId, "0", data.name, data.symbol).joinToString(","))
+            context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", tryGet).apply()
+        }
+        fun getAsset(context: Context): ArrayList<addrassets> {
+            val rs = arrayListOf<addrassets>()
+
+            try {
+                val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", emptySet())
+                tryGet.forEach {
+                    val sp = it.split(",")
+                    rs.add(addrassets(sp[0], sp[1], sp[2], sp[3]))
+                }
+            } catch (_: Throwable) {
+                context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().remove("observer_asset").apply()
+            }
+            return rs
+        }
+        fun rmAsset(context: Context, assetId: String) {
+            val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", setOf())
+            val newList = tryGet.filter {
+                !it.contains(assetId)
+            }
+            context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", newList.toSet()).apply()
+        }
+        fun rmAsset(context: Context, assetIds: ArrayList<String>) {
+            val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", setOf())
+            val newList = tryGet.filter {
+                assetIds.all {
+                    !it.contains(it)
+                }
+            }
+            context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", newList.toSet()).apply()
+        }
+        fun getNet(context: Context): String {
+            return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("net", "main")
+        }
+        fun setNet(context: Context, net: String) {
+            context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("net", if (net == "main") "main" else "test").apply()
+        }
+
+        private fun resolveLocale(default: Locale): Locale {
+            return when (default) {
+                Locale.CHINESE, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE, Locale.CHINA -> Locale.SIMPLIFIED_CHINESE
+                else -> Locale.ENGLISH
+            }
         }
     }
 }

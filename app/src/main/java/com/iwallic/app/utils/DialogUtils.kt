@@ -2,13 +2,24 @@ package com.iwallic.app.utils
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import com.iwallic.app.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
+import io.reactivex.Observable
+
+import android.util.Log
+import android.widget.ListView
+import com.iwallic.app.models.addrassets
+
 
 object DialogUtils {
     fun Dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
@@ -22,7 +33,6 @@ object DialogUtils {
         builder.setView(view)
         val dialog = builder.create()
         // dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window.setLayout(600, WindowManager.LayoutParams.WRAP_CONTENT)
 
         if (title != null) {
             titleTV.setText(title)
@@ -53,5 +63,103 @@ object DialogUtils {
             noTV.visibility = View.GONE
         }
         dialog.show()
+        dialog.window.setLayout(800, WindowManager.LayoutParams.WRAP_CONTENT)
+        dialog.setOnDismissListener {
+            if (callback != null) {
+                callback(false)
+            }
+        }
+    }
+
+    fun Password(context: Context): Observable<String> {
+        return Observable.create { observer ->
+            val builder = AlertDialog.Builder(context)
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.dialog_password, null)
+            val inputET = view.findViewById<EditText>(R.id.dialog_password)
+            val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
+            builder.setView(view)
+            val dialog = builder.create()
+            var rs: String = ""
+            inputET.addTextChangedListener(object: TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                    rs = p0.toString()
+                }
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            })
+            confirm.setOnClickListener {
+                observer.onNext(rs)
+                dialog.dismiss()
+            }
+            dialog.setOnDismissListener {
+                observer.onComplete()
+            }
+            dialog.show()
+            inputET.requestFocus()
+        }
+    }
+
+    fun load(context: Context, text: Int = R.string.load_load, callback: (AlertDialog) -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.dialog_load, null)
+        builder.setView(view)
+        view.findViewById<TextView>(R.id.load_title).text = inflater.context.resources.getText(text)
+        val dialog = builder.create()
+
+        dialog.show()
+
+        dialog.window.setLayout(600, WindowManager.LayoutParams.WRAP_CONTENT)
+        callback(dialog)
+    }
+
+    fun DialogList(context: Context, title: Int? = null, list: List<addrassets> ?= null, callback: ((String) -> Unit)? = null) {
+        val builder = AlertDialog.Builder(context)
+        if (title != null) {
+            builder.setTitle(title)
+        }
+        if(list != null) {
+            val listValue = arrayOfNulls<String>(list.size)
+            val listKey = arrayOfNulls<String>(list.size)
+            for ((index, i) in list.iterator().withIndex()) {
+                listKey[index] = i.assetId
+                listValue[index] = i.symbol
+            }
+            builder.setItems(listValue) { _, i ->
+                if (callback != null) {
+                    callback(listKey[i].toString())
+                }
+            }
+            val dialog = builder.create()
+            dialog.show()
+            dialog.window.setLayout(600, 700)
+        } else {
+            Dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
+                return
+            })
+        }
+    }
+
+    fun Error(context: Context, code: Int): Boolean {
+        when (code) {
+            99998 -> {
+                Toast.makeText(context, "数据解析出错", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            99997, 99996 -> {
+                Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            99995 -> {
+                Toast.makeText(context, "服务器错误", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            99994 -> {
+                Toast.makeText(context, "网络连接超时", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return false
     }
 }

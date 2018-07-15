@@ -1,9 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".asset.AssetDetailActivity">
+    android:background="?colorDefault2"
+    android:orientation="vertical"
+    tools:context=".pages.asset.AssetDetailActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <ImageView
+            android:contentDescription="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="?drawableAssetDetailBg"/>
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/asset_detail_back"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
+            android:layout_gravity="top|start"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_back"
+            android:tint="?colorDefault"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimenSpace">
+            <TextView
+                android:id="@+id/asset_detail"
+                android:textColor="?colorDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimenLarge"
+                android:text="NEO"/>
+            <TextView
+                android:id="@+id/asset_detail_balance"
+                android:textColor="?colorDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimenDefault"
+                android:text="999999999"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/asset_detail_load"
+        android:visibility="visible"
+        android:layout_margin="@dimen/dimenSpace"
+        android:foregroundTint="?colorPrimary"
+        android:layout_width="@dimen/dimenLarge"
+        android:layout_height="@dimen/dimenLarge"
+        android:layout_gravity="center"
+        tools:targetApi="lollipop" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/asset_detail_list_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/asset_detail_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</LinearLayout>

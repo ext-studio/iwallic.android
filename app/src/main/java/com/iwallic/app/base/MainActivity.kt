@@ -1,6 +1,5 @@
 package com.iwallic.app.base
 
-import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -8,19 +7,14 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.Animation
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.view.animation.Interpolator
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
-import com.iwallic.app.navigator.*
+import com.iwallic.app.navigations.*
 import com.iwallic.app.R
-import com.iwallic.app.transaction.TransactionReceiveActivity
-import com.iwallic.app.transaction.TransactionTransferActivity
-
+import com.iwallic.app.pages.transaction.TransactionReceiveActivity
+import com.iwallic.app.pages.transaction.TransactionTransferActivity
 
 class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     private val currentNavigation = "currentNavigation"
@@ -32,6 +26,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        // window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
 
         restoreSaveInstanceState(savedInstanceState)
         setContentView(R.layout.activity_base_main)

@@ -20,8 +20,8 @@
     <color name="colorDarkNight">#000000</color>
     <color name="colorSecondaryNight">#3E8FAD</color>
     <color name="colorDangerNight">#B95858</color>
-    <color name="colorDefaultNight">#282939</color>
-    <color name="colorDefault2Night">#333448</color>
+    <color name="colorDefaultNight">#333448</color>
+    <color name="colorDefault2Night">#282939</color>
     <color name="colorLineNight">#55566A</color>
     <color name="colorLine2Night">#88ADF4</color>
     <color name="colorFontNight">#C8FFFFFF</color>
