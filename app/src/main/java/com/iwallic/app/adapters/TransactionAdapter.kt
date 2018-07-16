@@ -78,7 +78,7 @@ class TransactionAdapter(data: PageData<transactions>, recyclerView: RecyclerVie
             }
             holder.itemView.setOnLongClickListener {
                 val clipboard = it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("TXID", pageData.data[position].txid)
+                val clip = ClipData.newPlainText("txid", pageData.data[position].txid)
                 clipboard.primaryClip = clip
                 Toast.makeText(it.context, R.string.error_copied, Toast.LENGTH_SHORT).show()
 
