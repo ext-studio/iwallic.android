@@ -169,11 +169,12 @@ class TransactionTransferActivity : BaseActivity() {
                     return
                 }
                 newTx.sign(wif)
-                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-                    Log.i("transaction",res.toString())
-                }, fun(err) {
-                    resolveError(err)
-                })
+                Log.i("交易转账", newTx.serialize(true))
+//                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+//                    Log.i("transaction",res.toString())
+//                }, fun(err) {
+//                    resolveError(err)
+//                })
             }
         }
     }

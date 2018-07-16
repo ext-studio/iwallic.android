@@ -9,7 +9,7 @@ const val ASSET_GAS = ""
 
 const val TxVersionClaim = 0
 const val TxVersionContract = 0
-const val TxVersionInvocation = 0
+const val TxVersionInvocation = 1
 
 const val TxTypeClaim = 2
 const val TxTypeContract = 128
@@ -71,9 +71,13 @@ class TransactionModel {
         result += Hex.fromInt(type.toLong(), 1, false)
         result += Hex.fromInt(version.toLong(), 1, false)
         result += resolveType()
+        Log.i("序列化交易", result)
         result += resolveAttrs()
+        Log.i("序列化交易", result)
         result += resolveInputs()
+        Log.i("序列化交易", result)
         result += resolveOutputs()
+        Log.i("序列化交易", result)
         if (signed && scripts.isNotEmpty()) {
             result += Hex.fromVarInt(scripts.size.toLong())
             for (sc in scripts) {
@@ -110,8 +114,8 @@ class TransactionModel {
                 var rs: String = Hex.fromVarInt((script.length/2).toLong())
                 rs += script
                 if (version >= 1) {
-                    val hex = Hex.fromVarInt((gas * 100000000).toLong())
-                    rs += Hex.reverse("0".repeat(16 - hex.length)) + hex
+                    // val hex = Hex.fromVarInt((gas * 100000000).toLong())
+                    rs += Hex.toFixedNum(gas, 8) // Hex.reverse("0".repeat(16 - hex.length)) + hex
                 }
                 return rs
             }
@@ -126,7 +130,7 @@ class TransactionModel {
             if (attr.data.length > 65535) {
                 return "00"
             }
-            rs += Hex.fromInt(attr.usage.toLong(), 1.toLong(), false)
+            rs += Hex.fromInt(attr.usage.toLong(), 1, false)
             when {
                 attr.usage == 0x81 -> {
                     rs += Hex.fromInt((attr.data.length/2).toLong(), 1.toLong(), false)

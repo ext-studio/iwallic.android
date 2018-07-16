@@ -3,6 +3,7 @@ package com.iwallic.app.adapters
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -18,6 +19,7 @@ import com.iwallic.app.models.PageData
 import com.iwallic.app.models.transactions
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.states.TransactionState
 
 class TransactionAdapter(data: PageData<transactions>, recyclerView: RecyclerView): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
@@ -68,6 +70,11 @@ class TransactionAdapter(data: PageData<transactions>, recyclerView: RecyclerVie
                 nameTV.setTextColor(R.attr.colorDefault)
                 valueTV.setTextColor(R.attr.colorDefault)
                 holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_out)
+            }
+            holder.itemView.setOnClickListener {
+                val intent = Intent(it.context, TransactionDetailActivity::class.java)
+                intent.putExtra("txid", pageData.data[position].txid)
+                it.context.startActivity(intent)
             }
             holder.itemView.setOnLongClickListener {
                 val clipboard = it.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

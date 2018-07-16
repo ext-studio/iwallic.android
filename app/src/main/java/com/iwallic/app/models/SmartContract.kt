@@ -1,5 +1,6 @@
 package com.iwallic.app.models
 
+import android.util.Log
 import com.iwallic.neon.wallet.Wallet
 import com.iwallic.neon.hex.Hex
 
@@ -39,6 +40,14 @@ class SmartContract {
                 }
             }
         }
+        addLong(args.size.toLong())
+        add(PACK)
+        addString(Hex.fromString(method))
+        if (useTailCall) {
+            add(TAILCALL, Hex.reverse(scriptHash))
+        } else {
+            add(APPCALL, Hex.reverse(scriptHash))
+        }
         return result
     }
     companion object {
@@ -52,39 +61,39 @@ class SmartContract {
     }
 
     private fun add(op: Long, arg: String = "") {
-        result += addLong(op)
+        result += Hex.int2HexInt(op)
         if (arg.isNotEmpty()) {
             addString(arg)
         }
     }
     private fun add(op: Int, arg: String = "") {
-        result += addLong(op.toLong())
+        result += Hex.int2HexInt(op.toLong())
         if (arg.isNotEmpty()) {
-            addString(arg)
+            result += arg
         }
     }
     private fun addLong(value: Long) {
         when {
             value == (-1).toLong() -> {
-                return add(PUSHM1)
+                add(PUSHM1)
             }
-            value == (0).toLong() -> {
-                return add(PUSH0)
+            value == 0.toLong() -> {
+                add(PUSH0)
             }
-            value in 1..16 -> {
-                return add((PUSH1 - 1).toLong() + value)
+            value > 0.toLong() && value < 16.toLong() -> {
+                add((PUSH1 - 1).toLong() + value)
             }
             else -> {
                 val hex = Hex.fromVarInt(value)
-                return addString(Hex.reverse("0".repeat(16 - hex.length)) + hex)
+                addString(Hex.reverse("0".repeat(16 - hex.length)) + hex)
             }
         }
     }
     private fun addDouble(value: Double) {
-        addLong((value * 100000000).toLong())
+        addString(Hex.toFixedNum(value, 8))
     }
     private fun addFloat(value: Float) {
-        addLong((value * 100000000).toLong())
+        addString(Hex.toFixedNum(value.toDouble(), 8))
     }
     private fun addString(value: String) {
         val size = value.length / 2
@@ -92,29 +101,23 @@ class SmartContract {
             size < PUSHBYTES75 -> {
                 result += Hex.fromInt(size.toLong(), 1, false)
                 result += value
-                return
             }
             size < 0x100 -> {
                 add(PUSHDATA1)
                 result += Hex.fromInt(size.toLong(), 1, true)
                 result += value
-                return
             }
             size < 0x10000 -> {
                 add(PUSHDATA2)
                 result += Hex.fromInt(size.toLong(), 2, true)
                 result += value
-                return
             }
             size < 0x100000000 -> {
                 add(PUSHDATA4)
                 result += Hex.fromInt(size.toLong(), 4, true)
                 result += value
-                return
             }
-            else -> {
-                return
-            }
+            else -> {}
         }
     }
 }
