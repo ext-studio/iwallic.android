@@ -63,7 +63,6 @@ object DialogUtils {
             noTV.visibility = View.GONE
         }
         dialog.show()
-        dialog.window.setLayout(800, WindowManager.LayoutParams.WRAP_CONTENT)
         dialog.setOnDismissListener {
             if (callback != null) {
                 callback(false)
@@ -110,7 +109,7 @@ object DialogUtils {
 
         dialog.show()
 
-        dialog.window.setLayout(600, WindowManager.LayoutParams.WRAP_CONTENT)
+        // dialog.window.setLayout(600, WindowManager.LayoutParams.WRAP_CONTENT)
         callback(dialog)
     }
 
@@ -133,7 +132,7 @@ object DialogUtils {
             }
             val dialog = builder.create()
             dialog.show()
-            dialog.window.setLayout(600, 700)
+            // dialog.window.setLayout(600, 700)
         } else {
             Dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
                 return
