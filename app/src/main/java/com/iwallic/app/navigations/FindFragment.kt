@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 
 import com.iwallic.app.R
@@ -35,6 +36,7 @@ class FindFragment : Fragment() {
 
         findWV = view.findViewById(R.id.fragment_find_webview)
         findWV.settings.javaScriptEnabled = true
+        findWV.webViewClient = WebViewClient()
 
         launch (UI) {
             findWV.loadUrl("file:///android_asset/fragment_find/index.html")
