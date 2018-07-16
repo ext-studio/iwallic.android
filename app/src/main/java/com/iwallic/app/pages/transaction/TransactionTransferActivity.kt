@@ -1,8 +1,7 @@
 package com.iwallic.app.pages.transaction
 
-import android.content.Context
+import android.app.Activity
 import android.os.Bundle
-import android.renderscript.Sampler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -23,7 +22,6 @@ import com.iwallic.app.utils.WalletUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import org.w3c.dom.Text
 
 class TransactionTransferActivity : BaseActivity() {
 
@@ -36,12 +34,16 @@ class TransactionTransferActivity : BaseActivity() {
     private lateinit var submitB: Button
     private lateinit var submitPB: ProgressBar
     private lateinit var tipTV: TextView
+    private lateinit var successB: Button
+    private lateinit var step1LL: LinearLayout
+    private lateinit var step2LL: LinearLayout
     private val gson = Gson()
     private var wif: String = ""
     private var asset: String = ""
     private var target: String = ""
     private var address: String = ""
     private var amount = 0.0
+    private var balance = 0.0
     private var list: List<addrassets>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +65,9 @@ class TransactionTransferActivity : BaseActivity() {
         submitB = findViewById(R.id.transaction_transfer_btn_submit)
         submitPB = findViewById(R.id.transaction_transfer_load_submit)
         tipTV = findViewById(R.id.transaction_transfer_error)
+        successB = findViewById(R.id.transaction_transfer_success)
+        step1LL = findViewById(R.id.transaction_transfer_step_1)
+        step2LL = findViewById(R.id.transaction_transfer_step_2)
     }
 
     private fun initClick() {
@@ -73,7 +78,7 @@ class TransactionTransferActivity : BaseActivity() {
             resolveAssetPick()
         }
         submitB.setOnClickListener {
-            if (amount <= 0 || target.isEmpty()) {
+            if (amount <= 0 || target.isEmpty() || amount > balance) {
                 return@setOnClickListener
             }
             if (asset.isEmpty()) {
@@ -84,9 +89,12 @@ class TransactionTransferActivity : BaseActivity() {
             submitB.visibility = View.GONE
             resolveVerify()
         }
+        successB.setOnClickListener {
+            finish()
+        }
     }
 
-    private  fun initInput() {
+    private fun initInput() {
         amountET.isEnabled = false
         amountET.setOnFocusChangeListener {_, hasFocus ->
             if(hasFocus) {
@@ -97,8 +105,9 @@ class TransactionTransferActivity : BaseActivity() {
         }
         amountET.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                val value = s.toString().toDouble()
-                amount = value
+                if (s.toString().isNotEmpty()) {
+                    amount = s.toString().toDouble()
+                }
                 resolveErrorTip()
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -170,11 +179,16 @@ class TransactionTransferActivity : BaseActivity() {
                 }
                 newTx.sign(wif)
                 Log.i("交易转账", newTx.serialize(true))
-//                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-//                    Log.i("transaction",res.toString())
-//                }, fun(err) {
-//                    resolveError(err)
-//                })
+                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                    val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
+                    if (rs == true) {
+                        resolveSuccess(newTx.hash())
+                    } else {
+                        resolveError(99698)
+                    }
+                }, fun(err) {
+                    resolveError(err)
+                })
             }
         }
     }
@@ -187,13 +201,16 @@ class TransactionTransferActivity : BaseActivity() {
                 it.assetId == confirm
             }
             assetNameTV.text = chooseAsset?.symbol
-            balanceTV.text ="${resources.getText(R.string.transaction_transfer_balance_hint)}: ${chooseAsset?.balance}"
+            balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
+            balance = chooseAsset?.balance?.toDouble() ?: 0.0
         })
     }
 
     private fun resolveVerify() {
-        DialogUtils.Password(this).subscribe {
+        DialogUtils.password(this).subscribe {
             if (it.isEmpty()) {
+                submitPB.visibility = View.GONE
+                submitB.visibility = View.VISIBLE
                 return@subscribe
             }
             DialogUtils.load(this) { load ->
@@ -202,7 +219,7 @@ class TransactionTransferActivity : BaseActivity() {
                     load.dismiss()
                     withContext(UI) {
                         if (wif.isEmpty()) {
-                            Toast.makeText(baseContext, "密码错误", Toast.LENGTH_SHORT).show()
+                            resolveError(99599)
                         } else {
                             resolveSend(address, target, amount)
                         }
@@ -212,13 +229,28 @@ class TransactionTransferActivity : BaseActivity() {
         }
     }
 
+    private fun resolveSuccess(txid: String) {
+        // 101.132.97.9:45005
+        // submit new transaction
+        // save this transaction locally
+        // listen unconfirmed tx
+        // post notify when newly confirmed
+        step1LL.visibility = View.GONE
+        step2LL.visibility = View.VISIBLE
+    }
+
     private fun resolveError(code: Int) {
         if (!DialogUtils.Error(this, code)) {
             Toast.makeText(this, when (code) {
-                99699 -> "交易发起失败"
+                1018 -> resources.getString(R.string.transaction_transfer_error_rpc)
+                99698 -> resources.getString(R.string.transaction_transfer_error_send)
+                99699 -> resources.getString(R.string.transaction_transfer_error_create)
+                99599 -> resources.getString(R.string.error_password)
                 else -> "$code"
             }, Toast.LENGTH_SHORT).show()
         }
+        submitPB.visibility = View.GONE
+        submitB.visibility = View.VISIBLE
     }
 
     private fun resolveErrorTip() {
@@ -229,6 +261,10 @@ class TransactionTransferActivity : BaseActivity() {
             }
             amount <= 0 -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_error)
+                tipTV.visibility = View.VISIBLE
+            }
+            amount > balance -> {
+                tipTV.setText(R.string.transaction_transfer_tips_amount_unenough)
                 tipTV.visibility = View.VISIBLE
             }
             else -> {

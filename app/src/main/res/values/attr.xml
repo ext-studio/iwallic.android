@@ -14,4 +14,5 @@
     <attr name="selectorOptionItem" format="reference|color"/>
     <attr name="drawableAssetBg" format="reference" />
     <attr name="drawableAssetDetailBg" format="reference" />
+    <attr name="drawableTransactionSuccess" format="reference" />
 </resources>

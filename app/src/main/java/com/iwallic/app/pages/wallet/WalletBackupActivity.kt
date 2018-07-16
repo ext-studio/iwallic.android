@@ -87,7 +87,7 @@ class WalletBackupActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.Password(this).subscribe {
+        DialogUtils.password(this).subscribe {
             if (it.isEmpty()) {
                 return@subscribe
             }

@@ -71,13 +71,9 @@ class TransactionModel {
         result += Hex.fromInt(type.toLong(), 1, false)
         result += Hex.fromInt(version.toLong(), 1, false)
         result += resolveType()
-        Log.i("序列化交易", result)
         result += resolveAttrs()
-        Log.i("序列化交易", result)
         result += resolveInputs()
-        Log.i("序列化交易", result)
         result += resolveOutputs()
-        Log.i("序列化交易", result)
         if (signed && scripts.isNotEmpty()) {
             result += Hex.fromVarInt(scripts.size.toLong())
             for (sc in scripts) {
@@ -85,14 +81,11 @@ class TransactionModel {
                         Hex.fromVarInt((sc.verification.length/2).toLong()) + sc.verification
             }
         }
-        Log.i("序列化交易", result)
-        // 序列化交易
         return result
     }
     fun sign(wif: String) {
         val sign = "40" + Wallet.signature(serialize(), wif)
         val verify = "21" + Wallet.priv2Pub(Wallet.wif2Priv(wif)) + "ac"
-        Log.i("签名交易", Wallet.signature(hash(), wif))
         scripts.add(ScriptModel(sign, verify))
     }
     fun remark(data: String) {
@@ -114,8 +107,7 @@ class TransactionModel {
                 var rs: String = Hex.fromVarInt((script.length/2).toLong())
                 rs += script
                 if (version >= 1) {
-                    // val hex = Hex.fromVarInt((gas * 100000000).toLong())
-                    rs += Hex.toFixedNum(gas, 8) // Hex.reverse("0".repeat(16 - hex.length)) + hex
+                    rs += Hex.toFixedNum(gas, 8)
                 }
                 return rs
             }
@@ -162,7 +154,7 @@ class TransactionModel {
         var rs: String = Hex.fromVarInt(outputs.size.toLong())
         for (output in outputs) {
             val asset = if (output.asset.startsWith("0x")) output.asset.substring(2) else output.asset
-            val value = Hex.toFixedNum(output.value.toDouble(),8)
+            val value = Hex.toFixedNum(output.value,8)
             val hash = if (output.scriptHash.startsWith("0x")) output.scriptHash.substring(2) else output.scriptHash
             rs += Hex.reverse(asset) + value + hash
         }
@@ -195,7 +187,8 @@ class TransactionModel {
             val newTx = TransactionModel()
             newTx.type = TxTypeInvocation
             newTx.version = TxVersionInvocation
-            newTx.script = SmartContract.forNEP5(token, from, to, amount).serielize()
+            newTx.script = SmartContract.forNEP5(token, from, to, amount).serielize() + "f1"
+            newTx.attributes.add(AttributeModel(AttrUsageScript, Wallet.addr2Script(from)))
             newTx.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
             return newTx
         }

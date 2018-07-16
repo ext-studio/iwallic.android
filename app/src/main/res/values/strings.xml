@@ -49,11 +49,16 @@
     <string name="transaction_transfer_chooseAsset">Choose Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
     <string name="transaction_transfer_amount_hint">Amount</string>
-    <string name="transaction_transfer_balance_hint">Balance</string>
+    <string name="transaction_transfer_balance_hint">Balance: %1$s</string>
     <string name="transaction_transfer_btn_submit">Submit</string>
     <string name="transaction_transfer_tips_noChooseAsset_error">Please choose asset</string>
     <string name="transaction_transfer_tips_target_error">Address Error</string>
     <string name="transaction_transfer_tips_amount_error">Amount Error</string>
+    <string name="transaction_transfer_tips_amount_unenough">Balance not enough</string>
+    <string name="transaction_transfer_success">Submitted, please wait for confirm.</string>
+    <string name="transaction_transfer_error_create">Generation failed</string>
+    <string name="transaction_transfer_error_send">Transaction failed</string>
+    <string name="transaction_transfer_error_rpc">Block net error</string>
     <string name="transaction_receive">Receive</string>
     <string name="transaction_receive_address_copy">Copy Address</string>
     <string name="dialog_title_primary">Notice</string>
@@ -75,6 +80,7 @@
     <string name="error_failed">Operation failed</string>
     <string name="error_copied">Copied!</string>
     <string name="error_empty">Please fill inputs.</string>
+    <string name="error_password">Password not match</string>
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>

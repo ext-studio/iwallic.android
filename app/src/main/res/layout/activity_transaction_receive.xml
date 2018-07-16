@@ -37,20 +37,27 @@
             </LinearLayout>
         </FrameLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <ImageView
+                android:contentDescription="@null"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tx_receive_bg"
+                android:layout_marginTop="@dimen/dimenLarge"/>
 
             <LinearLayout
                 android:id="@+id/transaction_receive_qrcode_box"
-                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="96dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimenLarge"
-                android:background="@drawable/shape_border_radius_default"
-                android:orientation="vertical"
-                android:padding="@dimen/dimenDefault">
+                android:orientation="vertical">
                 <ImageView
                     android:contentDescription="@null"
                     android:id="@+id/transaction_receive_qrcode"
@@ -74,11 +81,13 @@
             <Button
                 android:id="@+id/transaction_receive_address_copy"
                 android:layout_width="200dp"
-                android:layout_marginTop="@dimen/dimenLarge"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:text="@string/transaction_receive_address_copy"
-                android:textColor="?colorDefault"/>
-        </LinearLayout>
+                android:textColor="?colorDefault"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/dimenSpace"
+                android:layout_below="@id/transaction_receive_qrcode_box"/>
+        </RelativeLayout>
     </LinearLayout>

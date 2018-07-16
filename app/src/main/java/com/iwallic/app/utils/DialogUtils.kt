@@ -70,7 +70,7 @@ object DialogUtils {
         }
     }
 
-    fun Password(context: Context): Observable<String> {
+    fun password(context: Context): Observable<String> {
         return Observable.create { observer ->
             val builder = AlertDialog.Builder(context)
             val inflater = LayoutInflater.from(context)
@@ -79,7 +79,7 @@ object DialogUtils {
             val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
             builder.setView(view)
             val dialog = builder.create()
-            var rs: String = ""
+            var rs = ""
             inputET.addTextChangedListener(object: TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     rs = p0.toString()
