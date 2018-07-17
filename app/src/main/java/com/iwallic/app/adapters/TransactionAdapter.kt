@@ -15,14 +15,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
-import com.iwallic.app.models.PageData
-import com.iwallic.app.models.transactions
+import com.iwallic.app.models.PageDataRes
+import com.iwallic.app.models.TransactionRes
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.states.TransactionState
 
-class TransactionAdapter(data: PageData<transactions>, recyclerView: RecyclerView): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+class TransactionAdapter(data: PageDataRes<TransactionRes>, recyclerView: RecyclerView): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private val VIEW_TYPE_CELL = 1
     private val VIEW_TYPE_FOOTER = 0
     private var pageData = data

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -14,18 +13,16 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
-import com.iwallic.app.models.addrassets
-import com.iwallic.app.models.assetmanage
+import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.AssetManageRes
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 
 class AssetManageActivity : BaseActivity() {
-
     private lateinit var backIV: LinearLayout
     private lateinit var loadPB: ProgressBar
-
     private lateinit var amRV: RecyclerView
     private lateinit var amSRL: SwipeRefreshLayout
     private lateinit var amAdapter: RecyclerView.Adapter<*>
@@ -33,22 +30,28 @@ class AssetManageActivity : BaseActivity() {
 
     private var fetching: Boolean = false
     private val gson = Gson()
-    private var cache: ArrayList<assetmanage>? = null
-    private lateinit var current: ArrayList<addrassets>
+    private var cache: ArrayList<AssetManageRes>? = null
+    private lateinit var current: ArrayList<BalanceRes>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_manage)
+        initDOM()
+        initListener()
+        current = SharedPrefUtils.getAsset(this)
+        resolveList(arrayListOf())
+        resolveFetch()
+    }
 
+    private fun initDOM() {
         backIV = findViewById(R.id.asset_manage_back)
         amRV = findViewById(R.id.asset_manage_list)
         amSRL = findViewById(R.id.asset_manage_list_refresh)
         loadPB = findViewById(R.id.asset_manage_load)
         amSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        current = SharedPrefUtils.getAsset(this)
+    }
 
-        resolveList(arrayListOf())
-        resolveFetch()
+    private fun initListener() {
         backIV.setOnClickListener {
             finish()
         }
@@ -61,7 +64,7 @@ class AssetManageActivity : BaseActivity() {
         }
     }
 
-    private fun resolveList(list: ArrayList<assetmanage>) {
+    private fun resolveList(list: ArrayList<AssetManageRes>) {
         amManager = LinearLayoutManager(this)
         amAdapter = AssetManageAdapter(list, current)
         amRV.apply {
@@ -91,9 +94,9 @@ class AssetManageActivity : BaseActivity() {
         fetching = true
         HttpClient.post("getaddrassets", listOf(WalletUtils.address(this), 0), fun (res) {
             fetching = false
-            val data = gson.fromJson<ArrayList<assetmanage>>(res, object: TypeToken<ArrayList<assetmanage>>() {}.type)
+            val data = gson.fromJson<ArrayList<AssetManageRes>>(res, object: TypeToken<ArrayList<AssetManageRes>>() {}.type)
             if (data == null) {
-                DialogUtils.Error(this, 99998)
+                DialogUtils.error(this, 99998)
                 resolveRefreshed()
             } else {
                 cache = ArrayList(data.filterNot {
@@ -107,7 +110,7 @@ class AssetManageActivity : BaseActivity() {
             }
         }, fun (err) {
             fetching = false
-            if (!DialogUtils.Error(this, err)) {
+            if (!DialogUtils.error(this, err)) {
 
             }
             resolveRefreshed()

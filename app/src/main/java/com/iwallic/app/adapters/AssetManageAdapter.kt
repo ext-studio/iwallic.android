@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.iwallic.app.R
-import com.iwallic.app.models.addrassets
-import com.iwallic.app.models.assetmanage
+import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.AssetManageRes
 import com.iwallic.app.utils.SharedPrefUtils
 
-class AssetManageAdapter(list: ArrayList<assetmanage>, current: ArrayList<addrassets>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
+class AssetManageAdapter(list: ArrayList<AssetManageRes>, current: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = list
     private var curr = current
 
@@ -31,7 +31,7 @@ class AssetManageAdapter(list: ArrayList<assetmanage>, current: ArrayList<addras
         toggleSC.setOnClickListener {
             Log.i("资产管理状态", "【${data[position].symbol}】被设为了【${toggleSC.isChecked}】")
             if (toggleSC.isChecked) {
-                SharedPrefUtils.addAsset(holder.itemView.context, addrassets(data[position].assetId, "0", data[position].name, data[position].symbol))
+                SharedPrefUtils.addAsset(holder.itemView.context, BalanceRes(data[position].assetId, "0", data[position].name, data[position].symbol))
             } else {
                 SharedPrefUtils.rmAsset(holder.itemView.context, data[position].assetId)
             }

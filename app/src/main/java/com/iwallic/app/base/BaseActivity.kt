@@ -1,18 +1,17 @@
 package com.iwallic.app.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.annotation.Nullable
-import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.iwallic.app.R
 import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
 
-
+@SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
@@ -23,12 +22,12 @@ open class BaseActivity : AppCompatActivity() {
                 startService(Intent(this, BlockService::class.java))
             }
         }, {
-            Log.i("基活动", "配置失败，服务将不启动")
+            Log.i("【BaseActivity】", "config failed, block service will not on")
         })
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtils.OnAttach(base))
+        super.attachBaseContext(LocaleUtils.onAttach(base))
     }
 
     override fun onSupportNavigateUp(): Boolean {

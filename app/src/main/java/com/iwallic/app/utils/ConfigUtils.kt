@@ -5,13 +5,11 @@ import io.reactivex.subjects.PublishSubject
 
 object ConfigUtils {
     var setted = PublishSubject.create<Boolean>()
-    var _setted = false
-    // current net
     var net: String = "main"
-    // api url for net
     var mainApi: String = "https://api.iwallic.com/api/iwallic"
     var testApi: String = "https://teapi.iwallic.com/api/iwallic"
     var lock: Boolean = false // need verify each time open wallet
+    private var _setted = false
     fun api(): String = if (net == "test") testApi else mainApi
     fun set(_net: String?, _mainApi: String? = null, _testApi: String? = null) {
         net = _net ?: net

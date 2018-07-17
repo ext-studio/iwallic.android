@@ -83,6 +83,10 @@
     <string name="error_copied">Copied!</string>
     <string name="error_empty">Please fill inputs.</string>
     <string name="error_password">Password not match</string>
+    <string name="error_timeout">Request timeout</string>
+    <string name="error_request">Request failed</string>
+    <string name="error_parse">Data parse error</string>
+    <string name="error_server">Server error</string>
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>

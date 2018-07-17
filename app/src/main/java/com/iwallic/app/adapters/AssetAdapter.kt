@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
-import com.iwallic.app.models.addrassets
+import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 
-class AssetAdapter(list: ArrayList<addrassets>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
+class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
     private var data = list
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

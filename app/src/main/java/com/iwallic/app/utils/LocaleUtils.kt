@@ -3,21 +3,19 @@ package com.iwallic.app.utils
 import android.os.Build
 import android.annotation.TargetApi
 import android.content.Context
-import android.preference.PreferenceManager
 import java.util.*
 
-
 object LocaleUtils {
-    fun Current(context: Context): Locale {
+    fun current(context: Context): Locale {
         return SharedPrefUtils.getLocale(context)
     }
 
-    fun OnAttach(context: Context): Context {
+    fun onAttach(context: Context): Context {
         val locale = SharedPrefUtils.getLocale(context)
-        return SetLocale(context, locale)
+        return setLocale(context, locale)
     }
 
-    fun SetLocale(context: Context, locale: Locale): Context {
+    fun setLocale(context: Context, locale: Locale): Context {
         Locale.setDefault(locale)
         SharedPrefUtils.setLocale(context, locale)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

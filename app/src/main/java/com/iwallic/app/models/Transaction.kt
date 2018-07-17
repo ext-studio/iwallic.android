@@ -1,6 +1,5 @@
 package com.iwallic.app.models
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.iwallic.neon.hex.Hex
 import com.iwallic.neon.wallet.Wallet

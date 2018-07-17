@@ -14,13 +14,13 @@ import java.util.*
 
 
 object QRCodeUtils {
-    fun Generate(content: String, size: Int = 300): Bitmap? {
+    fun generate(content: String, size: Int = 300): Bitmap? {
         val result: BitMatrix
         try {
             result = MultiFormatWriter().encode(content,
                     BarcodeFormat.QR_CODE, size, size, Hashtable<EncodeHintType, Any>().apply {
-                put(EncodeHintType.CHARACTER_SET, "utf-8") //编码
-                put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H) //容错率
+                put(EncodeHintType.CHARACTER_SET, "utf-8")
+                put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H)
                 put(EncodeHintType.MARGIN, -1)
             })
         } catch (iae: IllegalArgumentException) {
@@ -28,8 +28,8 @@ object QRCodeUtils {
             return null
         }
 
-        val w = result.getWidth()
-        val h = result.getHeight()
+        val w = result.width
+        val h = result.height
         val pixels = IntArray(w * h)
         for (y in 0 until h) {
             val offset = y * w

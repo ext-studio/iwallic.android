@@ -55,11 +55,11 @@ class UserSettingLanguageActivity : BaseActivity() {
             if (chosenLocale == null) {
                 return@setOnClickListener
             }
-            if (chosenLocale == LocaleUtils.Current(this)) {
+            if (chosenLocale == LocaleUtils.current(this)) {
                 finish()
                 return@setOnClickListener
             } else {
-                LocaleUtils.SetLocale(this, chosenLocale!!)
+                LocaleUtils.setLocale(this, chosenLocale!!)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 this.startActivity(intent);
@@ -68,7 +68,7 @@ class UserSettingLanguageActivity : BaseActivity() {
     }
 
     private fun initLang() {
-        chosenLocale = LocaleUtils.Current(this)
+        chosenLocale = LocaleUtils.current(this)
         when (chosenLocale) {
             Locale.SIMPLIFIED_CHINESE -> itemCNChosen.visibility = View.VISIBLE
             Locale.ENGLISH -> itemENChosen.visibility = View.VISIBLE

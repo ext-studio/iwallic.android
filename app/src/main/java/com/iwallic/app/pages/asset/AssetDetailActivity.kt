@@ -18,9 +18,9 @@ import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
-import com.iwallic.app.models.PageData
-import com.iwallic.app.models.addrassets
-import com.iwallic.app.models.transactions
+import com.iwallic.app.models.PageDataRes
+import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
@@ -32,11 +32,11 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var titleTV: TextView
     private lateinit var balanceTV: TextView
     private lateinit var backIV: ImageView
-    private lateinit var asset: addrassets
+    private lateinit var asset: BalanceRes
     private lateinit var loadPB: ProgressBar
-
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
+
     private lateinit var txAdapter: RecyclerView.Adapter<*>
     private lateinit var txManager: RecyclerView.LayoutManager
 
@@ -49,46 +49,10 @@ class AssetDetailActivity : BaseActivity() {
         setContentView(R.layout.activity_asset_detail)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         initParams()
-
-        titleTV = findViewById(R.id.asset_detail)
-        backIV = findViewById(R.id.asset_detail_back)
-        balanceTV = findViewById(R.id.asset_detail_balance)
-        txRV = findViewById(R.id.asset_detail_list)
-        txSRL = findViewById(R.id.asset_detail_list_refresh)
-        loadPB = findViewById(R.id.asset_detail_load)
-        txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-
+        initDOM()
+        initListener()
         resolveBalance()
-        resolveList(PageData<transactions>())
-
-        listListen = TransactionState.list(WalletUtils.address(this), asset.assetId).subscribe({
-            resolveList(it)
-            resolveRefreshed(true)
-        }, {
-            resolveRefreshed()
-            Log.i("资产详情", "发生错误【${it}】")
-        })
-        errorListen = TransactionState.error().subscribe({
-            resolveRefreshed()
-            if (!DialogUtils.Error(this, it)) {
-                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            resolveRefreshed()
-            Log.i("资产详情", "发生错误【${it}】")
-        })
-        balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({}, {})
-        txSRL.setOnRefreshListener {
-            if (TransactionState.fetching) {
-                txSRL.isRefreshing = false
-                return@setOnRefreshListener
-            }
-            TransactionState.fetch()
-        }
-        backIV.setOnClickListener {
-            finish()
-        }
-
+        resolveList(PageDataRes())
         registerReceiver(BlockListener, IntentFilter(new_block_action))
     }
 
@@ -103,24 +67,65 @@ class AssetDetailActivity : BaseActivity() {
     private fun initParams() {
         val assetId = intent.getStringExtra("asset")
         if (assetId.isEmpty()) {
-            Toast.makeText(this, "参数错误", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
             finish()
             return
         }
         val tryGet = AssetState.get(assetId)
         if (tryGet == null) {
-            Toast.makeText(this, "参数错误", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
             finish()
             return
         }
         asset = tryGet
     }
+
+    private fun initDOM() {
+        titleTV = findViewById(R.id.asset_detail)
+        backIV = findViewById(R.id.asset_detail_back)
+        balanceTV = findViewById(R.id.asset_detail_balance)
+        txRV = findViewById(R.id.asset_detail_list)
+        txSRL = findViewById(R.id.asset_detail_list_refresh)
+        loadPB = findViewById(R.id.asset_detail_load)
+        txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+    }
+
+    private fun initListener() {
+        listListen = TransactionState.list(WalletUtils.address(this), asset.assetId).subscribe({
+            resolveList(it)
+            resolveRefreshed(true)
+        }, {
+            resolveRefreshed()
+            Log.i("【AssetDetail】", "error【${it}】")
+        })
+        errorListen = TransactionState.error().subscribe({
+            resolveRefreshed()
+            if (!DialogUtils.error(this, it)) {
+                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }, {
+            resolveRefreshed()
+            Log.i("【AssetDetail】", "error【${it}】")
+        })
+        balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({}, {})
+        txSRL.setOnRefreshListener {
+            if (TransactionState.fetching) {
+                txSRL.isRefreshing = false
+                return@setOnRefreshListener
+            }
+            TransactionState.fetch()
+        }
+        backIV.setOnClickListener {
+            finish()
+        }
+    }
+
     private fun resolveBalance() {
         val tryGet = AssetState.get(asset.assetId)
         titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
     }
-    private fun resolveList(data: PageData<transactions>) {
+    private fun resolveList(data: PageDataRes<TransactionRes>) {
         txManager = LinearLayoutManager(this)
         txAdapter = TransactionAdapter(data, txRV)
         txRV.apply {

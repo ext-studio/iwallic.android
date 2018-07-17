@@ -3,8 +3,8 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iwallic.app.models.PageData
-import com.iwallic.app.models.transactions
+import com.iwallic.app.models.PageDataRes
+import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.HttpClient
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -12,14 +12,14 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object TransactionState {
-    private var cached = PageData<transactions>()
+    private var cached = PageDataRes<TransactionRes>()
     private var address: String = ""
     private var assetId: String = ""
-    private val _list = PublishSubject.create<PageData<transactions>>()
+    private val _list = PublishSubject.create<PageDataRes<TransactionRes>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = "", asset: String? = null): Observable<PageData<transactions>> {
+    fun list(addr: String = "", asset: String? = null): Observable<PageDataRes<TransactionRes>> {
         if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
             fetch(addr, asset)
             return _list
@@ -39,7 +39,6 @@ object TransactionState {
             cached.total = it.total
             cached.pageSize = it.pageSize
             cached.data.addAll(it.data)
-            Log.i("交易状态", "${cached.data.size} - ${it.data.size}")
             _list.onNext(cached)
             fetching = false
         }, {
@@ -55,11 +54,11 @@ object TransactionState {
             return
         }
         if (addr.isNotEmpty()) {
-            Log.i("交易状态", "设置地址")
+            Log.i("【TxState】", "set address")
             address = addr
         }
         if (asset != null) {
-            Log.i("交易状态", "设置资产为【$asset】")
+            Log.i("【TxState】", "set asset")
             assetId = asset
         }
         if (address.isEmpty()) {
@@ -74,7 +73,7 @@ object TransactionState {
                 val start = pageData.data.indexOfFirst {
                     it.txid == cached.data[0].txid
                 }
-                Log.i("交易状态", "从【$start】开始出现新交易")
+                Log.i("【TxState】", "new tx from index【$start】")
                 if (start > 0) {
                     pageData.data = ArrayList(pageData.data.subList(0, start))
                     pageData.data.addAll(cached.data)
@@ -92,16 +91,16 @@ object TransactionState {
         })
     }
 
-    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageData<transactions>) -> Unit, no: (Int) -> Unit) {
+    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataRes<TransactionRes>) -> Unit, no: (Int) -> Unit) {
         HttpClient.post(
             if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
             if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
             fun (res) {
                 if (res.isEmpty()) {
-                    ok(PageData())
+                    ok(PageDataRes())
                     return
                 }
-                val data = gson.fromJson<PageData<transactions>>(res, object: TypeToken<PageData<transactions>>() {}.type)
+                val data = gson.fromJson<PageDataRes<TransactionRes>>(res, object: TypeToken<PageDataRes<TransactionRes>>() {}.type)
                 if (data == null) {
                     no(99998)
                 } else {
@@ -113,7 +112,7 @@ object TransactionState {
     }
 
     fun clear() {
-        cached = PageData()
+        cached = PageDataRes()
         address = ""
         assetId = ""
         fetching = false

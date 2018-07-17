@@ -1,28 +1,23 @@
 package com.iwallic.app.utils
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import com.iwallic.app.R
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
-import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import io.reactivex.Observable
 
-import android.util.Log
-import android.widget.ListView
-import com.iwallic.app.models.addrassets
-
+import com.iwallic.app.models.BalanceRes
 
 object DialogUtils {
-    fun Dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
+    @SuppressLint("InflateParams")
+    fun dialog(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null, callback: ((Boolean) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.dialog_confirm, null)
@@ -32,7 +27,6 @@ object DialogUtils {
         val bodyTV = view.findViewById<TextView>(R.id.dialog_confirm_body)
         builder.setView(view)
         val dialog = builder.create()
-        // dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         if (title != null) {
             titleTV.setText(title)
@@ -70,6 +64,7 @@ object DialogUtils {
         }
     }
 
+    @SuppressLint("InflateParams")
     fun password(context: Context): Observable<String> {
         return Observable.create { observer ->
             val builder = AlertDialog.Builder(context)
@@ -99,6 +94,7 @@ object DialogUtils {
         }
     }
 
+    @SuppressLint("InflateParams")
     fun load(context: Context, text: Int = R.string.load_load, callback: (AlertDialog) -> Unit) {
         val builder = AlertDialog.Builder(context)
         val inflater = LayoutInflater.from(context)
@@ -113,7 +109,7 @@ object DialogUtils {
         callback(dialog)
     }
 
-    fun DialogList(context: Context, title: Int? = null, list: List<addrassets> ?= null, callback: ((String) -> Unit)? = null) {
+    fun list(context: Context, title: Int? = null, list: List<BalanceRes> ?= null, callback: ((String) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
         if (title != null) {
             builder.setTitle(title)
@@ -132,30 +128,29 @@ object DialogUtils {
             }
             val dialog = builder.create()
             dialog.show()
-            // dialog.window.setLayout(600, 700)
         } else {
-            Dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
+            dialog(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok, null, fun (confirm: Boolean) {
                 return
             })
         }
     }
 
-    fun Error(context: Context, code: Int): Boolean {
+    fun error(context: Context, code: Int): Boolean {
         when (code) {
             99998 -> {
-                Toast.makeText(context, "数据解析出错", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.error_parse, Toast.LENGTH_SHORT).show()
                 return true
             }
             99997, 99996 -> {
-                Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.error_request, Toast.LENGTH_SHORT).show()
                 return true
             }
             99995 -> {
-                Toast.makeText(context, "服务器错误", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.error_server, Toast.LENGTH_SHORT).show()
                 return true
             }
             99994 -> {
-                Toast.makeText(context, "网络连接超时", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.error_timeout, Toast.LENGTH_SHORT).show()
                 return true
             }
         }

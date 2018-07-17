@@ -17,10 +17,9 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
-import com.iwallic.app.models.addrassets
+import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
@@ -45,54 +44,9 @@ class AssetFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
-
-        assetRV = view.findViewById(R.id.asset_list)
-        assetSRL = view.findViewById(R.id.asset_list_refresh)
-        assetSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        mainAssetTV = view.findViewById(R.id.fragment_asset_main_asset)
-        mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
-        loadPB = view.findViewById(R.id.fragment_asset_load)
-        manageIV = view.findViewById(R.id.fragment_asset_manage)
-
+        initDOM(view)
         resolveList(arrayListOf())
-
-        listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
-            val obList = SharedPrefUtils.getAsset(context!!)
-            obList.forEach {ob ->
-                if (it.indexOfFirst {aa ->
-                    aa.assetId == ob.assetId
-                } < 0) {
-                    it.add(ob)
-                }
-            }
-            resolveList(it)
-            resolveRefreshed(true)
-        }, {
-            resolveRefreshed()
-            Log.i("资产列表", "发生错误【${it}】")
-        })
-        errorListen = AssetState.error().subscribe({
-            resolveRefreshed()
-            if (!DialogUtils.Error(context!!, it)) {
-                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            resolveRefreshed()
-            Log.i("资产列表", "发生错误【${it}】")
-        })
-
-        assetSRL.setOnRefreshListener {
-            if (AssetState.fetching) {
-                assetSRL.isRefreshing = false
-                return@setOnRefreshListener
-            }
-            AssetState.fetch()
-        }
-
-        manageIV.setOnClickListener {
-            activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
-        }
-
+        initListener()
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
         return view
     }
@@ -104,7 +58,54 @@ class AssetFragment : Fragment() {
         context!!.unregisterReceiver(BlockListener)
     }
 
-    private fun resolveList(list: ArrayList<addrassets>) {
+    private fun initDOM(view: View) {
+        assetRV = view.findViewById(R.id.asset_list)
+        assetSRL = view.findViewById(R.id.asset_list_refresh)
+        assetSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        mainAssetTV = view.findViewById(R.id.fragment_asset_main_asset)
+        mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
+        loadPB = view.findViewById(R.id.fragment_asset_load)
+        manageIV = view.findViewById(R.id.fragment_asset_manage)
+    }
+
+    private fun initListener() {
+        listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
+            val obList = SharedPrefUtils.getAsset(context!!)
+            obList.forEach {ob ->
+                if (it.indexOfFirst {aa ->
+                            aa.assetId == ob.assetId
+                        } < 0) {
+                    it.add(ob)
+                }
+            }
+            resolveList(it)
+            resolveRefreshed(true)
+        }, {
+            resolveRefreshed()
+            Log.i("资产列表", "发生错误【${it}】")
+        })
+        errorListen = AssetState.error().subscribe({
+            resolveRefreshed()
+            if (!DialogUtils.error(context!!, it)) {
+                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }, {
+            resolveRefreshed()
+            Log.i("资产列表", "发生错误【${it}】")
+        })
+        assetSRL.setOnRefreshListener {
+            if (AssetState.fetching) {
+                assetSRL.isRefreshing = false
+                return@setOnRefreshListener
+            }
+            AssetState.fetch()
+        }
+        manageIV.setOnClickListener {
+            activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
+        }
+    }
+
+    private fun resolveList(list: ArrayList<BalanceRes>) {
         mainAssetTV.text = mainAsset
         mainBalanceTV.text = list.find {
             it.symbol == mainAsset

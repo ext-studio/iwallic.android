@@ -1,6 +1,5 @@
 package com.iwallic.app.pages.transaction
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,13 +8,12 @@ import android.view.View
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.utils.DialogUtils
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
-import com.iwallic.app.models.addrassets
+import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.WalletUtils
@@ -44,7 +42,7 @@ class TransactionTransferActivity : BaseActivity() {
     private var address: String = ""
     private var amount = 0.0
     private var balance = 0.0
-    private var list: List<addrassets>? = null
+    private var list: List<BalanceRes>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_transfer)
@@ -134,7 +132,7 @@ class TransactionTransferActivity : BaseActivity() {
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()
         } else {
-            DialogUtils.Dialog(this, R.string.dialog_title_primary, R.string.dialog_content_nobalance, R.string.dialog_ok, callback = fun (_) {
+            DialogUtils.dialog(this, R.string.dialog_title_primary, R.string.dialog_content_nobalance, R.string.dialog_ok, callback = fun (_) {
                 finish()
             })
         }
@@ -148,7 +146,7 @@ class TransactionTransferActivity : BaseActivity() {
         }
         when {
             WalletUtils.check(asset, "asset") -> {
-                Log.i("交易转账", "发起资产交易【$asset】*【$amount】to【$target】")
+                Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
                 HttpClient.post("getutxoes", listOf(from, asset), fun(res) {
                     val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                     if (data == null) {
@@ -171,14 +169,13 @@ class TransactionTransferActivity : BaseActivity() {
                 })
             }
             WalletUtils.check(asset, "script") -> {
-                Log.i("交易转账", "发起Token交易【$asset】*【$amount】to【$target】")
+                Log.i("【transfer】", "token tx【$asset】*【$amount】to【$target】")
                 val newTx = TransactionModel.forToken(asset, from, to, amount)
                 if (newTx == null) {
                     resolveError(99699)
                     return
                 }
                 newTx.sign(wif)
-                Log.i("交易转账", newTx.serialize(true))
                 HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
@@ -194,7 +191,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
     
     private fun resolveAssetPick() {
-        DialogUtils.DialogList(this, R.string.dialog_title_choose, list, fun(confirm: String) {
+        DialogUtils.list(this, R.string.dialog_title_choose, list, fun(confirm: String) {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
@@ -240,7 +237,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveError(code: Int) {
-        if (!DialogUtils.Error(this, code)) {
+        if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)
                 99698 -> resources.getString(R.string.transaction_transfer_error_send)

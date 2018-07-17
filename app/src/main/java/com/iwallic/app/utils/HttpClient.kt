@@ -3,7 +3,6 @@ package com.iwallic.app.utils
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
-import io.reactivex.Observable
 
 object HttpClient {
     private val gson = Gson()
@@ -17,25 +16,25 @@ object HttpClient {
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
-                            Log.i("网络请求", "完成【${method}】")
+                            Log.i("【request】", "complete【${method}】")
                             ok(gson.toJson(rs.result))
                         }
                         rs.code == 1000 -> {
                             ok("")
                         }
                         else -> {
-                            Log.i("网络请求", "出错【${rs.msg}】")
+                            Log.i("【request】", "error【${rs.msg}】")
                             no(rs.code)
                         }
                     }
                 }) { err ->
-                    Log.i("网络请求", "失败【${err}】")
+                    Log.i("【request】", "error【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }
     }
     private fun resolveError(status: Int): Int {
-        Log.i("网络请求", "返回状态码【$status】")
+        Log.i("【request】", "status【$status】")
         return when (status) {
             400 -> 99997
             404 -> 99996

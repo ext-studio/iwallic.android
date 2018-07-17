@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
@@ -97,7 +96,7 @@ class WalletBackupActivity : BaseActivity() {
                     load.dismiss()
                     withContext(UI) {
                         if (wif.isEmpty()) {
-                            Toast.makeText(baseContext, "密码错误", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(baseContext, R.string.error_password, Toast.LENGTH_SHORT).show()
                         } else {
                             verified = true
                             resolveVerified()
@@ -111,7 +110,7 @@ class WalletBackupActivity : BaseActivity() {
     private fun resolveVerified() {
         gateTV.visibility = View.GONE
         clickIV.visibility = View.GONE
-        val qrCode = QRCodeUtils.Generate(wif)
+        val qrCode = QRCodeUtils.generate(wif)
         if (qrCode != null) {
             qrIV.setImageBitmap(qrCode)
             qrIV.visibility = View.VISIBLE

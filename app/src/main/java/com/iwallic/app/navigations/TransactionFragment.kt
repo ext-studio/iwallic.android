@@ -13,15 +13,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
-
 import com.iwallic.app.R
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.adapters.TransactionAdapter
-import com.iwallic.app.models.PageData
-import com.iwallic.app.models.transactions
+import com.iwallic.app.models.PageDataRes
+import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.DialogUtils
@@ -32,21 +30,34 @@ class TransactionFragment : Fragment() {
     private lateinit var txSRL: SwipeRefreshLayout
     private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: RecyclerView.Adapter<*>
-    private lateinit var txManager: RecyclerView.LayoutManager
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
+        initDOM(view)
+        resolveList(PageDataRes())
+        initListener()
+        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
+        return view
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        listListen.dispose()
+        errorListen.dispose()
+        context!!.unregisterReceiver(BlockListener)
+    }
+
+    private fun initDOM(view: View) {
         txRV = view.findViewById(R.id.transaction_list)
         txSRL = view.findViewById(R.id.transaction_list_refresh)
         loadPB = view.findViewById(R.id.fragment_transaction_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+    }
 
-        resolveList(PageData<transactions>())
-
+    private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
             resolveList(it)
             resolveRefreshed(true)
@@ -56,7 +67,7 @@ class TransactionFragment : Fragment() {
         })
         errorListen = TransactionState.error().subscribe({
             resolveRefreshed()
-            if (!DialogUtils.Error(context!!, it)) {
+            if (!DialogUtils.error(context!!, it)) {
                 Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
             }
         }, {
@@ -71,19 +82,9 @@ class TransactionFragment : Fragment() {
             }
             TransactionState.fetch(asset = "")
         }
-
-        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
-        return view
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        listListen.dispose()
-        errorListen.dispose()
-        context!!.unregisterReceiver(BlockListener)
-    }
-
-    private fun resolveList(data: PageData<transactions>) {
+    private fun resolveList(data: PageDataRes<TransactionRes>) {
         txRV.layoutManager =LinearLayoutManager(context!!)
         txAdapter = TransactionAdapter(data, txRV)
         txRV.adapter = txAdapter
