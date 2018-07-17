@@ -39,7 +39,7 @@
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
         <activity android:name=".pages.user.UserSettingNetActivity" />
-        <activity android:name=".pages.user.UserBrowserActivity"/>
+        <activity android:name=".pages.user.UserBrowserActivity" />
 
         <service
             android:name=".services.BlockService"
@@ -48,5 +48,9 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
+
+        <activity android:name=".pages.user.UserSupportActivity" />
+        <activity android:name=".pages.user.UserAboutActivity"></activity>
     </application>
+
 </manifest>

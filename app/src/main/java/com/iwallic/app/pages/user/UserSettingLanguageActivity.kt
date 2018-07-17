@@ -13,53 +13,53 @@ import com.iwallic.app.base.MainActivity
 
 
 class UserSettingLanguageActivity : BaseActivity() {
-    var itemCN: LinearLayout? = null
-    var itemEN: LinearLayout? = null
-    var backBtn: LinearLayout? = null
-    var saveBtn: LinearLayout? = null
-    var itemCNChosen: ImageView? = null
-    var itemENChosen: ImageView? = null
+    private lateinit var itemCN: LinearLayout
+    private lateinit var itemEN: LinearLayout
+    private lateinit var backBtn: LinearLayout
+    private lateinit var saveBtn: LinearLayout
+    private lateinit var itemCNChosen: ImageView
+    private lateinit var itemENChosen: ImageView
     var chosenLocale: Locale? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_setting_language)
-        this.initDOM()
-        this.initClick()
-        this.initLang()
+        initDOM()
+        initClick()
+        initLang()
     }
 
     private fun initDOM() {
-        this.backBtn = findViewById<LinearLayout>(R.id.user_setting_lang_back)
-        this.saveBtn = findViewById<LinearLayout>(R.id.user_setting_lang_save)
-        this.itemCN = findViewById<LinearLayout>(R.id.user_setting_lang_cn)
-        this.itemEN = findViewById<LinearLayout>(R.id.user_setting_lang_en)
-        this.itemCNChosen = findViewById<ImageView>(R.id.user_setting_lang_cn_chosen)
-        this.itemENChosen = findViewById<ImageView>(R.id.user_setting_lang_en_chosen)
+        backBtn = findViewById(R.id.user_setting_lang_back)
+        saveBtn = findViewById(R.id.user_setting_lang_save)
+        itemCN = findViewById(R.id.user_setting_lang_cn)
+        itemEN = findViewById(R.id.user_setting_lang_en)
+        itemCNChosen = findViewById(R.id.user_setting_lang_cn_chosen)
+        itemENChosen = findViewById(R.id.user_setting_lang_en_chosen)
     }
 
     private fun initClick() {
-        this.backBtn!!.setOnClickListener{
-            this.finish()
+        backBtn.setOnClickListener{
+            finish()
         }
-        this.itemCN!!.setOnClickListener{
-            this.chosenLocale = Locale.SIMPLIFIED_CHINESE
-            this.itemCNChosen!!.visibility = View.VISIBLE
-            this.itemENChosen!!.visibility = View.INVISIBLE
+        itemCN.setOnClickListener{
+            chosenLocale = Locale.SIMPLIFIED_CHINESE
+            itemCNChosen.visibility = View.VISIBLE
+            itemENChosen.visibility = View.INVISIBLE
         }
-        this.itemEN!!.setOnClickListener{
-            this.chosenLocale = Locale.ENGLISH
-            this.itemENChosen!!.visibility = View.VISIBLE
-            this.itemCNChosen!!.visibility = View.INVISIBLE
+        itemEN.setOnClickListener{
+            chosenLocale = Locale.ENGLISH
+            itemENChosen.visibility = View.VISIBLE
+            itemCNChosen.visibility = View.INVISIBLE
         }
-        this.saveBtn!!.setOnClickListener {
-            if (this.chosenLocale == null) {
+        saveBtn.setOnClickListener {
+            if (chosenLocale == null) {
                 return@setOnClickListener
             }
-            if (this.chosenLocale == LocaleUtils.Current(this)) {
-                this.finish()
+            if (chosenLocale == LocaleUtils.Current(this)) {
+                finish()
                 return@setOnClickListener
             } else {
-                LocaleUtils.SetLocale(this, this.chosenLocale!!)
+                LocaleUtils.SetLocale(this, chosenLocale!!)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 this.startActivity(intent);
@@ -68,10 +68,10 @@ class UserSettingLanguageActivity : BaseActivity() {
     }
 
     private fun initLang() {
-        this.chosenLocale = LocaleUtils.Current(this)
-        when (this.chosenLocale) {
-            Locale.SIMPLIFIED_CHINESE -> this.itemCNChosen!!.visibility = View.VISIBLE
-            Locale.ENGLISH -> this.itemENChosen!!.visibility = View.VISIBLE
+        chosenLocale = LocaleUtils.Current(this)
+        when (chosenLocale) {
+            Locale.SIMPLIFIED_CHINESE -> itemCNChosen.visibility = View.VISIBLE
+            Locale.ENGLISH -> itemENChosen.visibility = View.VISIBLE
         }
     }
 }

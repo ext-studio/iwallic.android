@@ -38,9 +38,7 @@ class FindFragment : Fragment() {
         findWV.settings.javaScriptEnabled = true
         findWV.webViewClient = WebViewClient()
 
-        launch (UI) {
-            findWV.loadUrl("file:///android_asset/fragment_find/index.html")
-        }
+        findWV.loadUrl("file:///android_asset/fragment_find/index.html")
 
         findSRL.setOnRefreshListener {
             findWV.reload()

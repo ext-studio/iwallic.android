@@ -7,24 +7,37 @@ import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 
 class UserSettingActivity : BaseActivity() {
+    private lateinit var backLL: LinearLayout
+    private lateinit var skinLL: LinearLayout
+    private lateinit var netLL: LinearLayout
+    private lateinit var langLL: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_setting)
 
-        findViewById<LinearLayout>(R.id.user_setting_back).setOnClickListener {
+        initDOM()
+        initClick()
+    }
+
+    private fun initDOM() {
+        backLL = findViewById(R.id.user_setting_back)
+        langLL = findViewById(R.id.user_setting_net)
+        skinLL = findViewById(R.id.user_setting_lang)
+        netLL = findViewById(R.id.user_setting_skin)
+    }
+
+    private fun initClick() {
+        backLL.setOnClickListener {
             finish()
         }
-
-        findViewById<LinearLayout>(R.id.user_setting_lang).setOnClickListener {
+        langLL.setOnClickListener {
             startActivity(Intent(this, UserSettingLanguageActivity::class.java))
         }
-
-        findViewById<LinearLayout>(R.id.user_setting_skin).setOnClickListener {
+        skinLL.setOnClickListener {
             startActivity(Intent(this, UserSettingThemeActivity::class.java))
         }
-
-        findViewById<LinearLayout>(R.id.user_setting_net).setOnClickListener {
+        netLL.setOnClickListener {
             startActivity(Intent(this, UserSettingNetActivity::class.java))
         }
     }

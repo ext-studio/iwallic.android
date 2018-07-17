@@ -11,65 +11,65 @@ import com.iwallic.app.base.MainActivity
 import com.iwallic.app.utils.SharedPrefUtils
 
 class UserSettingThemeActivity : BaseActivity() {
-    var itemDefault: LinearLayout? = null
-    var itemNight: LinearLayout? = null
-    var backBtn: LinearLayout? = null
-    var saveBtn: LinearLayout? = null
-    var itemDefaultChosen: ImageView? = null
-    var itemNightChosen: ImageView? = null
-    var chosenSkin: String? = null
+    private lateinit var itemDefault: LinearLayout
+    private lateinit var itemNight: LinearLayout
+    private lateinit var backBtn: LinearLayout
+    private lateinit var saveBtn: LinearLayout
+    private lateinit var itemDefaultChosen: ImageView
+    private lateinit var itemNightChosen: ImageView
+    private var chosenSkin: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_setting_theme)
-        this.initDOM()
-        this.initClick()
-        this.initSkin()
+        initDOM()
+        initClick()
+        initSkin()
     }
 
     private fun initDOM() {
-        this.backBtn = findViewById<LinearLayout>(R.id.user_setting_skin_back)
-        this.saveBtn = findViewById<LinearLayout>(R.id.user_setting_skin_save)
-        this.itemDefault = findViewById<LinearLayout>(R.id.user_setting_skin_default)
-        this.itemNight = findViewById<LinearLayout>(R.id.user_setting_skin_night)
-        this.itemDefaultChosen = findViewById<ImageView>(R.id.user_setting_skin_default_chosen)
-        this.itemNightChosen = findViewById<ImageView>(R.id.user_setting_skin_night_chosen)
+        backBtn = findViewById(R.id.user_setting_skin_back)
+        saveBtn = findViewById(R.id.user_setting_skin_save)
+        itemDefault = findViewById(R.id.user_setting_skin_default)
+        itemNight = findViewById(R.id.user_setting_skin_night)
+        itemDefaultChosen = findViewById(R.id.user_setting_skin_default_chosen)
+        itemNightChosen = findViewById(R.id.user_setting_skin_night_chosen)
     }
 
     private fun initClick() {
-        this.backBtn!!.setOnClickListener{
+        backBtn.setOnClickListener{
             finish()
         }
-        this.itemDefault!!.setOnClickListener{
-            this.chosenSkin = "default"
-            this.itemDefaultChosen!!.visibility = View.VISIBLE
-            this.itemNightChosen!!.visibility = View.INVISIBLE
+        itemDefault.setOnClickListener{
+            chosenSkin = "default"
+            itemDefaultChosen.visibility = View.VISIBLE
+            itemNightChosen.visibility = View.INVISIBLE
         }
-        this.itemNight!!.setOnClickListener{
-            this.chosenSkin = "night"
-            this.itemNightChosen!!.visibility = View.VISIBLE
-            this.itemDefaultChosen!!.visibility = View.INVISIBLE
+        itemNight.setOnClickListener{
+            chosenSkin = "night"
+            itemNightChosen.visibility = View.VISIBLE
+            itemDefaultChosen.visibility = View.INVISIBLE
         }
-        this.saveBtn!!.setOnClickListener {
-            if (this.chosenSkin == null) {
+        saveBtn.setOnClickListener {
+            if (chosenSkin == null) {
                 return@setOnClickListener
             }
-            if (this.chosenSkin == SharedPrefUtils.getSkin(this)) {
-                this.finish()
+            if (chosenSkin == SharedPrefUtils.getSkin(this)) {
+                finish()
                 return@setOnClickListener
             } else {
                 SharedPrefUtils.setSkin(this, chosenSkin!!)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                this.startActivity(intent);
+                startActivity(intent)
             }
         }
     }
 
     private fun initSkin() {
-        this.chosenSkin = SharedPrefUtils.getSkin(this)
+        chosenSkin = SharedPrefUtils.getSkin(this)
         when (chosenSkin) {
-            "default" -> itemDefaultChosen!!.visibility = View.VISIBLE
-            "night" -> itemNightChosen!!.visibility = View.VISIBLE
+            "default" -> itemDefaultChosen.visibility = View.VISIBLE
+            "night" -> itemNightChosen.visibility = View.VISIBLE
         }
     }
 }

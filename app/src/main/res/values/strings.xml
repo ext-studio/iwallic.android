@@ -12,6 +12,8 @@
     <string name="fragment_user_setting">Settings</string>
     <string name="fragment_user_signout">Close wallet</string>
     <string name="fragment_user_backup">Backup wallet</string>
+    <string name="fragment_user_support">Support</string>
+    <string name="fragment_user_about">About</string>
     <string name="asset_manage">Assets manage</string>
     <string name="asset_manage_save">Save</string>
     <string name="user_setting_language">Language</string>
