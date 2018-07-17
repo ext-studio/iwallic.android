@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.MainActivity
@@ -26,6 +28,7 @@ class WalletImportActivity : BaseActivity() {
     private lateinit var confirmET: EditText
     private lateinit var errorTV: TextView
     private lateinit var importPB: ProgressBar
+    private lateinit var scanIV: ImageView
     var wif: String = ""
     var pwd: String = ""
     var confirm: String = ""
@@ -37,6 +40,25 @@ class WalletImportActivity : BaseActivity() {
         initInput()
         initClick()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents != null) {
+                Log.i("【WalletImport】", "scanned【${result.contents}】")
+                if (WalletUtils.check(result.contents, "wif")) {
+                    wif = result.contents
+                    wifET.setText(result.contents)
+                } else {
+                    Toast.makeText(this, R.string.error_scan_wif, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.i("【WalletImport】", "scan cancelled")
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
     private fun initDOM() {
         backLL = findViewById(R.id.wallet_import_back)
         wifET = findViewById(R.id.wallet_import_wif)
@@ -46,6 +68,7 @@ class WalletImportActivity : BaseActivity() {
         confirmET = findViewById(R.id.wallet_import_confirm)
         errorTV = findViewById(R.id.wallet_import_error)
         importPB = findViewById(R.id.wallet_import_load_wif)
+        scanIV = findViewById(R.id.wallet_import_scan)
     }
     private fun initInput() {
         wifET.addTextChangedListener(object : TextWatcher {
@@ -88,6 +111,11 @@ class WalletImportActivity : BaseActivity() {
         }
         fileB.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+        }
+        scanIV.setOnClickListener {
+            val scan = IntentIntegrator(this)
+            scan.setOrientationLocked(true)
+            scan.initiateScan()
         }
     }
     private fun resolveError() {

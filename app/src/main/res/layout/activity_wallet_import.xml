@@ -53,22 +53,39 @@
                 android:background="?colorPrimary"
                 android:textColor="?colorDefault"/>
 
-            <EditText
-                android:id="@+id/wallet_import_wif"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:layout_marginTop="@dimen/dimenSpace"
-                android:inputType="textMultiLine"
-                android:background="?colorDefault"
-                android:textSize="@dimen/dimenDefault"
-                android:padding="@dimen/dimenSpace"
-                android:hint="@string/wallet_import_wif_hint"
-                android:textColor="?colorFont"
-                android:focusedByDefault="true"
-                android:minLines="3"
-                android:gravity="top|start"
-                tools:targetApi="o" />
+                android:orientation="horizontal"
+                android:background="?colorDefault">
+                <EditText
+                    android:id="@+id/wallet_import_wif"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:layout_marginTop="@dimen/dimenSpace"
+                    android:inputType="textMultiLine"
+                    android:textSize="@dimen/dimenDefault"
+                    android:background="?colorDefault"
+                    android:padding="@dimen/dimenSpace"
+                    android:hint="@string/wallet_import_wif_hint"
+                    android:textColor="?colorFont"
+                    android:focusedByDefault="true"
+                    android:minLines="3"
+                    android:gravity="top|start"
+                    tools:targetApi="o" />
+                <ImageView
+                    android:padding="@dimen/dimenMini"
+                    android:id="@+id/wallet_import_scan"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace"
+                    android:layout_width="@dimen/dimenLarge"
+                    android:layout_height="@dimen/dimenLarge"
+                    android:src="@drawable/icon_scan"
+                    android:tint="?colorPrimary"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/wallet_import_pwd"

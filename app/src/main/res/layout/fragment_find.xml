@@ -7,7 +7,7 @@
     android:background="?colorDefault">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="69dp">
+        android:layout_height="65dp">
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"

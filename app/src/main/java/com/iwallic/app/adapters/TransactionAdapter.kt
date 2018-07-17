@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,8 +20,10 @@ import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.util.TypedValue
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.ConfigUtils
 
 class TransactionAdapter(data: PageDataRes<TransactionRes>, recyclerView: RecyclerView): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private val VIEW_TYPE_CELL = 1
@@ -66,9 +69,10 @@ class TransactionAdapter(data: PageDataRes<TransactionRes>, recyclerView: Recycl
             val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
             nameTV.text = pageData.data[position].name
             if (pageData.data[position].value.startsWith("-")) {
-                txidTV.setTextColor(R.attr.colorDefault)
-                nameTV.setTextColor(R.attr.colorDefault)
-                valueTV.setTextColor(R.attr.colorDefault)
+                val color = ConfigUtils.attrColor(holder.itemView.context, R.attr.colorFont)
+                txidTV.setTextColor(color)
+                nameTV.setTextColor(color)
+                valueTV.setTextColor(color)
                 holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_out)
             }
             holder.itemView.setOnClickListener {
