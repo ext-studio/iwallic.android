@@ -24,6 +24,7 @@ import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
@@ -48,6 +49,12 @@ class AssetFragment : Fragment() {
         resolveList(arrayListOf())
         initListener()
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
+
+        HttpClient.getPy("/client/assets/list?page=1&wallet_address=${WalletUtils.address(context!!)}").subscribe({
+            Log.i("【AssetList】", it)
+        }, {
+
+        })
         return view
     }
 

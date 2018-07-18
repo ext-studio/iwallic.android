@@ -22,9 +22,9 @@ class UserSettingActivity : BaseActivity() {
 
     private fun initDOM() {
         backLL = findViewById(R.id.user_setting_back)
-        langLL = findViewById(R.id.user_setting_net)
-        skinLL = findViewById(R.id.user_setting_lang)
-        netLL = findViewById(R.id.user_setting_skin)
+        langLL = findViewById(R.id.user_setting_lang)
+        skinLL = findViewById(R.id.user_setting_skin)
+        netLL = findViewById(R.id.user_setting_net)
     }
 
     private fun initClick() {

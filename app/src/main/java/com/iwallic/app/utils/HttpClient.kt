@@ -3,6 +3,7 @@ package com.iwallic.app.utils
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
+import io.reactivex.Observable
 
 object HttpClient {
     private val gson = Gson()
@@ -33,6 +34,41 @@ object HttpClient {
                 }
             }
     }
+
+    fun postPy(url: String, data: Map<String, Any>): Observable<String> {
+        return Observable.create {
+            Fuel.post("${ConfigUtils.apiDomain}$url")
+                    .header(Pair("app_version", ConfigUtils.version))
+                    .body(gson.toJson(data))
+                    .responseString { _, _, result ->
+                        result.fold({ d ->
+                            it.onNext(d)
+                            it.onComplete()
+                        }) { err ->
+                            Log.i("【request】", "error【${err}】")
+                            it.onError(Throwable(resolveError(err.response.statusCode).toString()))
+                        }
+                    }
+        }
+    }
+
+    fun getPy(url: String, net: String = "main"): Observable<String> {
+        return Observable.create {
+            Fuel.get("${ConfigUtils.apiDomain}$url")
+                .header(Pair("app_version", ConfigUtils.version), Pair("network", net))
+                .responseString { _, _, result ->
+                    result.fold({ d ->
+                        Log.i("【request】", "complete【$url】")
+                        it.onNext(d)
+                        it.onComplete()
+                    }) { err ->
+                        Log.i("【request】", "error【${err}】")
+                        it.onError(Throwable(resolveError(err.response.statusCode).toString()))
+                    }
+                }
+        }
+    }
+
     private fun resolveError(status: Int): Int {
         Log.i("【request】", "status【$status】")
         return when (status) {
