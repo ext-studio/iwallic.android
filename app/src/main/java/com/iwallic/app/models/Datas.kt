@@ -20,6 +20,15 @@ data class TransactionRes (
     val value: String
 )
 
+data class TransactionDetailRes (
+    val from: String,
+    val to: String,
+    val name: String,
+    val value: Double,
+    val blockIndex: Int,
+    val time: String
+)
+
 data class BlockTimeRes (
     val lastBlockIndex: Long,
     val time: Long
