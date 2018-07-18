@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?colorDefault">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="8dp">
+            <TextView
+                android:id="@+id/transaction_detail_txToAddr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="APKpVfc3annbFqB1qebmKVD6LyCbp1UX6C"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/colorPrimaryDarkDefault"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/transaction_detail_txToValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.000001"
+                    android:gravity="right"
+                    android:paddingRight="12dp"/>
+                <TextView
+                    android:id="@+id/transaction_detail_txToName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="NEO"
+                    android:gravity="left"
+                    android:paddingLeft="12dp"
+                    android:textColor="@color/colorPrimaryDarkDefault"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>
+

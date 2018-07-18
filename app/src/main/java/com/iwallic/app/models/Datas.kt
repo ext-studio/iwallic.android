@@ -24,7 +24,7 @@ data class TransactionDetailRes (
     val from: String,
     val to: String,
     val name: String,
-    val value: Double,
+    val value: Int,
     val blockIndex: Int,
     val time: String
 )
