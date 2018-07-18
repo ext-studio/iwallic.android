@@ -1,6 +1,5 @@
 package com.iwallic.app.pages.wallet
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.WalletHistoryAdapter
@@ -21,9 +19,6 @@ import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
 import com.iwallic.app.utils.WalletUtils
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 class WalletActivity : BaseActivity() {
     private lateinit var createB: Button
@@ -102,20 +97,17 @@ class WalletActivity : BaseActivity() {
             if (pwd.isEmpty()) {
                 return@subscribe
             }
-            DialogUtils.load(this) {
-                launch {
-                    val rs = WalletUtils.switch(baseContext, w, pwd)
-                    withContext(UI) {
-                        it.dismiss()
-                        if (rs == 0) {
-                            val intent = Intent(baseContext, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            if (!DialogUtils.error(baseContext, rs)) {
-                                Toast.makeText(baseContext, "$rs", Toast.LENGTH_SHORT).show()
-                            }
+            DialogUtils.load(this).subscribe {
+                WalletUtils.switch(baseContext, w, pwd).subscribe {rs ->
+                    it.dismiss()
+                    if (rs == 0) {
+                        val intent = Intent(baseContext, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        if (!DialogUtils.error(baseContext, rs)) {
+                            Toast.makeText(baseContext, "$rs", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -125,9 +117,15 @@ class WalletActivity : BaseActivity() {
 
     private fun resolveDel(w: WalletAgentModel, p: Int) {
         Log.i("【Wallet】", "del wallet at【$p】")
-        DialogUtils.dialog(this, title = R.string.dialog_title_warn, ok = R.string.dialog_ok, no = R.string.dialog_no, body = R.string.dialog_content_addrdel) {
+        DialogUtils.confirm(
+            this,
+            R.string.dialog_title_warn,
+            R.string.dialog_content_addrdel,
+            R.string.dialog_ok,
+            R.string.dialog_no
+        ).subscribe {
             if (!it) {
-                return@dialog
+                return@subscribe
             }
             WalletUtils.remove(baseContext, w)
             adapter.remove(p)

@@ -112,6 +112,7 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 WalletEntry.COLUMN_NAME_FILE,
                 WalletEntry.COLUMN_NAME_SNAPSHOT,
                 WalletEntry.COLUMN_NAME_COUNT,
+                WalletEntry.COLUMN_NAME_ADDR,
                 WalletEntry.COLUMN_NAME_UPDATEAT
         )
         val cursor = db.query(

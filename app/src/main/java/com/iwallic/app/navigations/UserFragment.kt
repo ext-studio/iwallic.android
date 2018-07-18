@@ -59,8 +59,8 @@ class UserFragment : Fragment() {
     }
 
     private fun resolveSignOut() {
-        DialogUtils.dialog(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no, fun (confirm: Boolean) {
-            if (confirm) {
+        DialogUtils.confirm(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no).subscribe {
+            if (it) {
                 AssetState.clear()
                 WalletUtils.close(context!!)
                 val intent = Intent(context, WalletActivity::class.java)
@@ -68,7 +68,7 @@ class UserFragment : Fragment() {
                 startActivity(intent)
                 activity!!.finish()
             }
-        })
+        }
     }
 
     companion object {

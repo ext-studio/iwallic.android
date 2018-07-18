@@ -17,9 +17,6 @@ import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.HttpClient
 import com.iwallic.app.utils.WalletUtils
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 class TransactionTransferActivity : BaseActivity() {
 
@@ -132,9 +129,14 @@ class TransactionTransferActivity : BaseActivity() {
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()
         } else {
-            DialogUtils.dialog(this, R.string.dialog_title_primary, R.string.dialog_content_nobalance, R.string.dialog_ok, callback = fun (_) {
+            DialogUtils.confirm(
+                this,
+                R.string.dialog_title_primary,
+                R.string.dialog_content_nobalance,
+                R.string.dialog_ok
+            ).subscribe {
                 finish()
-            })
+            }
         }
     }
 
@@ -204,22 +206,20 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.password(this).subscribe {
-            if (it.isEmpty()) {
+        DialogUtils.password(this).subscribe {pwd ->
+            if (pwd.isEmpty()) {
                 submitPB.visibility = View.GONE
                 submitB.visibility = View.VISIBLE
                 return@subscribe
             }
-            DialogUtils.load(this) { load ->
-                launch {
-                    wif = WalletUtils.verify(baseContext, it)
+            DialogUtils.load(this).subscribe { load ->
+                WalletUtils.verify(baseContext, pwd).subscribe {rs ->
+                    wif = rs
                     load.dismiss()
-                    withContext(UI) {
-                        if (wif.isEmpty()) {
-                            resolveError(99599)
-                        } else {
-                            resolveSend(address, target, amount)
-                        }
+                    if (wif.isEmpty()) {
+                        resolveError(99599)
+                    } else {
+                        resolveSend(address, target, amount)
                     }
                 }
             }

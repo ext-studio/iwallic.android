@@ -53,22 +53,21 @@ class WelcomeActivity : BaseActivity() {
     }
 
     private fun resolveNewVersion(config: OldConfigRes) {
-        DialogUtils.dialog(
+        DialogUtils.confirm(
             this,
             R.string.dialog_title_primary,
             R.string.dialog_version_new_body,
             R.string.dialog_version_ok,
-            R.string.dialog_no,
-            fun (confirm) {
-                if (confirm) {
-                    enterB.visibility = View.VISIBLE
-                    val uri = Uri.parse(config.version_android!!.url)
-                    startActivity(Intent(Intent.ACTION_VIEW, uri))
-                } else {
-                    resolveWallet()
-                }
+            R.string.dialog_no
+        ).subscribe {
+            if (it) {
+                enterB.visibility = View.VISIBLE
+                val uri = Uri.parse(config.version_android!!.url)
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+            } else {
+                resolveWallet()
             }
-        )
+        }
     }
 
     private fun resolveConfig() {

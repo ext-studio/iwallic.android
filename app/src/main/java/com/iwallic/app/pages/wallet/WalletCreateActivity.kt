@@ -92,11 +92,17 @@ class WalletCreateActivity : BaseActivity() {
                 resolveEnter()
                 return@setOnClickListener
             }
-            DialogUtils.dialog(this, R.string.dialog_title_primary, R.string.wallet_create_dialog_enter, R.string.dialog_ok_enter, R.string.dialog_no, fun (confirm: Boolean) {
-                if (confirm) {
+            DialogUtils.confirm(
+                this,
+                R.string.dialog_title_primary,
+                R.string.wallet_create_dialog_enter,
+                R.string.dialog_ok_enter,
+                R.string.dialog_no
+            ).subscribe {
+                if (it) {
                     resolveEnter()
                 }
-            })
+            }
         }
         saveB.setOnClickListener {
             Toast.makeText(baseContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
