@@ -145,7 +145,7 @@ object DialogUtils {
                 Toast.makeText(context, R.string.error_request, Toast.LENGTH_SHORT).show()
                 return true
             }
-            99995 -> {
+            100000, 99995 -> {
                 Toast.makeText(context, R.string.error_server, Toast.LENGTH_SHORT).show()
                 return true
             }

@@ -3,6 +3,7 @@ package com.iwallic.app.utils
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
+import com.iwallic.app.models.ResponsePyModel
 import io.reactivex.Observable
 
 object HttpClient {
@@ -10,10 +11,10 @@ object HttpClient {
     @Suppress("UNCHECKED_CAST")
     fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
         Fuel.post(ConfigUtils.api())
-            .body(gson.toJson(RequestModel(method, params)))
+            .body(gson.toJson(RequestGoModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    val rs = gson.fromJson(d, ResponseModel::class.java)
+                    val rs = gson.fromJson(d, ResponseGoModel::class.java)
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
@@ -52,25 +53,30 @@ object HttpClient {
         }
     }
 
-    fun getPy(url: String, net: String = "main"): Observable<String> {
-        return Observable.create {
-            Fuel.get("${ConfigUtils.apiDomain}$url")
-                .header(Pair("app_version", ConfigUtils.version), Pair("network", net))
-                .responseString { _, _, result ->
-                    result.fold({ d ->
-                        Log.i("【request】", "complete【$url】")
-                        it.onNext(d)
-                        it.onComplete()
-                    }) { err ->
-                        Log.i("【request】", "error【${err}】")
-                        it.onError(Throwable(resolveError(err.response.statusCode).toString()))
+    fun getPy(url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
+        Fuel.get("${ConfigUtils.apiDomain}$url")
+            .header(Pair("app_version", ConfigUtils.version), Pair("network", ConfigUtils.net))
+            .responseString { _, _, result ->
+                result.fold({ d ->
+                    Log.i("【request】", "complete【$url】【$d】")
+                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    if (rs == null) {
+                        no(99998)
+                        return@fold
                     }
+                    if (rs.bool_status) {
+                        ok(gson.toJson(rs.data))
+                    } else {
+                        no(rs.error_code ?: 99999)
+                    }
+                }) { err ->
+                    Log.i("【request】", "error【${err}】")
+                    no(resolveError(err.response.statusCode))
                 }
-        }
+            }
     }
 
     private fun resolveError(status: Int): Int {
-        Log.i("【request】", "status【$status】")
         return when (status) {
             400 -> 99997
             404 -> 99996
@@ -81,14 +87,13 @@ object HttpClient {
     }
 }
 
-data class RequestModel (
+data class RequestGoModel (
     val method: String,
     val params: List<Any>
 )
 
-data class ResponseModel (
+data class ResponseGoModel (
     val code: Int,
     val msg: String,
     val result: Any?
 )
-

@@ -35,11 +35,11 @@ data class BlockTimeRes (
 )
 
 data class AssetManageRes (
-    val assetId: String,
-    val name: String,
-    val symbol: String,
+    val assetId: String = "",
+    val name: String = "",
+    val symbol: String = "",
     val balance: String = "0",
-    val active: Boolean = false
+    var display: Boolean = false
 )
 
 data class OldConfigRes (
@@ -51,4 +51,25 @@ data class VersionAndroidRes (
     val tag: String,
     val url: String,
     val info: Map<String, String> = emptyMap()
+)
+
+data class ResponsePyModel (
+    val msg: String = "",
+    val data: Any?,
+    val error_code: Int?,
+    val bool_status: Boolean = false
+)
+
+data class PageDataPyModel<T> (
+    val items: ArrayList<T> = arrayListOf(),
+    var page: Int = 1,
+    var pages: Int = 1,
+    var per_page: Int = 10,
+    var total: Int = 0
+)
+
+data class AssetListPyModel (
+    val assetId: String = "",
+    val name: String = "",
+    val symbol: String = ""
 )

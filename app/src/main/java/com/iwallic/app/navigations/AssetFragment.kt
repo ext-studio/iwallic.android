@@ -49,12 +49,6 @@ class AssetFragment : Fragment() {
         resolveList(arrayListOf())
         initListener()
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
-
-        HttpClient.getPy("/client/assets/list?page=1&wallet_address=${WalletUtils.address(context!!)}").subscribe({
-            Log.i("【AssetList】", it)
-        }, {
-
-        })
         return view
     }
 
