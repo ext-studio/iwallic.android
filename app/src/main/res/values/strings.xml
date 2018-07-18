@@ -24,6 +24,7 @@
     <string name="user_setting_net">Chain net</string>
     <string name="user_setting_net_main">Main net</string>
     <string name="user_setting_net_test">Test net</string>
+    <string name="wallet_history_count">Contains %1$d address</string>
     <string name="wallet_import">Import wallet</string>
     <string name="wallet_create">Create wallet</string>
     <string name="wallet_create_tip">You need to set a cipher to keep your private key and transactions in safe. iWallic will never save your cipher, nor to help you find it back. So do keep it in mind.</string>
@@ -72,6 +73,7 @@
     <string name="dialog_content_signout">Sure to close current wallet?</string>
     <string name="dialog_content_noAsset">No Asset</string>
     <string name="dialog_content_nobalance">You do not own any asset currently, tap to go back.</string>
+    <string name="dialog_content_addrdel">Sure to delete it? This can not be backspaced.</string>
     <string name="toast_refreshed">Refreshed!</string>
     <string name="dialog_version_ok">Update</string>
     <string name="dialog_version_new_body">Find new version for iWallic, update now?</string>

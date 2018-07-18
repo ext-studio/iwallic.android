@@ -153,6 +153,10 @@ object DialogUtils {
                 Toast.makeText(context, R.string.error_timeout, Toast.LENGTH_SHORT).show()
                 return true
             }
+            99599 -> {
+                Toast.makeText(context, R.string.error_password, Toast.LENGTH_SHORT).show()
+                return true
+            }
         }
         return false
     }

@@ -41,5 +41,6 @@ data class WalletAgentModel(
     val file: String,
     val snapshot: String,
     val count: Int,
+    val address: String,
     val updateAt: Long
 )

@@ -50,10 +50,26 @@
             tools:targetApi="lollipop" />
     </LinearLayout>
 
-    <ListView
-        android:visibility="gone"
+    <LinearLayout
         android:id="@+id/wallet_history_list"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_width="260dp"
-        android:layout_height="480dp"/>
+        android:gravity="center"
+        android:orientation="vertical">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/wallet_history_list_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="?colorPrimary"
+            android:src="@drawable/icon_back"
+            android:tint="?colorDefault"
+            android:layout_margin="@dimen/dimenSpace"
+            tools:targetApi="lollipop" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/wallet_history_list_view"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </FrameLayout>

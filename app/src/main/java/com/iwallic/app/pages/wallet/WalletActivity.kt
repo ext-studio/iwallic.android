@@ -1,27 +1,42 @@
 package com.iwallic.app.pages.wallet
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.WalletHistoryAdapter
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.MainActivity
 import com.iwallic.app.models.WalletAgentModel
+import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
+import com.iwallic.app.utils.WalletUtils
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class WalletActivity : BaseActivity() {
     private lateinit var createB: Button
     private lateinit var importB: Button
     private lateinit var historyFAB: FloatingActionButton
     private lateinit var history: ArrayList<WalletAgentModel>
-    private lateinit var historyLV: ListView
+    private lateinit var historyLL: LinearLayout
+    private lateinit var historyRV: RecyclerView
     private lateinit var gateLL: LinearLayout
+    private lateinit var backFAB: FloatingActionButton
+    private lateinit var adapter: WalletHistoryAdapter
+
+    private lateinit var adapterViewManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +52,26 @@ class WalletActivity : BaseActivity() {
         createB = findViewById(R.id.wallet_create_btn)
         importB = findViewById(R.id.wallet_import_btn)
         historyFAB = findViewById(R.id.wallet_history_btn)
-        historyLV = findViewById(R.id.wallet_history_list)
+        historyRV = findViewById(R.id.wallet_history_list_view)
+        historyLL = findViewById(R.id.wallet_history_list)
         gateLL = findViewById(R.id.wallet_gate)
+        backFAB = findViewById(R.id.wallet_history_list_back)
     }
 
     private fun initListener() {
         createB.setOnClickListener {
             startActivity(Intent(this, WalletCreateActivity::class.java))
         }
-
         importB.setOnClickListener {
             startActivity(Intent(this, WalletImportActivity::class.java))
         }
         historyFAB.setOnClickListener {
+            historyLL.visibility = View.VISIBLE
             gateLL.visibility = View.GONE
-            historyLV.visibility = View.VISIBLE
+        }
+        backFAB.setOnClickListener {
+            historyLL.visibility = View.GONE
+            gateLL.visibility = View.VISIBLE
         }
     }
 
@@ -64,9 +84,58 @@ class WalletActivity : BaseActivity() {
     }
 
     private fun resolveList() {
-        historyLV.adapter = WalletHistoryAdapter(this, history)
-        historyLV.setOnItemClickListener { adapterView, view, i, l ->
-            Log.i("【Wallet】", "tapped【$i】")
+        adapterViewManager = LinearLayoutManager(this)
+        adapter = WalletHistoryAdapter(history)
+        historyRV.layoutManager = adapterViewManager
+        historyRV.adapter = adapter
+        adapter.onChoose().subscribe {
+            resolveOpen(adapter.getData(it))
+        }
+        adapter.onDelete().subscribe {
+            resolveDel(adapter.getData(it), it)
+        }
+    }
+
+    private fun resolveOpen(w: WalletAgentModel) {
+        Log.i("【Wallet】", "open wallet【${w._ID}】")
+        DialogUtils.password(this).subscribe { pwd ->
+            if (pwd.isEmpty()) {
+                return@subscribe
+            }
+            DialogUtils.load(this) {
+                launch {
+                    val rs = WalletUtils.switch(baseContext, w, pwd)
+                    withContext(UI) {
+                        it.dismiss()
+                        if (rs == 0) {
+                            val intent = Intent(baseContext, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            if (!DialogUtils.error(baseContext, rs)) {
+                                Toast.makeText(baseContext, "$rs", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resolveDel(w: WalletAgentModel, p: Int) {
+        Log.i("【Wallet】", "del wallet at【$p】")
+        DialogUtils.dialog(this, title = R.string.dialog_title_warn, ok = R.string.dialog_ok, no = R.string.dialog_no, body = R.string.dialog_content_addrdel) {
+            if (!it) {
+                return@dialog
+            }
+            WalletUtils.remove(baseContext, w)
+            adapter.remove(p)
+            if (adapter.itemCount == 0) {
+                historyLL.visibility = View.GONE
+                gateLL.visibility = View.VISIBLE
+                historyFAB.visibility = View.GONE
+            }
         }
     }
 }

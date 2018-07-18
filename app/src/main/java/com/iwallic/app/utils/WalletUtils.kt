@@ -69,7 +69,7 @@ object WalletUtils {
     fun save (context: Context, wallet: WalletModel): Boolean {
         val newFile = (System.currentTimeMillis()/1000).toString()
         var snapshot = newFile
-        var defaultAddress: String = ""
+        var defaultAddress = ""
         if (wallet.accounts.isNotEmpty()) {
             snapshot = wallet.accounts[0].address
             defaultAddress = snapshot
@@ -77,13 +77,48 @@ object WalletUtils {
         if (!FileUtils.saveWalletFile(context, newFile, gson.toJson(wallet))) {
             return false
         }
-        val newId = WalletDBUtils(context).add(newFile, snapshot)
+        val newId = WalletDBUtils(context).add(newFile, defaultAddress, snapshot)
         if (newId == null || newId < 1) {
             return false
         }
         SharedPrefUtils.setWallet(context, newId)
         SharedPrefUtils.setAddress(context, defaultAddress)
         return true
+    }
+
+    /**
+     * Switch to another exists wallet
+     * 1. get wallet file
+     * 2. verify pwd
+     * 3. set to SharedPreference
+     */
+    fun switch(context: Context, agent: WalletAgentModel, pwd: String): Int {
+        val content = FileUtils.readWalletFile(context, agent.file)
+        if (content.isNullOrEmpty()) {
+            return 99598
+        }
+        val w = gson.fromJson(content, WalletModel::class.java) ?: return 99998
+        val a = w.accounts.find {
+            it.address == agent.address
+        } ?: return 99597
+        val check = Wallet.neP2Decode(a.key, pwd)
+        if (check.isEmpty()) {
+            return 99599
+        }
+        SharedPrefUtils.setWallet(context, agent._ID)
+        SharedPrefUtils.setAddress(context, agent.address)
+        WalletDBUtils(context).touch(agent._ID)
+        return 0
+    }
+
+    /**
+     * Remove wallet and file forever
+     * 1. remove sql
+     * 2. remove file
+     */
+    fun remove(context: Context, agent: WalletAgentModel) {
+        WalletDBUtils(context).remove(agent._ID)
+        FileUtils.rmWalletFile(context, agent.file)
     }
 
     fun address(context: Context): String {
