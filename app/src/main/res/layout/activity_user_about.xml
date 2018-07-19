@@ -52,9 +52,56 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View style="@style/option_item_line_full"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <View style="@style/option_item_line_full"/>
+                <LinearLayout
+                    style="@style/option_item_rl">
+
+
+                    <TextView
+                        android:text="@string/fragment_user_backup"
+                        style="@style/option_item_text"/>
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_arrowright"
+                        style="@style/option_item_imgarrow"/>
+                </LinearLayout>
+
+                <View
+                    style="@style/option_item_line_full"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/fragment_user_setting"
+                    style="@style/option_item_rl">
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_setting"
+                        style="@style/option_item_img"/>
+
+                    <TextView
+                        android:text="@string/fragment_user_setting"
+                        style="@style/option_item_text"/>
+
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:src="@drawable/icon_arrowright"
+                        style="@style/option_item_imgarrow"/>
+                </LinearLayout>
+
+                <View
+                    style="@style/option_item_line_full"/>
+            </LinearLayout>
 
         </LinearLayout>
 

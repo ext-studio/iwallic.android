@@ -30,7 +30,7 @@ data class TransactionDetailRes (
         val name: String,
         val value: Double,
         val blockIndex: Int,
-        val time: String
+        val time: Double
 )
 
 data class TransactionDetailFromRes<T>(
