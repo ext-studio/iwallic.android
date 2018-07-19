@@ -8,7 +8,7 @@ import io.reactivex.Observable
 
 object HttpClient {
     private val gson = Gson()
-    @Suppress("UNCHECKED_CAST")
+
     fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
         Fuel.post(ConfigUtils.api())
             .body(gson.toJson(RequestGoModel(method, params)))

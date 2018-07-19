@@ -37,8 +37,8 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
 
-    private lateinit var txAdapter: RecyclerView.Adapter<*>
-    private lateinit var txManager: RecyclerView.LayoutManager
+    private lateinit var txAdapter: TransactionAdapter
+    private lateinit var txManager: LinearLayoutManager
 
     private lateinit var balanceListen: Disposable
     private lateinit var listListen: Disposable
@@ -52,7 +52,7 @@ class AssetDetailActivity : BaseActivity() {
         initDOM()
         initListener()
         resolveBalance()
-        resolveList(PageDataRes())
+        // resolveList(PageDataRes())
         registerReceiver(BlockListener, IntentFilter(new_block_action))
     }
 
@@ -88,6 +88,10 @@ class AssetDetailActivity : BaseActivity() {
         txSRL = findViewById(R.id.asset_detail_list_refresh)
         loadPB = findViewById(R.id.asset_detail_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        txAdapter = TransactionAdapter(PageDataRes())
+        txManager = LinearLayoutManager(this)
+        txRV.layoutManager = txManager
+        txRV.adapter = txAdapter
     }
 
     private fun initListener() {
@@ -107,7 +111,11 @@ class AssetDetailActivity : BaseActivity() {
             resolveRefreshed()
             Log.i("【AssetDetail】", "error【${it}】")
         })
-        balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({}, {})
+        balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({
+            resolveBalance()
+        }, {
+            Log.i("【AssetDetail】", "error【${it}】")
+        })
         txSRL.setOnRefreshListener {
             if (TransactionState.fetching) {
                 txSRL.isRefreshing = false
@@ -118,6 +126,15 @@ class AssetDetailActivity : BaseActivity() {
         backIV.setOnClickListener {
             finish()
         }
+        txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!TransactionState.fetching && newState == 1 && txAdapter.checkNext(txManager.findLastVisibleItemPosition())) {
+                    txAdapter.setPaging()
+                    TransactionState.next()
+                }
+            }
+        })
     }
 
     private fun resolveBalance() {
@@ -126,13 +143,8 @@ class AssetDetailActivity : BaseActivity() {
         balanceTV.text = tryGet?.balance
     }
     private fun resolveList(data: PageDataRes<TransactionRes>) {
-        txManager = LinearLayoutManager(this)
-        txAdapter = TransactionAdapter(data, txRV)
-        txRV.apply {
-            setHasFixedSize(true)
-            layoutManager = txManager
-            adapter = txAdapter
-        }
+        txAdapter.push(data)
+        resolveRefreshed(true)
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

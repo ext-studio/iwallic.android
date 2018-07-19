@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.iwallic.app.R
 import com.iwallic.app.models.OldConfigRes
+import com.iwallic.app.models.VersionAndroidRes
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.utils.*
 import kotlinx.coroutines.experimental.launch
@@ -27,7 +28,8 @@ class WelcomeActivity : BaseActivity() {
             resolveWallet()
         }
         resolveConfig()
-        resolveVersion()
+        resolveWallet()
+        // resolveVersion()
     }
 
     override fun onBackPressed() {
@@ -35,24 +37,22 @@ class WelcomeActivity : BaseActivity() {
     }
 
     private fun resolveVersion () {
-        HttpClient.post("fetchIwallicConfig", ok = fun (res) {
-            val config = gson.fromJson<OldConfigRes>(res, OldConfigRes::class.java)
-            if (config?.version_android != null) {
-                if (config.version_android.code != "1.0.0") {
-                    resolveNewVersion(config)
-                    return
-                }
+        HttpClient.getPy("/client/index/app_version/detail", {
+            val config = gson.fromJson<VersionAndroidRes>(it, VersionAndroidRes::class.java)
+            if (config.code != "1.0.0") {
+                resolveNewVersion(config)
+                return@getPy
             }
             resolveWallet()
-        }, no = fun (err) {
-            if (!DialogUtils.error(baseContext, err)) {
-                Toast.makeText(baseContext, "$err", Toast.LENGTH_SHORT).show()
+        }, {
+            if (!DialogUtils.error(this, it)) {
+                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
             resolveWallet()
         })
     }
 
-    private fun resolveNewVersion(config: OldConfigRes) {
+    private fun resolveNewVersion(config: VersionAndroidRes) {
         DialogUtils.confirm(
             this,
             R.string.dialog_title_primary,
@@ -62,7 +62,7 @@ class WelcomeActivity : BaseActivity() {
         ).subscribe {
             if (it) {
                 enterB.visibility = View.VISIBLE
-                val uri = Uri.parse(config.version_android!!.url)
+                val uri = Uri.parse(config.url)
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
             } else {
                 resolveWallet()
@@ -71,8 +71,13 @@ class WelcomeActivity : BaseActivity() {
     }
 
     private fun resolveConfig() {
+        // 101.132.97.9:45005 192.168.1.106:5000
         // request for latest config, or use local config
-        ConfigUtils.set(SharedPrefUtils.getNet(this), "http://101.132.97.9:8001/api/iwallic", "http://101.132.97.9:8002/api/iwallic")
+        ConfigUtils.set(
+                SharedPrefUtils.getNet(this),
+                "http://101.132.97.9:45005",
+                "http://101.132.97.9:8001/api/iwallic",
+                "http://101.132.97.9:8002/api/iwallic")
     }
 
     private fun resolveWallet() {

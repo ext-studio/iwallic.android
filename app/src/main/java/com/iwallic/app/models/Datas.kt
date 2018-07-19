@@ -9,7 +9,7 @@ data class BalanceRes (
 
 data class PageDataRes<T>(
     var page: Int = 1,
-    var pageSize: Int = 10,
+    var pageSize: Int = 30,
     var total: Int = 0,
     var data: ArrayList<T> = arrayListOf()
 )
@@ -47,9 +47,9 @@ data class OldConfigRes (
 )
 
 data class VersionAndroidRes (
-    val code: String,
-    val tag: String,
-    val url: String,
+    val code: String = "1.0.0",
+    val tag: String = "Beta",
+    val url: String = "",
     val info: Map<String, String> = emptyMap()
 )
 
@@ -61,10 +61,10 @@ data class ResponsePyModel (
 )
 
 data class PageDataPyModel<T> (
-    val items: ArrayList<T> = arrayListOf(),
+    var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 10,
+    var per_page: Int = 20,
     var total: Int = 0
 )
 

@@ -8,9 +8,12 @@ import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 
 class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
     private var data = list
+    private val _onClick = PublishSubject.create<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_list, parent, false) as FrameLayout
@@ -22,9 +25,7 @@ class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapt
         holder.itemView.findViewById<TextView>(R.id.asset_list_name).text = data[position].symbol
         holder.itemView.findViewById<TextView>(R.id.asset_list_balance).text = data[position].balance
         holder.itemView.setOnClickListener {
-            val intent = Intent(it.context, AssetDetailActivity::class.java)
-            intent.putExtra("asset", data[position].assetId)
-            it.context.startActivity(intent)
+            _onClick.onNext(position)
         }
     }
 
@@ -32,6 +33,19 @@ class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapt
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun onClick(): Observable<Int> {
+        return _onClick
+    }
+
+    fun set(newData: ArrayList<BalanceRes>) {
+        data = newData
+        notifyDataSetChanged()
+    }
+
+    fun getAssetId(position: Int): String {
+        return data[position].assetId
     }
 
     class ViewHolder(
