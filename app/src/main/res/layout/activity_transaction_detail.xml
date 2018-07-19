@@ -149,10 +149,15 @@
             android:gravity="center"
             android:textColor="@color/colorPrimaryDarkDefault"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/transaction_detail_list_from"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:id="@+id/transaction_detail_from_list">
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/transaction_detail_to"
@@ -163,10 +168,14 @@
             android:text="发给"
             android:textColor="@color/colorPrimaryDarkDefault"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/transaction_detail_list_to"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:id="@+id/transaction_detail_to_list">
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

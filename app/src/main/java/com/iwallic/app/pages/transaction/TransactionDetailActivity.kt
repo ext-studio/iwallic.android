@@ -1,11 +1,12 @@
 package com.iwallic.app.pages.transaction
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Gravity.CENTER
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.LinearLayout.HORIZONTAL
+import android.widget.LinearLayout.VERTICAL
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.iwallic.app.base.BaseActivity
@@ -18,19 +19,13 @@ import com.iwallic.app.utils.HttpClient.post
 import kotlin.collections.ArrayList
 import com.iwallic.app.models.TransactionDetailFromRes
 import com.iwallic.app.models.TransactionDetailToRes
-import com.iwallic.app.adapters.TransactionDetailAdapter
 import java.util.*
 
 class TransactionDetailActivity : BaseActivity() {
     private lateinit var txid: Any
     private lateinit var loadPB: ProgressBar
-    private lateinit var transactionDetailRV: RecyclerView
-    private lateinit var transactionDetailManager: RecyclerView.LayoutManager
-    private lateinit var transactionDetailAdapter: RecyclerView.Adapter<*>
     private var fromFlag: Boolean = true
     private var toFlag: Boolean = true
-    private var fromData: ArrayList<TransactionDetailRes> = ArrayList()
-    private var toData: ArrayList<TransactionDetailRes> = ArrayList()
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +73,6 @@ class TransactionDetailActivity : BaseActivity() {
             resolveData(toDatatemp.TxVouts, true, "to")
 
             // render page
-            if (fromData.size > 0) resolveList(fromData, "from")
-            if(toData.size > 0) resolveList(toData, "to")
-
             if (fromFlag) {
                 findViewById<TextView>(R.id.transaction_detail_from).visibility = View.INVISIBLE
             }
@@ -102,9 +94,9 @@ class TransactionDetailActivity : BaseActivity() {
                 if (index.address != "") {
                     count++
                     if (direction == "from") {
-                        fromData.add(index)
+                        addTransferView(index, "from")
                     } else {
-                        toData.add(index)
+                        addTransferView(index, "to")
                     }
                 }
             } else { // Nep5 transfer
@@ -112,13 +104,13 @@ class TransactionDetailActivity : BaseActivity() {
                     if (index.from != "") {
                         count++
                         index.address = index.from
-                        fromData.add(index)
+                        addTransferView(index, "from")
                     }
                 } else {
                     if (index.to != "") {
                         count++
                         index.address = index.to
-                        toData.add(index)
+                        addTransferView(index, "to")
                     }
                 }
             }
@@ -133,20 +125,33 @@ class TransactionDetailActivity : BaseActivity() {
         }
     }
 
-    private fun resolveList(data: ArrayList<TransactionDetailRes>, direction: String) {
-        transactionDetailAdapter = TransactionDetailAdapter(data)
+    private fun addTransferView(data: TransactionDetailRes, direction: String) {
+        lateinit var LinearLayout: LinearLayout
         if (direction == "from") {
-            transactionDetailRV = findViewById(R.id.transaction_detail_list_to)
+             LinearLayout = findViewById<LinearLayout>(R.id.transaction_detail_from_list)
         } else {
-            transactionDetailRV = findViewById(R.id.transaction_detail_list_from)
+            LinearLayout = findViewById<LinearLayout>(R.id.transaction_detail_to_list)
         }
-        transactionDetailManager = LinearLayoutManager(this)
+        val row = LinearLayout(this)
+        row.orientation = VERTICAL
+        row.gravity = CENTER
+        val address = TextView(this)
+        address.gravity = CENTER
+        address.text = data.address
+        val line = LinearLayout(this)
+        line.orientation = HORIZONTAL
+        val value = TextView(this)
+        value.gravity  = RIGHT
+        value.text = data.value.toString()
+        val name = TextView(this)
+        name.gravity = LEFT
+        name.text = data.name
 
-        transactionDetailRV.apply {
-            setHasFixedSize(true)
-            layoutManager = transactionDetailManager
-            adapter = transactionDetailAdapter
-        }
+        line.addView(value)
+        line.addView(name)
+        row.addView(address)
+        row.addView(line)
+        LinearLayout.addView(row)
     }
 }
 
