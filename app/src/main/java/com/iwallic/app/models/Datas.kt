@@ -76,7 +76,7 @@ data class PageDataPyModel<T> (
     var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 20,
+    var per_page: Int = 10,
     var total: Int = 0
 )
 
@@ -84,4 +84,13 @@ data class AssetListPyModel (
     val assetId: String = "",
     val name: String = "",
     val symbol: String = ""
+)
+
+data class ListSwipingModel<T1, T2> (
+    var view1: T1? = null,
+    var view2: T2? = null,
+    var position: Int = -1,
+    var lastX: Float = -1f,
+    var opening: Boolean = true,
+    var base: Float = 0f
 )

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.iwallic.app.R
 import com.iwallic.app.models.AssetManageRes
@@ -22,11 +23,11 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
     private var paging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: FrameLayout
+        val view: RelativeLayout
         if (viewType == VIEW_TYPE_CELL) {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as FrameLayout
+            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as RelativeLayout
         } else {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
+            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as RelativeLayout
             pagerTV = view.findViewById(R.id.adapter_pager)
             pagerTV.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         }
@@ -106,6 +107,6 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
     }
 
     class ViewHolder(
-        listView: FrameLayout
+        listView: RelativeLayout
     ): RecyclerView.ViewHolder(listView)
 }

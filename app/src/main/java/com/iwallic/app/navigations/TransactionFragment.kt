@@ -95,22 +95,6 @@ class TransactionFragment : Fragment() {
                 }
             }
         })
-        txAdapter.onCopy().subscribe {
-            val clipboard = context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("txid", txAdapter.getItem(it).txid)
-            clipboard.primaryClip = clip
-            Toast.makeText(context, R.string.error_copied, Toast.LENGTH_SHORT).show()
-
-            val vibratorService = context!!.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (vibratorService.hasVibrator()) { // Vibrator availability checking
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    vibratorService.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)) // New vibrate method for API Level 26 or higher
-                } else {
-                    @Suppress("DEPRECATION")
-                    vibratorService.vibrate(100) // Vibrate method for below API Level 26
-                }
-            }
-        }
         txAdapter.onEnter().subscribe {
             val intent = Intent(context, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)

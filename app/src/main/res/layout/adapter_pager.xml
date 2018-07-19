@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:clickable="true"
-    android:focusable="true"
-    android:padding="@dimen/dimenSpace">
+    android:focusable="true">
     <TextView
         android:id="@+id/adapter_pager"
+        android:layout_margin="@dimen/dimenDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="?colorFont2"
+        android:text="no more"
         android:layout_gravity="center"/>
 </FrameLayout>

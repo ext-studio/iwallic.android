@@ -21,6 +21,7 @@ import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.models.TransactionRes
+import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
@@ -135,6 +136,11 @@ class AssetDetailActivity : BaseActivity() {
                 }
             }
         })
+        txAdapter.onEnter().subscribe {
+            val intent = Intent(this, TransactionDetailActivity::class.java)
+            intent.putExtra("txid", txAdapter.getItem(it).txid)
+            startActivity(intent)
+        }
     }
 
     private fun resolveBalance() {
