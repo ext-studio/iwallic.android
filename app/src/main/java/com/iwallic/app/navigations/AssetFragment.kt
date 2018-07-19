@@ -20,6 +20,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
 import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
@@ -32,7 +33,7 @@ import io.reactivex.disposables.Disposable
 class AssetFragment : Fragment() {
     private lateinit var assetRV: RecyclerView
     private lateinit var assetSRL: SwipeRefreshLayout
-    private lateinit var assetAdapter: RecyclerView.Adapter<*>
+    private lateinit var assetAdapter: AssetAdapter
     private lateinit var assetManager: RecyclerView.LayoutManager
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
@@ -46,7 +47,7 @@ class AssetFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
-        resolveList(arrayListOf())
+        // resolveList(arrayListOf())
         initListener()
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
         return view
@@ -67,6 +68,10 @@ class AssetFragment : Fragment() {
         mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
         loadPB = view.findViewById(R.id.fragment_asset_load)
         manageIV = view.findViewById(R.id.fragment_asset_manage)
+        assetAdapter = AssetAdapter(arrayListOf())
+        assetManager = LinearLayoutManager(context!!)
+        assetRV.layoutManager = assetManager
+        assetRV.adapter = assetAdapter
     }
 
     private fun initListener() {
@@ -104,6 +109,11 @@ class AssetFragment : Fragment() {
         manageIV.setOnClickListener {
             activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
+        assetAdapter.onClick().subscribe {
+            val intent = Intent(context!!, AssetDetailActivity::class.java)
+            intent.putExtra("asset", assetAdapter.getAssetId(it))
+            context!!.startActivity(intent)
+        }
     }
 
     private fun resolveList(list: ArrayList<BalanceRes>) {
@@ -111,13 +121,7 @@ class AssetFragment : Fragment() {
         mainBalanceTV.text = list.find {
             it.symbol == mainAsset
         }?.balance
-        assetManager = LinearLayoutManager(context!!)
-        assetAdapter = AssetAdapter(list)
-        assetRV.apply {
-            setHasFixedSize(true)
-            layoutManager = assetManager
-            adapter = assetAdapter
-        }
+        assetAdapter.set(list)
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

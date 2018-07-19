@@ -16,7 +16,6 @@ import io.reactivex.subjects.PublishSubject
 class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = _data
     private val _onSwitch = PublishSubject.create<Int>()
-    private val _onNext = PublishSubject.create<Int>()
     private val VIEW_TYPE_CELL = 1
     private val VIEW_TYPE_FOOTER = 0
     private lateinit var pagerTV: TextView
@@ -28,8 +27,8 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
             view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as FrameLayout
         } else {
             view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
-            pagerTV = view.findViewById<TextView>(R.id.adapter_pager)
-            pagerTV.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
+            pagerTV = view.findViewById(R.id.adapter_pager)
+            pagerTV.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         }
         return ViewHolder(view)
     }
@@ -82,7 +81,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         if (paging) {
             return false
         }
-        return position == data.items.size && data.items.size < data.total
+        return position == data.items.size && data.items.size != data.total
     }
 
     fun getPage(): Int {

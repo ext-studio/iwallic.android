@@ -35,12 +35,17 @@ object TransactionState {
         }
         fetching = true
         resolveFetch(assetId, address, cached.page+1, cached.pageSize, {
-            cached.page = it.page
-            cached.total = it.total
-            cached.pageSize = it.pageSize
-            cached.data.addAll(it.data)
-            _list.onNext(cached)
-            fetching = false
+            if (it.page > 1) {
+                cached.page = it.page
+                cached.total = it.total
+                cached.pageSize = it.pageSize
+                cached.data.addAll(it.data)
+                _list.onNext(it)
+            }
+            launch {
+                delay(1000)
+                fetching = false
+            }
         }, {
             _error.onNext(it)
             launch {
@@ -81,9 +86,15 @@ object TransactionState {
             }
             cached = pageData
             _list.onNext(cached)
-            fetching = false
+            launch {
+                delay(1000)
+                fetching = false
+            }
         }, {
-            fetching = false
+            launch {
+                delay(1000)
+                fetching = false
+            }
             if (silent) {
                 return@resolveFetch
             }
@@ -92,6 +103,11 @@ object TransactionState {
     }
 
     private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataRes<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+//        HttpClient.getPy("/client/transaction/list?page=$page&wallet_address=$addr&assetId=$assetId&confirmed=true", {
+//
+//        }, {
+//
+//        })
         HttpClient.post(
             if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
             if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
