@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
@@ -22,6 +23,7 @@ import com.iwallic.app.adapters.TransactionDetailAdapter
 class TransactionDetailActivity : BaseActivity() {
     private val gson = Gson()
     private lateinit var txid: Any
+    private lateinit var loadPB: ProgressBar
     private var fromFlag: Boolean = true
     private var toFlag: Boolean = true
     private var fromData: ArrayList<TransactionDetailRes> = ArrayList()
@@ -33,6 +35,8 @@ class TransactionDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_detail)
+
+        loadPB = findViewById(R.id.transaction_detail_load)
 
         txid = this.intent.extras.get("txid")
         findViewById<TextView>(R.id.transaction_detail_txid).setText("${txid}")
@@ -48,7 +52,7 @@ class TransactionDetailActivity : BaseActivity() {
 
     fun getnep5transferbytxid() {  // from and to
         post("getnep5transferbytxid", listOf("${txid}"), fun (res) {
-            Log.e("【交易详情】", "${res}")
+            Log.i("【nep5交易详情】", "${res}")
             val data = gson.fromJson<ArrayList<TransactionDetailRes>>(res, object: TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
             if (data !== null) {
                 val format: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -60,21 +64,22 @@ class TransactionDetailActivity : BaseActivity() {
                 resolveData(data, false, "to")
             }
         }, fun(err) {
-            Log.e("【接收交易失败】", "${err}")
+            Log.i("【接收nep5交易详情失败】", "${err}")
         })
     }
 
     fun gettransferbytxid() {  // address
         post("gettransferbytxid", listOf("${txid}"), fun (res) {
-            Log.e("【交易详情】", "${res}")
+            Log.i("【交易详情】", "${res}")
             val fromDatatemp = gson.fromJson<TransactionDetailFromRes<ArrayList<TransactionDetailRes>>>(res, object: TypeToken<TransactionDetailFromRes<ArrayList<TransactionDetailRes>>>() {}.type)
             val toDatatemp = gson.fromJson<TransactionDetailToRes<ArrayList<TransactionDetailRes>>>(res, object : TypeToken<TransactionDetailToRes<ArrayList<TransactionDetailRes>>>() {}.type)
 
             resolveData(fromDatatemp.TxUTXO, true, "from")
             resolveData(toDatatemp.TxVouts, true, "to")
 
-            resolveList(fromData, "from")
-            resolveList(toData, "to")
+            // render page
+            if (fromData.size > 0) resolveList(fromData, "from")
+            if(toData.size > 0) resolveList(toData, "to")
 
             if (fromFlag) {
                 findViewById<TextView>(R.id.transaction_detail_from).visibility = View.INVISIBLE
@@ -82,8 +87,12 @@ class TransactionDetailActivity : BaseActivity() {
             if (toFlag) {
                 findViewById<TextView>(R.id.transaction_detail_to).visibility = View.INVISIBLE
             }
+
+            if (loadPB.visibility == View.VISIBLE) {
+                loadPB.visibility = View.GONE
+            }
         }, fun(err) {
-            Log.e("【接收交易失败】", "${err}")
+            Log.i("【接收交易详情失败】", "${err}")
         })
     }
     fun resolveData(data: ArrayList<TransactionDetailRes>, flag: Boolean, direction: String) {

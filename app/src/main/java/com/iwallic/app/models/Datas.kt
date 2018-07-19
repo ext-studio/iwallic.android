@@ -23,15 +23,6 @@ data class TransactionRes (
     val value: String
 )
 
-//data class TransactionDetailNep5Res (
-//    val from: String,
-//    val to: String,
-//    val name: String,
-//    val value: Int,
-//    val blockIndex: Int,
-//    val time: String
-//)
-
 data class TransactionDetailRes (
         val from: String,
         val to: String,
@@ -41,18 +32,7 @@ data class TransactionDetailRes (
         val blockIndex: Int,
         val time: String
 )
-//data class TransactionDetailFromProtoType (
-//        @SerializedName("address") val from: String,
-//        val name: String,
-//        val value: String
-//)
-//
-//data class TransactionDetailToProtoType (
-//        @SerializedName("address") val to: String,
-//        val name: String,
-//        val value: String
-//)
-//
+
 data class TransactionDetailFromRes<T>(
     val TxUTXO: ArrayList<TransactionDetailRes>
 )
