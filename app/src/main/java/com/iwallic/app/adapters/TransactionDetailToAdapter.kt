@@ -15,12 +15,12 @@ class TransactionDetailToAdapter(list: ArrayList<TransactionDetailRes>): Recycle
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_detail_to, parent, false)
 
-        return TransactionDetailToAdapter.ViewHolder(view as FrameLayout)
+        return ViewHolder(view as FrameLayout)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.findViewById<TextView>(R.id.transaction_detail_txToName).text = data[position].name
         holder.itemView.findViewById<TextView>(R.id.transaction_detail_txToAddr).text = data[position].to
+        holder.itemView.findViewById<TextView>(R.id.transaction_detail_txToName).text = data[position].name
         holder.itemView.findViewById<TextView>(R.id.transaction_detail_txToValue).text = data[position].value.toString()
     }
 
