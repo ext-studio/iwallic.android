@@ -3,14 +3,17 @@ package com.iwallic.app.base
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
 import com.google.gson.Gson
+import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.models.OldConfigRes
 import com.iwallic.app.models.VersionAndroidRes
+import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.utils.*
 import kotlinx.coroutines.experimental.launch
@@ -28,8 +31,7 @@ class WelcomeActivity : BaseActivity() {
             resolveWallet()
         }
         resolveConfig()
-        resolveWallet()
-        // resolveVersion()
+        resolveVersion()
     }
 
     override fun onBackPressed() {
@@ -38,8 +40,9 @@ class WelcomeActivity : BaseActivity() {
 
     private fun resolveVersion () {
         HttpClient.getPy("/client/index/app_version/detail", {
-            val config = gson.fromJson<VersionAndroidRes>(it, VersionAndroidRes::class.java)
-            if (config.code != "1.0.0") {
+            val config = gson.fromJson(it, VersionRes::class.java)
+            Log.i("【WelcomeActivity】", "version【$config】")
+            if (config.code > BuildConfig.VERSION_CODE) {
                 resolveNewVersion(config)
                 return@getPy
             }
@@ -52,7 +55,8 @@ class WelcomeActivity : BaseActivity() {
         })
     }
 
-    private fun resolveNewVersion(config: VersionAndroidRes) {
+    private fun resolveNewVersion(config: VersionRes) {
+        Log.i("【WelcomeActivity】", "new version")
         DialogUtils.confirm(
             this,
             R.string.dialog_title_primary,

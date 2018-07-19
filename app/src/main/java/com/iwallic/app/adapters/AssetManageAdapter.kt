@@ -23,11 +23,11 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
     private var paging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: RelativeLayout
+        val view: FrameLayout
         if (viewType == VIEW_TYPE_CELL) {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as RelativeLayout
+            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as FrameLayout
         } else {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as RelativeLayout
+            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
             pagerTV = view.findViewById(R.id.adapter_pager)
             pagerTV.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         }
@@ -107,6 +107,6 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
     }
 
     class ViewHolder(
-        listView: RelativeLayout
+        listView: FrameLayout
     ): RecyclerView.ViewHolder(listView)
 }
