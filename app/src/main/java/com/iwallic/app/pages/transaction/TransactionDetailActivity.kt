@@ -11,23 +11,24 @@ import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iwallic.app.utils.HttpClient
-import com.iwallic.app.models.TransactionDetailRes
 import java.text.SimpleDateFormat
-import java.util.*
-import com.iwallic.app.adapters.TransactionDetailFromAdapter
-import com.iwallic.app.adapters.TransactionDetailToAdapter
+import com.iwallic.app.models.*
+import com.iwallic.app.utils.HttpClient.post
 import kotlin.collections.ArrayList
+import com.iwallic.app.models.TransactionDetailFromRes
+import com.iwallic.app.models.TransactionDetailToRes
+import com.iwallic.app.adapters.TransactionDetailAdapter
 
 class TransactionDetailActivity : BaseActivity() {
     private val gson = Gson()
     private lateinit var txid: Any
-    private lateinit var TransactionDetailFromRV: RecyclerView
-    private lateinit var TransactionDetailToRV: RecyclerView
-    private lateinit var TransactionDetailFromManager: RecyclerView.LayoutManager
-    private lateinit var TransactionDetailToManager: RecyclerView.LayoutManager
-    private lateinit var transactionDetailFromAdapter: RecyclerView.Adapter<*>
-    private lateinit var transactionDetailToAdapter: RecyclerView.Adapter<*>
+    private var fromFlag: Boolean = true
+    private var toFlag: Boolean = true
+    private var fromData: ArrayList<TransactionDetailRes> = ArrayList()
+    private var toData: ArrayList<TransactionDetailRes> = ArrayList()
+    private lateinit var TransactionDetailRV: RecyclerView
+    private lateinit var TransactionDetailManager: RecyclerView.LayoutManager
+    private lateinit var transactionDetailAdapter: RecyclerView.Adapter<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +46,8 @@ class TransactionDetailActivity : BaseActivity() {
         }
     }
 
-    fun getnep5transferbytxid() {
-        HttpClient.post("getnep5transferbytxid", listOf("${txid}"), fun (res) {
+    fun getnep5transferbytxid() {  // from and to
+        post("getnep5transferbytxid", listOf("${txid}"), fun (res) {
             Log.e("【交易详情】", "${res}")
             val data = gson.fromJson<ArrayList<TransactionDetailRes>>(res, object: TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
             if (data !== null) {
@@ -55,71 +56,87 @@ class TransactionDetailActivity : BaseActivity() {
                 findViewById<TextView>(R.id.transaction_detail_txTime).text = date
                 findViewById<TextView>(R.id.transaction_detail_txBlockIndex).text = data[0].blockIndex.toString()
 
-                resolveData(data)
+                resolveData(data, false, "from")
+                resolveData(data, false, "to")
             }
         }, fun(err) {
             Log.e("【接收交易失败】", "${err}")
         })
-
     }
-    fun gettransferbytxid() {
-        HttpClient.post("gettransferbytxid", listOf("${txid}"), fun (res) {
+
+    fun gettransferbytxid() {  // address
+        post("gettransferbytxid", listOf("${txid}"), fun (res) {
             Log.e("【交易详情】", "${res}")
-//            val data = gson.fromJson<ArrayList<TransactionDetailRes>>(res, object: TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
-//            if (data !== null) {
-//
-//            }
+            val fromDatatemp = gson.fromJson<TransactionDetailFromRes<ArrayList<TransactionDetailRes>>>(res, object: TypeToken<TransactionDetailFromRes<ArrayList<TransactionDetailRes>>>() {}.type)
+            val toDatatemp = gson.fromJson<TransactionDetailToRes<ArrayList<TransactionDetailRes>>>(res, object : TypeToken<TransactionDetailToRes<ArrayList<TransactionDetailRes>>>() {}.type)
+
+            resolveData(fromDatatemp.TxUTXO, true, "from")
+            resolveData(toDatatemp.TxVouts, true, "to")
+
+            resolveList(fromData, "from")
+            resolveList(toData, "to")
+
+            if (fromFlag) {
+                findViewById<TextView>(R.id.transaction_detail_from).visibility = View.INVISIBLE
+            }
+            if (toFlag) {
+                findViewById<TextView>(R.id.transaction_detail_to).visibility = View.INVISIBLE
+            }
         }, fun(err) {
             Log.e("【接收交易失败】", "${err}")
         })
     }
-    fun resolveData(data: ArrayList<TransactionDetailRes>) {
-        var fromCount = 0
-        var toCount = 0
-        var fromData: ArrayList<TransactionDetailRes> = ArrayList()
-        var toData: ArrayList<TransactionDetailRes> = ArrayList()
+    fun resolveData(data: ArrayList<TransactionDetailRes>, flag: Boolean, direction: String) {
+        var count = 0
         for (index in data) {
-            if (index.from != "") {
-                fromCount++
-                fromData.add(index)
-            }
-            if (index.to != "") {
-                toCount++
-                toData.add(index)
+            if (flag) {  // not Nep5 transfer
+                if (index.address != "") {
+                    count++
+                    if (direction == "from") {
+                        fromData.add(index)
+                    } else {
+                        toData.add(index)
+                    }
+                }
+            } else { // Nep5 transfer
+                if (direction == "from") {
+                    if (index.from != "") {
+                        count++
+                        index.address = index.from
+                        fromData.add(index)
+                    }
+                } else {
+                    if (index.to != "") {
+                        count++
+                        index.address = index.to
+                        toData.add(index)
+                    }
+                }
             }
         }
-        if (fromCount == 0) {
-            findViewById<TextView>(R.id.transaction_detail_from).visibility = View.INVISIBLE
-        } else {
-            resolveFromList(fromData)
-        }
-        if (toCount == 0) {
-            findViewById<TextView>(R.id.transaction_detail_to).visibility = View.INVISIBLE
-        } else {
-            resolveToList(toData)
+        if (count != 0) {
+            if (direction == "from") {
+                fromFlag = false
+
+            } else {
+                toFlag = false
+            }
         }
     }
-    fun resolveFromList(data: ArrayList<TransactionDetailRes>) {
-        transactionDetailFromAdapter = TransactionDetailFromAdapter(data)
-        TransactionDetailFromRV = findViewById(R.id.transaction_detail_list_from)
 
-        TransactionDetailFromManager = LinearLayoutManager(this)
-        TransactionDetailFromRV.apply {
-            setHasFixedSize(true)
-            layoutManager = TransactionDetailFromManager
-            adapter = transactionDetailFromAdapter
+    fun resolveList(data: ArrayList<TransactionDetailRes>, direction: String) {
+        transactionDetailAdapter = TransactionDetailAdapter(data)
+        if (direction == "from") {
+            TransactionDetailRV = findViewById(R.id.transaction_detail_list_to)
+        } else {
+            TransactionDetailRV = findViewById(R.id.transaction_detail_list_from)
         }
-    }
-    fun resolveToList(data: ArrayList<TransactionDetailRes>) {
-        transactionDetailToAdapter = TransactionDetailToAdapter(data)
-        TransactionDetailToRV = findViewById(R.id.transaction_detail_list_to)
+        TransactionDetailManager = LinearLayoutManager(this)
 
-        TransactionDetailToManager = LinearLayoutManager(this)
-
-        TransactionDetailToRV.apply {
+        TransactionDetailRV.apply {
             setHasFixedSize(true)
-            layoutManager = TransactionDetailToManager
-            adapter = transactionDetailToAdapter
+            layoutManager = TransactionDetailManager
+            adapter = transactionDetailAdapter
         }
     }
 }
