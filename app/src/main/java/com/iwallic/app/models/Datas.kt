@@ -1,8 +1,5 @@
 package com.iwallic.app.models
 
-import com.google.gson.annotations.SerializedName
-import java.net.Inet4Address
-
 data class BalanceRes (
     val assetId: String,
     val balance: String,
@@ -38,7 +35,7 @@ data class TransactionDetailFromRes<T>(
 )
 
 data class TransactionDetailToRes<T>(
-        val TxVouts: ArrayList<TransactionDetailRes>
+    val TxVouts: ArrayList<TransactionDetailRes>
 )
 
 data class BlockTimeRes (
@@ -60,6 +57,14 @@ data class OldConfigRes (
 
 data class VersionAndroidRes (
     val code: String = "1.0.0",
+    val tag: String = "Beta",
+    val url: String = "",
+    val info: Map<String, String> = emptyMap()
+)
+
+data class VersionRes (
+    val code: Int = 10,
+    val name: String = "1.0.0",
     val tag: String = "Beta",
     val url: String = "",
     val info: Map<String, String> = emptyMap()

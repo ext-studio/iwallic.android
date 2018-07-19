@@ -120,7 +120,9 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun initAsset() {
         asset = intent.getStringExtra("asset") ?: ""
-        if (asset.isNotEmpty()) {
+        val chosen = AssetState.get(asset)
+        if (asset.isNotEmpty() && chosen != null) {
+            assetNameTV.text = chosen.symbol
             return
         }
         list = AssetState.cached?.filter {
@@ -227,11 +229,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSuccess(txid: String) {
-        // 101.132.97.9:45005
-        // submit new transaction
-        // save this transaction locally
-        // listen unconfirmed tx
-        // post notify when newly confirmed
+        // todo post new tx to api
         step1LL.visibility = View.GONE
         step2LL.visibility = View.VISIBLE
     }

@@ -22,6 +22,7 @@ import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
+import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
@@ -33,6 +34,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var titleTV: TextView
     private lateinit var balanceTV: TextView
     private lateinit var backIV: ImageView
+    private lateinit var transferIV: ImageView
     private lateinit var asset: BalanceRes
     private lateinit var loadPB: ProgressBar
     private lateinit var txRV: RecyclerView
@@ -53,7 +55,6 @@ class AssetDetailActivity : BaseActivity() {
         initDOM()
         initListener()
         resolveBalance()
-        // resolveList(PageDataRes())
         registerReceiver(BlockListener, IntentFilter(new_block_action))
     }
 
@@ -84,6 +85,7 @@ class AssetDetailActivity : BaseActivity() {
     private fun initDOM() {
         titleTV = findViewById(R.id.asset_detail)
         backIV = findViewById(R.id.asset_detail_back)
+        transferIV = findViewById(R.id.asset_detail_transfer)
         balanceTV = findViewById(R.id.asset_detail_balance)
         txRV = findViewById(R.id.asset_detail_list)
         txSRL = findViewById(R.id.asset_detail_list_refresh)
@@ -126,6 +128,14 @@ class AssetDetailActivity : BaseActivity() {
         }
         backIV.setOnClickListener {
             finish()
+        }
+        if (asset.balance.toDouble() <= 0) {
+            transferIV.visibility = View.GONE
+        }
+        transferIV.setOnClickListener {
+            val intent = Intent(this, TransactionTransferActivity::class.java)
+            intent.putExtra("asset", asset.assetId)
+            startActivity(intent)
         }
         txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
