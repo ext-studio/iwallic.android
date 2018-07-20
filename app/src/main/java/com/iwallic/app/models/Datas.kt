@@ -15,27 +15,27 @@ data class PageDataRes<T>(
 )
 
 data class TransactionRes (
-    val name: String,
-    val txid: String,
-    val value: String
+    val name: String = "",
+    val txid: String = "",
+    val value: String = ""
 )
 
 data class TransactionDetailRes (
-        val from: String,
-        val to: String,
-        var address: String,
-        val name: String,
-        val value: Double,
-        val blockIndex: Int,
-        val time: Double
+        val from: String = "",
+        val to: String = "",
+        var address: String = "",
+        val name: String = "",
+        val value: Double = 0.0,
+        val blockIndex: Int = 0,
+        val time: Double = 0.0
 )
 
-data class TransactionDetailFromRes<T>(
-    val TxUTXO: ArrayList<TransactionDetailRes>
+data class TransactionDetailFromRes(
+    val TxUTXO: ArrayList<TransactionDetailRes> = arrayListOf()
 )
 
-data class TransactionDetailToRes<T>(
-    val TxVouts: ArrayList<TransactionDetailRes>
+data class TransactionDetailToRes(
+    val TxVouts: ArrayList<TransactionDetailRes> = arrayListOf()
 )
 
 data class BlockTimeRes (
