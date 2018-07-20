@@ -93,4 +93,6 @@
     <string name="list_loadmore">加载更多数据</string>
     <string name="list_nomore">没有更多数据</string>
     <string name="list_loading">努力加载中</string>
+    <string name="activity_user_about_version">当前版本</string>
+    <string name="activity_user_about_disclaimer">免责声明</string>
 </resources>

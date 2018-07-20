@@ -94,4 +94,7 @@
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>
+    <string name="activity_user_about_version">Current version</string>
+    <string name="activity_user_about_disclaimer">Disclaimer</string>
+    <string name="activity_user_about_version_content">0.0.8</string>
 </resources>

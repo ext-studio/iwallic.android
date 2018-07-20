@@ -52,27 +52,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <View style="@style/option_item_line_full"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/activity_user_about_version"
                     style="@style/option_item_rl">
 
-
                     <TextView
-                        android:text="@string/fragment_user_backup"
+                        android:text="@string/activity_user_about_version"
                         style="@style/option_item_text"/>
 
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                    <TextView
+                        android:text="@string/activity_user_about_version_content"
+                        style="@style/option_item_imgarrow" />
                 </LinearLayout>
 
-                <View
-                    style="@style/option_item_line_full"/>
+                <View style="@style/option_item_line"/>
             </LinearLayout>
 
             <LinearLayout
@@ -81,16 +81,11 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/fragment_user_setting"
+                    android:id="@+id/activity_user_about_disclaimer"
                     style="@style/option_item_rl">
 
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_setting"
-                        style="@style/option_item_img"/>
-
                     <TextView
-                        android:text="@string/fragment_user_setting"
+                        android:text="@string/activity_user_about_disclaimer"
                         style="@style/option_item_text"/>
 
                     <ImageView
@@ -99,10 +94,8 @@
                         style="@style/option_item_imgarrow"/>
                 </LinearLayout>
 
-                <View
-                    style="@style/option_item_line_full"/>
             </LinearLayout>
-
+            <View style="@style/option_item_line_full"/>
         </LinearLayout>
 
     </ScrollView>
