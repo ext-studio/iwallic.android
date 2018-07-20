@@ -15,7 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import com.iwallic.app.models.*
-import com.iwallic.app.utils.HttpClient.post
+import com.iwallic.app.utils.HttpUtils.post
 import kotlin.collections.ArrayList
 import com.iwallic.app.models.TransactionDetailFromRes
 import com.iwallic.app.models.TransactionDetailToRes

@@ -13,14 +13,4 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"/>
-    <Button
-        android:visibility="gone"
-        android:paddingStart="@dimen/dimenLarge"
-        android:paddingEnd="@dimen/dimenLarge"
-        android:layout_gravity="center"
-        android:id="@+id/welcome_enter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome_enter"
-        android:textColor="?colorDefault"/>
 </FrameLayout>

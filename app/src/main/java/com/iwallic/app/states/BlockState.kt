@@ -2,7 +2,7 @@ package com.iwallic.app.states
 
 import com.google.gson.Gson
 import com.iwallic.app.models.BlockTimeRes
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -23,7 +23,7 @@ object BlockState {
             return
         }
         loading = true
-        HttpClient.post("getblocktime", emptyList(), fun (res) {
+        HttpUtils.post("getblocktime", emptyList(), fun (res) {
             loading = false
             val blockData = gson.fromJson(res, BlockTimeRes::class.java)
             if (blockData == null) {

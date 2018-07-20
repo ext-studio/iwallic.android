@@ -18,7 +18,7 @@ import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.models.AssetManageRes
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 
@@ -94,7 +94,7 @@ class AssetManageActivity : BaseActivity() {
             return
         }
         fetching = true
-        HttpClient.getPy("/client/assets/list?page=$page&wallet_address=$address", {
+        HttpUtils.getPy("/client/assets/list?page=$page&wallet_address=$address", {
             val rs = gson.fromJson<PageDataPyModel<AssetManageRes>>(it, object: TypeToken<PageDataPyModel<AssetManageRes>>() {}.type)
             if (rs == null) {
                 DialogUtils.error(this, 99998)

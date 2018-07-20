@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.experimental.delay
@@ -103,12 +103,12 @@ object TransactionState {
     }
 
     private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataRes<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-//        HttpClient.getPy("/client/transaction/list?page=$page&wallet_address=$addr&assetId=$assetId&confirmed=true", {
+//        HttpUtils.getPy("/client/transaction/list?page=$page&wallet_address=$addr&assetId=$assetId&confirmed=true", {
 //
 //        }, {
 //
 //        })
-        HttpClient.post(
+        HttpUtils.post(
             if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
             if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
             fun (res) {

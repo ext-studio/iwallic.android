@@ -9,7 +9,7 @@ data class BalanceRes (
 
 data class PageDataRes<T>(
     var page: Int = 1,
-    var pageSize: Int = 30,
+    var pageSize: Int = 20,
     var total: Int = 0,
     var data: ArrayList<T> = arrayListOf()
 )
@@ -21,13 +21,13 @@ data class TransactionRes (
 )
 
 data class TransactionDetailRes (
-        val from: String,
-        val to: String,
-        var address: String,
-        val name: String,
-        val value: Double,
-        val blockIndex: Int,
-        val time: Double
+    val from: String,
+    val to: String,
+    var address: String,
+    val name: String,
+    val value: Double,
+    val blockIndex: Int,
+    val time: Double
 )
 
 data class TransactionDetailFromRes<T>(
@@ -51,17 +51,6 @@ data class AssetManageRes (
     var display: Boolean = false
 )
 
-data class OldConfigRes (
-    val version_android: VersionAndroidRes?
-)
-
-data class VersionAndroidRes (
-    val code: String = "1.0.0",
-    val tag: String = "Beta",
-    val url: String = "",
-    val info: Map<String, String> = emptyMap()
-)
-
 data class VersionRes (
     val code: Int = 10,
     val name: String = "1.0.0",
@@ -81,7 +70,7 @@ data class PageDataPyModel<T> (
     var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 10,
+    var per_page: Int = 20,
     var total: Int = 0
 )
 
@@ -91,11 +80,13 @@ data class AssetListPyModel (
     val symbol: String = ""
 )
 
-data class ListSwipingModel<T1, T2> (
-    var view1: T1? = null,
-    var view2: T2? = null,
-    var position: Int = -1,
-    var lastX: Float = -1f,
-    var opening: Boolean = true,
-    var base: Float = 0f
+data class RequestGoModel (
+        val method: String,
+        val params: List<Any>
+)
+
+data class ResponseGoModel (
+        val code: Int,
+        val msg: String,
+        val result: Any?
 )

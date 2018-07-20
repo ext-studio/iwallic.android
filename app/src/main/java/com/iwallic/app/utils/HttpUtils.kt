@@ -3,14 +3,16 @@ package com.iwallic.app.utils
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
+import com.iwallic.app.models.RequestGoModel
+import com.iwallic.app.models.ResponseGoModel
 import com.iwallic.app.models.ResponsePyModel
 import io.reactivex.Observable
 
-object HttpClient {
+object HttpUtils {
     private val gson = Gson()
 
     fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
-        Fuel.post(ConfigUtils.api())
+        Fuel.post(CommonUtils.apiGo())
             .body(gson.toJson(RequestGoModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->
@@ -38,8 +40,8 @@ object HttpClient {
 
     fun postPy(url: String, data: Map<String, Any>): Observable<String> {
         return Observable.create {
-            Fuel.post("${ConfigUtils.apiDomain}$url")
-                    .header(Pair("app_version", ConfigUtils.version))
+            Fuel.post("${CommonUtils.pyApi}$url")
+                    .header(Pair("app_version", CommonUtils.versionName))
                     .body(gson.toJson(data))
                     .responseString { _, _, result ->
                         result.fold({ d ->
@@ -54,8 +56,8 @@ object HttpClient {
     }
 
     fun getPy(url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
-        Fuel.get("${ConfigUtils.apiDomain}$url")
-            .header(Pair("app_version", ConfigUtils.version), Pair("network", ConfigUtils.net))
+        Fuel.get("${CommonUtils.pyApi}$url")
+            .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .responseString { _, _, result ->
                 result.fold({ d ->
                     Log.i("【request】", "complete【$url】【$d】")
@@ -86,14 +88,3 @@ object HttpClient {
         }
     }
 }
-
-data class RequestGoModel (
-    val method: String,
-    val params: List<Any>
-)
-
-data class ResponseGoModel (
-    val code: Int,
-    val msg: String,
-    val result: Any?
-)

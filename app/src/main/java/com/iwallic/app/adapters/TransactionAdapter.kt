@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.iwallic.app.R
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
-import com.iwallic.app.utils.ConfigUtils
+import com.iwallic.app.utils.CommonUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -49,7 +49,7 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
 //        val bodyFL = holder.itemView.findViewById<FrameLayout>(R.id.adapter_transaction_list_body)
 //        val copyFL = holder.itemView.findViewById<FrameLayout>(R.id.adapter_transaction_list_copy)
         if (data.data[position].value.startsWith("-")) {
-            val color = ConfigUtils.attrColor(holder.itemView.context, R.attr.colorFont)
+            val color = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
             txidTV.setTextColor(color)
             nameTV.setTextColor(color)
             valueTV.setTextColor(color)
