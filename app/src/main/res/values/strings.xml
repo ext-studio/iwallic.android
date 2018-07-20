@@ -97,4 +97,12 @@
     <string name="activity_user_about_version">Current version</string>
     <string name="activity_user_about_disclaimer">Disclaimer</string>
     <string name="activity_user_about_version_content">0.0.8</string>
+    <string name="activity_user_support_wallet_guide">Wallet guide</string>
+    <string name="activity_user_support_transaction_guide">Transaction guide</string>
+    <string name="activity_user_support_blockchain_browser">Blockchain browser</string>
+    <string name="activity_user_support_blockchain_browser_link">blolys.com</string>
+    <string name="activity_user_support_community">Community</string>
+    <string name="activity_user_support_community_link">bbs.iwallic.com</string>
+    <string name="activity_user_support_contact">Contact</string>
+    <string name="activity_user_support_contact_link">contact@iwallic.com</string>
 </resources>

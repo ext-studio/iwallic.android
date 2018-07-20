@@ -95,4 +95,9 @@
     <string name="list_loading">努力加载中</string>
     <string name="activity_user_about_version">当前版本</string>
     <string name="activity_user_about_disclaimer">免责声明</string>
+    <string name="activity_user_support_wallet_guide">Wallet guide</string>
+    <string name="activity_user_support_transaction_guide">Transaction guide</string>
+    <string name="activity_user_support_blockchain_browser">Blockchain browser</string>
+    <string name="activity_user_support_community">Community</string>
+    <string name="activity_user_support_contact">Contact</string>
 </resources>
