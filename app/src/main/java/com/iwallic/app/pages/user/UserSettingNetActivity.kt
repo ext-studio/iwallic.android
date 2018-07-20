@@ -11,7 +11,7 @@ import com.iwallic.app.base.MainActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.TransactionState
-import com.iwallic.app.utils.ConfigUtils
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.SharedPrefUtils
 
 class UserSettingNetActivity : BaseActivity() {
@@ -62,7 +62,7 @@ class UserSettingNetActivity : BaseActivity() {
                 AssetState.clear()
                 TransactionState.clear()
                 BlockState.clear()
-                ConfigUtils.set(chosenNet)
+                CommonUtils.setNet(_net = chosenNet)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)

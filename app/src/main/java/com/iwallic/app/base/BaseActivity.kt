@@ -17,7 +17,7 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resolveTheme()
-        ConfigUtils.listen().subscribe({
+        CommonUtils.onConfigured().subscribe({
             if (it) {
                 startService(Intent(this, BlockService::class.java))
             }

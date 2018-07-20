@@ -2,8 +2,7 @@ package com.iwallic.app.pages.transaction
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity.CENTER
-import android.view.Gravity.RIGHT
+import android.view.Gravity.*
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -19,7 +18,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import com.iwallic.app.models.*
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import kotlin.collections.ArrayList
 import com.iwallic.app.models.TransactionDetailFromRes
 import com.iwallic.app.models.TransactionDetailToRes
@@ -50,7 +49,7 @@ class TransactionDetailActivity : BaseActivity() {
     }
 
     private fun getnep5transferbytxid() {  // from and to
-        HttpClient.post("getnep5transferbytxid", listOf(txid), fun (nep5Res) {
+        HttpUtils.post("getnep5transferbytxid", listOf(txid), fun (nep5Res) {
             Log.i("【nep5交易详情】", "result 【${nep5Res}】")
             if (nep5Res != "") {
                 val data = gson.fromJson<ArrayList<TransactionDetailRes>>(nep5Res, object : TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
@@ -70,7 +69,7 @@ class TransactionDetailActivity : BaseActivity() {
     }
 
     private fun gettransferbytxid() {  // address
-        HttpClient.post("gettransferbytxid", listOf(txid), fun (res) {
+        HttpUtils.post("gettransferbytxid", listOf(txid), fun (res) {
             Log.i("【交易详情】", "result 【${res}】")
             if (res != "") {
                 val fromDataTemp = gson.fromJson<TransactionDetailFromRes>(res, object: TypeToken<TransactionDetailFromRes>() {}.type)
@@ -167,11 +166,11 @@ class TransactionDetailActivity : BaseActivity() {
         value.text = data.value.toString()
         value.setPadding(0, 0, 12, 0)
         value.layoutParams = colParams
-        value.gravity  = RIGHT
+        value.gravity = END
 
         name.text = data.name
         name.layoutParams = colParams
-        name.gravity = LEFT
+        name.gravity = START
         name.setPadding(12, 0, 0, 0)
 
         line.addView(value)

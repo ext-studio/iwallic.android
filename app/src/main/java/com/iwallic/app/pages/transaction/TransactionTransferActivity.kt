@@ -15,7 +15,7 @@ import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.states.AssetState
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
 class TransactionTransferActivity : BaseActivity() {
@@ -151,7 +151,7 @@ class TransactionTransferActivity : BaseActivity() {
         when {
             WalletUtils.check(asset, "asset") -> {
                 Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
-                HttpClient.post("getutxoes", listOf(from, asset), fun(res) {
+                HttpUtils.post("getutxoes", listOf(from, asset), fun(res) {
                     val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                     if (data == null) {
                         resolveError(99998)
@@ -163,7 +163,7 @@ class TransactionTransferActivity : BaseActivity() {
                         return
                     }
                     newTx.sign(wif)
-                    HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                    HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                         Log.i("transaction",res)
                     }, fun(err) {
                         resolveError(err)
@@ -180,7 +180,7 @@ class TransactionTransferActivity : BaseActivity() {
                     return
                 }
                 newTx.sign(wif)
-                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
                         resolveSuccess(newTx.hash())

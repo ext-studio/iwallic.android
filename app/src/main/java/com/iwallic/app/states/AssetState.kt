@@ -4,7 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.BalanceRes
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlin.collections.ArrayList
@@ -48,7 +48,7 @@ object AssetState {
             _error.onNext(99899)
         }
         fetching = true
-        HttpClient.post("getaddrassets", listOf(address, 1), fun (res) {
+        HttpUtils.post("getaddrassets", listOf(address, 1), fun (res) {
             fetching = false
             val data = gson.fromJson<ArrayList<BalanceRes>>(res, object: TypeToken<ArrayList<BalanceRes>>() {}.type)
             if (data == null) {
