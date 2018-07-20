@@ -11,8 +11,8 @@ import android.widget.Toast
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.iwallic.app.models.AssetRes
 import io.reactivex.Observable
-import com.iwallic.app.models.BalanceRes
 
 object DialogUtils {
     @SuppressLint("InflateParams")
@@ -111,7 +111,7 @@ object DialogUtils {
         }
     }
 
-    fun list(context: Context, title: Int? = null, list: List<BalanceRes> ?= null, callback: ((String) -> Unit)? = null) {
+    fun list(context: Context, title: Int? = null, list: List<AssetRes> ?= null, callback: ((String) -> Unit)? = null) {
         val builder = AlertDialog.Builder(context)
         if (title != null) {
             builder.setTitle(title)
@@ -121,7 +121,7 @@ object DialogUtils {
             val listKey = arrayOfNulls<String>(list.size)
             for ((index, i) in list.iterator().withIndex()) {
                 listKey[index] = i.assetId
-                listValue[index] = i.symbol
+                listValue[index] = i.name
             }
             builder.setItems(listValue) { _, i ->
                 if (callback != null) {

@@ -1,17 +1,15 @@
 package com.iwallic.app.adapters
 
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
-import com.iwallic.app.models.BalanceRes
-import com.iwallic.app.pages.asset.AssetDetailActivity
+import com.iwallic.app.models.AssetRes
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
+class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
     private var data = list
     private val _onClick = PublishSubject.create<Int>()
 
@@ -39,7 +37,7 @@ class AssetAdapter(list: ArrayList<BalanceRes>): RecyclerView.Adapter<AssetAdapt
         return _onClick
     }
 
-    fun set(newData: ArrayList<BalanceRes>) {
+    fun set(newData: ArrayList<AssetRes>) {
         data = newData
         notifyDataSetChanged()
     }

@@ -12,12 +12,12 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/ThemeDefault"
-        android:hardwareAccelerated="true">
+        android:theme="@style/ThemeDefault">
         <activity android:name=".base.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,9 @@
             android:value="2.1" />
 
         <activity android:name=".pages.user.UserSupportActivity" />
-        <activity android:name=".pages.user.UserAboutActivity"></activity>
+        <activity android:name=".pages.user.UserAboutActivity" />
+
+        <service android:name=".services.DownloadService"/>
     </application>
 
 </manifest>

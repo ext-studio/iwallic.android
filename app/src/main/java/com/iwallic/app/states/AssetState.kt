@@ -3,20 +3,20 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlin.collections.ArrayList
 
 object AssetState {
-    var cached: ArrayList<BalanceRes>? = null
+    var cached: ArrayList<AssetRes>? = null
     private var address: String = ""
-    private val _list = PublishSubject.create<ArrayList<BalanceRes>>()
+    private val _list = PublishSubject.create<ArrayList<AssetRes>>()
     private val _error = PublishSubject.create<Int>()
     var fetching: Boolean = false
     private val gson = Gson()
-    fun list(addr: String = ""): Observable<ArrayList<BalanceRes>> {
+    fun list(addr: String = ""): Observable<ArrayList<AssetRes>> {
         if (addr.isNotEmpty() && addr != address) {
             fetch(addr)
             return _list
@@ -24,10 +24,12 @@ object AssetState {
         if (cached != null) {
             Log.i("【AssetState】", "from cache")
             return _list.startWith(cached)
+        } else {
+            fetch()
         }
         return _list
     }
-    fun get(id: String): BalanceRes? = cached?.find {
+    fun get(id: String): AssetRes? = cached?.find {
         it.assetId == id
     }
     fun error(): Observable<Int> {
@@ -48,24 +50,25 @@ object AssetState {
             _error.onNext(99899)
         }
         fetching = true
-        HttpUtils.post("getaddrassets", listOf(address, 1), fun (res) {
+        HttpUtils.getPy("/client/index/assets/display?wallet_address=$address", {
             fetching = false
-            val data = gson.fromJson<ArrayList<BalanceRes>>(res, object: TypeToken<ArrayList<BalanceRes>>() {}.type)
+            val data = gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)
             if (data == null) {
                 if (silent) {
-                    return
+                    return@getPy
                 }
                 _error.onNext(99998)
             } else {
                 cached = data
+                Log.i("【AssetState】", "$data")
                 _list.onNext(data)
             }
-        }, fun (err) {
+        }, {
             fetching = false
             if (silent) {
-                return
+                return@getPy
             }
-            _error.onNext(err)
+            _error.onNext(it)
         })
     }
     fun clear() {

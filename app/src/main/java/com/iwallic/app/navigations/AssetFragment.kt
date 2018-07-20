@@ -1,5 +1,6 @@
 package com.iwallic.app.navigations
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,15 +12,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
-import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.services.new_block_action
@@ -36,7 +35,7 @@ class AssetFragment : Fragment() {
     private lateinit var mainBalanceTV: TextView
     private lateinit var loadPB: ProgressBar
     private lateinit var manageIV: ImageView
-    private val mainAsset: String = "NEO"
+    private val mainAsset = AssetRes("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b", "0", "NEO", "NEO")
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
@@ -44,7 +43,6 @@ class AssetFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
-        // resolveList(arrayListOf())
         initListener()
         context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
         return view
@@ -57,6 +55,7 @@ class AssetFragment : Fragment() {
         context!!.unregisterReceiver(BlockListener)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initDOM(view: View) {
         assetRV = view.findViewById(R.id.asset_list)
         assetSRL = view.findViewById(R.id.asset_list_refresh)
@@ -69,26 +68,15 @@ class AssetFragment : Fragment() {
         assetManager = LinearLayoutManager(context!!)
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
-
-        val imgView = view.findViewById<ImageView>(R.id.test_net_image)
-        ImageUtils.setUrl(imgView, "http://i1.hdslb.com/bfs/archive/6b4d7bec948aa3eb942bc772ee039c230cf459fc.jpg")
     }
 
     private fun initListener() {
         listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
-            val obList = SharedPrefUtils.getAsset(context!!)
-            obList.forEach {ob ->
-                if (it.indexOfFirst {aa ->
-                            aa.assetId == ob.assetId
-                        } < 0) {
-                    it.add(ob)
-                }
-            }
             resolveList(it)
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
-            Log.i("资产列表", "发生错误【${it}】")
+            Log.i("【AssetList】", "error【${it}】")
         })
         errorListen = AssetState.error().subscribe({
             resolveRefreshed()
@@ -97,7 +85,7 @@ class AssetFragment : Fragment() {
             }
         }, {
             resolveRefreshed()
-            Log.i("资产列表", "发生错误【${it}】")
+            Log.i("【AssetList】", "error【${it}】")
         })
         assetSRL.setOnRefreshListener {
             if (AssetState.fetching) {
@@ -116,11 +104,18 @@ class AssetFragment : Fragment() {
         }
     }
 
-    private fun resolveList(list: ArrayList<BalanceRes>) {
-        mainAssetTV.text = mainAsset
+    private fun resolveList(list: ArrayList<AssetRes>) {
+        mainAssetTV.text = mainAsset.name
         mainBalanceTV.text = list.find {
-            it.symbol == mainAsset
+            it.assetId == mainAsset.assetId
         }?.balance
+        for (asset in SharedPrefUtils.getAsset(context!!)) {
+            if (list.indexOfFirst {
+                it.assetId == asset.assetId
+            } < 0) {
+                list.add(asset)
+            }
+        }
         assetAdapter.set(list)
     }
 

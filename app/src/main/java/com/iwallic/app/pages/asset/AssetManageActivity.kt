@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -14,8 +13,7 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
-import com.iwallic.app.models.BalanceRes
-import com.iwallic.app.models.AssetManageRes
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpUtils
@@ -50,7 +48,7 @@ class AssetManageActivity : BaseActivity() {
         loadPB = findViewById(R.id.asset_manage_load)
         amSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
         amManager = LinearLayoutManager(this)
-        amAdapter = AssetManageAdapter(PageDataPyModel())
+        amAdapter = AssetManageAdapter(PageDataPyModel(), SharedPrefUtils.getAsset(this))
         amRV.layoutManager = amManager
         amRV.adapter = amAdapter
     }
@@ -58,9 +56,6 @@ class AssetManageActivity : BaseActivity() {
     private fun initListener() {
         backIV.setOnClickListener {
             finish()
-        }
-        amAdapter.onSwitch().subscribe {
-
         }
         amRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -95,7 +90,7 @@ class AssetManageActivity : BaseActivity() {
         }
         fetching = true
         HttpUtils.getPy("/client/assets/list?page=$page&wallet_address=$address", {
-            val rs = gson.fromJson<PageDataPyModel<AssetManageRes>>(it, object: TypeToken<PageDataPyModel<AssetManageRes>>() {}.type)
+            val rs = gson.fromJson<PageDataPyModel<AssetRes>>(it, object: TypeToken<PageDataPyModel<AssetRes>>() {}.type)
             if (rs == null) {
                 DialogUtils.error(this, 99998)
                 resolveRefreshed()

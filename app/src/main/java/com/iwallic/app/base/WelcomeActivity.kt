@@ -64,7 +64,7 @@ class WelcomeActivity : BaseActivity() {
         // request for latest config, or use local config
         CommonUtils.setNet(
                 SharedPrefUtils.getNet(this),
-                "http://101.132.97.9:45005",
+                "http://101.132.97.9:45005", // "http://192.168.1.106:5000", // "http://101.132.97.9:45005",
                 "http://101.132.97.9:8001/api/iwallic",
                 "http://101.132.97.9:8002/api/iwallic")
         CommonUtils.notifyNetwork()

@@ -11,15 +11,14 @@ import com.iwallic.app.utils.DialogUtils
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
-import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
 class TransactionTransferActivity : BaseActivity() {
-
     private lateinit var backLL: LinearLayout
     private lateinit var chooseAssetLL: LinearLayout
     private lateinit var targetET: EditText
@@ -39,7 +38,7 @@ class TransactionTransferActivity : BaseActivity() {
     private var address: String = ""
     private var amount = 0.0
     private var balance = 0.0
-    private var list: List<BalanceRes>? = null
+    private var list: List<AssetRes>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_transfer)
@@ -122,7 +121,7 @@ class TransactionTransferActivity : BaseActivity() {
         asset = intent.getStringExtra("asset") ?: ""
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
-            assetNameTV.text = chosen.symbol
+            assetNameTV.text = chosen.name
             return
         }
         list = AssetState.cached?.filter {
@@ -201,7 +200,7 @@ class TransactionTransferActivity : BaseActivity() {
             val chooseAsset = list?.find {
                 it.assetId == confirm
             }
-            assetNameTV.text = chooseAsset?.symbol
+            assetNameTV.text = chooseAsset?.name
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
             balance = chooseAsset?.balance?.toDouble() ?: 0.0
         })

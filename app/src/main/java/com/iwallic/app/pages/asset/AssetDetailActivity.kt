@@ -18,8 +18,8 @@ import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataRes
-import com.iwallic.app.models.BalanceRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
@@ -35,7 +35,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var balanceTV: TextView
     private lateinit var backIV: ImageView
     private lateinit var transferIV: ImageView
-    private lateinit var asset: BalanceRes
+    private lateinit var asset: AssetRes
     private lateinit var loadPB: ProgressBar
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
@@ -155,7 +155,7 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun resolveBalance() {
         val tryGet = AssetState.get(asset.assetId)
-        titleTV.text = tryGet?.symbol
+        titleTV.text = tryGet?.name
         balanceTV.text = tryGet?.balance
     }
     private fun resolveList(data: PageDataRes<TransactionRes>) {

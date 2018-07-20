@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
         <ImageView
-            android:id="@+id/test_net_image"
             android:contentDescription="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -41,15 +40,13 @@
                 android:textColor="?colorLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dimenLarge"
-                android:text="NEO"/>
+                android:textSize="@dimen/dimenLarge"/>
             <TextView
                 android:id="@+id/fragment_asset_main_balance"
                 android:textColor="?colorLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dimenDefault"
-                android:text="999999999"/>
+                android:textSize="@dimen/dimenDefault"/>
         </LinearLayout>
     </FrameLayout>
 

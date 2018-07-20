@@ -1,15 +1,14 @@
 package com.iwallic.app.models
 
-data class BalanceRes (
-    val assetId: String,
-    val balance: String,
-    val name: String,
-    val symbol: String
-)
+//data class BalanceRes (
+//    val assetId: String = "",
+//    val balance: String = "0",
+//    val name: String = "unknown"
+//)
 
 data class PageDataRes<T>(
     var page: Int = 1,
-    var pageSize: Int = 20,
+    var pageSize: Int = 10,
     var total: Int = 0,
     var data: ArrayList<T> = arrayListOf()
 )
@@ -43,12 +42,11 @@ data class BlockTimeRes (
     val time: Long
 )
 
-data class AssetManageRes (
+data class AssetRes (
     val assetId: String = "",
-    val name: String = "",
-    val symbol: String = "",
     val balance: String = "0",
-    var display: Boolean = false
+    val name: String = "unknown",
+    val symbol: String = "unknown"
 )
 
 data class VersionRes (
@@ -70,7 +68,7 @@ data class PageDataPyModel<T> (
     var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 20,
+    var per_page: Int = 10,
     var total: Int = 0
 )
 
@@ -81,12 +79,12 @@ data class AssetListPyModel (
 )
 
 data class RequestGoModel (
-        val method: String,
-        val params: List<Any>
+    val method: String,
+    val params: List<Any>
 )
 
 data class ResponseGoModel (
-        val code: Int,
-        val msg: String,
-        val result: Any?
+    val code: Int,
+    val msg: String,
+    val result: Any?
 )

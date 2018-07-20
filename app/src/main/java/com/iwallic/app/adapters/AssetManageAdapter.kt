@@ -6,17 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.iwallic.app.R
-import com.iwallic.app.models.AssetManageRes
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
+import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
+class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<AssetRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = _data
-    private val _onSwitch = PublishSubject.create<Int>()
+    private var display = _display
     private val VIEW_TYPE_CELL = 1
     private val VIEW_TYPE_FOOTER = 0
     private lateinit var pagerTV: TextView
@@ -29,7 +29,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         } else {
             view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
             pagerTV = view.findViewById(R.id.adapter_pager)
-            pagerTV.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
+            pagerTV.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
         }
         return ViewHolder(view)
     }
@@ -40,10 +40,17 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         }
         holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data.items[position].symbol
         val toggleSC = holder.itemView.findViewById<SwitchCompat>(R.id.asset_manage_toggle)
-        toggleSC.isChecked = data.items[position].display
+        toggleSC.isChecked = display.indexOfFirst {
+            it.assetId == data.items[position].assetId
+        } >= 0
         toggleSC.setOnClickListener {
-            Log.i("【AssetManage】", "switch【${data.items[position].symbol}】")
-            _onSwitch.onNext(position)
+            if (toggleSC.isChecked) {
+                SharedPrefUtils.addAsset(holder.itemView.context, data.items[position])
+                Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【on】")
+            } else {
+                SharedPrefUtils.rmAsset(holder.itemView.context, data.items[position].assetId)
+                Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【off】")
+            }
         }
     }
 
@@ -57,11 +64,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
-    fun onSwitch(): Observable<Int> {
-        return _onSwitch
-    }
-
-    fun push(newData: PageDataPyModel<AssetManageRes>) {
+    fun push(newData: PageDataPyModel<AssetRes>) {
         if (newData.page == 1) {
             data = newData
             notifyDataSetChanged()
@@ -82,7 +85,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         if (paging) {
             return false
         }
-        return position == data.items.size && data.items.size != data.total
+        return position == data.items.size && data.items.size < data.total
     }
 
     fun getPage(): Int {
@@ -97,13 +100,8 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetManageRes>): RecyclerView.A
         pagerTV.setText(R.string.list_loading)
     }
 
-    fun getItem(position: Int): AssetManageRes {
+    fun getItem(position: Int): AssetRes {
         return data.items[position]
-    }
-
-    fun setChecked(position: Int, checked: Boolean) {
-        data.items[position].display = checked
-        notifyItemChanged(position)
     }
 
     class ViewHolder(

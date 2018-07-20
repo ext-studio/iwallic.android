@@ -55,12 +55,36 @@ object HttpUtils {
         }
     }
 
+    fun putPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
+        Fuel.put("${CommonUtils.pyApi}$url")
+            .header(Pair("app_version", CommonUtils.versionName))
+            .body(gson.toJson(data))
+            .responseString { _, _, result ->
+                result.fold({ d ->
+                    Log.i("【request】", "complete【put】【$url】")
+                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    if (rs == null) {
+                        no(99998)
+                        return@fold
+                    }
+                    if (rs.bool_status) {
+                        ok(gson.toJson(rs.data))
+                    } else {
+                        no(rs.error_code ?: 99999)
+                    }
+                }) { err ->
+                    Log.i("【request】", "error【${err}】")
+                    no(resolveError(err.response.statusCode))
+                }
+            }
+    }
+
     fun getPy(url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.get("${CommonUtils.pyApi}$url")
             .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【$url】【$d】")
+                    Log.i("【request】", "complete【get】【$url】【$d】")
                     val rs = gson.fromJson(d, ResponsePyModel::class.java)
                     if (rs == null) {
                         no(99998)

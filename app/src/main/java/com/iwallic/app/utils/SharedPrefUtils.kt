@@ -2,7 +2,7 @@ package com.iwallic.app.utils
 
 import java.util.*
 import android.content.Context
-import com.iwallic.app.models.BalanceRes
+import com.iwallic.app.models.AssetRes
 import kotlin.collections.ArrayList
 
 class SharedPrefUtils {
@@ -50,19 +50,18 @@ class SharedPrefUtils {
         fun rmAddress(context: Context) {
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().remove("chosen_wallet").remove("chosen_address").apply()
         }
-        fun addAsset(context: Context, data: BalanceRes) {
+        fun addAsset(context: Context, data: AssetRes) {
             val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", emptySet()).toMutableSet()
             tryGet.add(arrayOf(data.assetId, "0", data.name, data.symbol).joinToString(","))
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", tryGet).apply()
         }
-        fun getAsset(context: Context): ArrayList<BalanceRes> {
-            val rs = arrayListOf<BalanceRes>()
-
+        fun getAsset(context: Context): ArrayList<AssetRes> {
+            val rs = arrayListOf<AssetRes>()
             try {
                 val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", emptySet())
                 tryGet.forEach {
                     val sp = it.split(",")
-                    rs.add(BalanceRes(sp[0], sp[1], sp[2], sp[3]))
+                    rs.add(AssetRes(sp[0], sp[1], sp[2], sp[3]))
                 }
             } catch (_: Throwable) {
                 context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().remove("observer_asset").apply()
