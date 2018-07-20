@@ -95,9 +95,9 @@
     <string name="list_loading">努力加载中</string>
     <string name="activity_user_about_version">当前版本</string>
     <string name="activity_user_about_disclaimer">免责声明</string>
-    <string name="activity_user_support_wallet_guide">Wallet guide</string>
-    <string name="activity_user_support_transaction_guide">Transaction guide</string>
-    <string name="activity_user_support_blockchain_browser">Blockchain browser</string>
-    <string name="activity_user_support_community">Community</string>
-    <string name="activity_user_support_contact">Contact</string>
+    <string name="activity_user_support_wallet_guide">钱包教程</string>
+    <string name="activity_user_support_transaction_guide">交易教程</string>
+    <string name="activity_user_support_blockchain_browser">区块浏览器</string>
+    <string name="activity_user_support_community">社区</string>
+    <string name="activity_user_support_contact">联系我们</string>
 </resources>
