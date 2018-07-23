@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
