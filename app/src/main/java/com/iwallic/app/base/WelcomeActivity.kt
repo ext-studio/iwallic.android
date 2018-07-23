@@ -1,5 +1,6 @@
 package com.iwallic.app.base
 
+import android.app.Notification
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.services.DownloadService
 import com.iwallic.app.utils.*
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -36,6 +38,9 @@ class WelcomeActivity : BaseActivity() {
     private fun initListen() {
         CommonUtils.onConfigured().subscribe {
             resolveWallet()
+//            val intent = Intent(this, DownloadService::class.java)
+//            intent.putExtra("url", "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk")
+//            startService(intent)
         }
     }
 

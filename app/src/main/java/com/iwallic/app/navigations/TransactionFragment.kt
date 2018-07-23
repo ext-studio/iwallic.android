@@ -18,6 +18,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
@@ -56,7 +57,7 @@ class TransactionFragment : Fragment() {
         txSRL = view.findViewById(R.id.transaction_list_refresh)
         loadPB = view.findViewById(R.id.fragment_transaction_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        txAdapter = TransactionAdapter(PageDataRes())
+        txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(context!!)
         txRV.layoutManager = txManager
         txRV.adapter = txAdapter
@@ -102,7 +103,7 @@ class TransactionFragment : Fragment() {
         }
     }
 
-    private fun resolveList(data: PageDataRes<TransactionRes>) {
+    private fun resolveList(data: PageDataPyModel<TransactionRes>) {
         txAdapter.push(data)
         resolveRefreshed(true)
     }

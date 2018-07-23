@@ -7,13 +7,14 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.iwallic.app.R
+import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.CommonUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private var data = _data
     private val _onEnter = PublishSubject.create<Int>()
     private val _onCopy = PublishSubject.create<Int>()
@@ -29,26 +30,26 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
         } else {
             view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
             pagerTV = view.findViewById(R.id.adapter_pager)
-            pagerTV?.setText(if (data.data.size < data.total) R.string.list_loadmore else R.string.list_nomore)
+            pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
         }
         return ViewHolder(view)
     }
 
     @Suppress("DEPRECATION")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == data.data.size) {
+        if (position == data.items.size) {
             if (pagerTV == null) {
                 pagerTV = holder.itemView.findViewById(R.id.adapter_pager)
             }
             return
         }
         val txidTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_txid)
-        txidTV.text = data.data[position].txid
+        txidTV.text = data.items[position].txid
         val valueTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_value)
-        valueTV.text = data.data[position].value
+        valueTV.text = data.items[position].value
         val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
-        nameTV.text = data.data[position].name
-        if (data.data[position].value.startsWith("-")) {
+        nameTV.text = data.items[position].name
+        if (data.items[position].value.startsWith("-")) {
             val color = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
             txidTV.setTextColor(color)
             nameTV.setTextColor(color)
@@ -60,14 +61,14 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
         }
     }
 
-    override fun getItemCount() = data.data.size + 1
+    override fun getItemCount() = data.items.size + 1
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == data.data.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
+        return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
 //    fun onCopy(): Observable<Int> {
@@ -78,20 +79,20 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
         return _onEnter
     }
 
-    fun push(newData: PageDataRes<TransactionRes>) {
+    fun push(newData: PageDataPyModel<TransactionRes>) {
         if (newData.page == 1) {
             data = newData
             notifyDataSetChanged()
         } else {
-            val p = data.data.size
+            val p = data.items.size
             data.page = newData.page
             // data.pageSize = newData.pageSize
             data.total = newData.total
-            data.pageSize = newData.pageSize
-            data.data.addAll(newData.data)
-            notifyItemRangeInserted(p + 1, newData.data.size)
+            data.per_page = newData.per_page
+            data.items.addAll(newData.items)
+            notifyItemRangeInserted(p + 1, newData.items.size)
         }
-        pagerTV?.setText(if (data.data.size != data.total) R.string.list_loadmore else R.string.list_nomore)
+        pagerTV?.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         paging = false
     }
 
@@ -99,7 +100,7 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
         if (paging) {
             return false
         }
-        return position == data.data.size && data.data.size < data.total
+        return position == data.items.size && data.items.size < data.total
     }
 
     fun getPage(): Int {
@@ -115,7 +116,7 @@ class TransactionAdapter(_data: PageDataRes<TransactionRes>): RecyclerView.Adapt
     }
 
     fun getItem(position: Int): TransactionRes {
-        return data.data[position]
+        return data.items[position]
     }
 
     class ViewHolder(

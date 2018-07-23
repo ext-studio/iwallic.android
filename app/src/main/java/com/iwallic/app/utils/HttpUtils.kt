@@ -84,7 +84,7 @@ object HttpUtils {
             .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【get】【$url】【$d】")
+                    Log.i("【request】", "complete【get】【$url】")
                     val rs = gson.fromJson(d, ResponsePyModel::class.java)
                     if (rs == null) {
                         no(99998)
@@ -93,10 +93,11 @@ object HttpUtils {
                     if (rs.bool_status) {
                         ok(gson.toJson(rs.data))
                     } else {
+                        Log.i("【request】", "error【$url】【${rs}】")
                         no(rs.error_code ?: 99999)
                     }
                 }) { err ->
-                    Log.i("【request】", "error【${err}】")
+                    Log.i("【request】", "error【$url】【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }

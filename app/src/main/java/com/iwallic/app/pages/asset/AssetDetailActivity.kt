@@ -19,6 +19,7 @@ import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.AssetRes
+import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
@@ -91,7 +92,7 @@ class AssetDetailActivity : BaseActivity() {
         txSRL = findViewById(R.id.asset_detail_list_refresh)
         loadPB = findViewById(R.id.asset_detail_load)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        txAdapter = TransactionAdapter(PageDataRes())
+        txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(this)
         txRV.layoutManager = txManager
         txRV.adapter = txAdapter
@@ -158,7 +159,7 @@ class AssetDetailActivity : BaseActivity() {
         titleTV.text = tryGet?.name
         balanceTV.text = tryGet?.balance
     }
-    private fun resolveList(data: PageDataRes<TransactionRes>) {
+    private fun resolveList(data: PageDataPyModel<TransactionRes>) {
         txAdapter.push(data)
         resolveRefreshed(true)
     }
