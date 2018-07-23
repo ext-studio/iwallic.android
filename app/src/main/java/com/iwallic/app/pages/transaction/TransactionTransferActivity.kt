@@ -72,6 +72,7 @@ class TransactionTransferActivity : BaseActivity() {
             resolveAssetPick()
         }
         submitB.setOnClickListener {
+            hideKeyBoard()
             if (amount <= 0 || target.isEmpty() || amount > balance) {
                 return@setOnClickListener
             }
@@ -122,6 +123,9 @@ class TransactionTransferActivity : BaseActivity() {
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
             assetNameTV.text = chosen.name
+            balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chosen.balance)
+            amountET.isEnabled = true
+            balance = chosen.balance.toDouble()
             return
         }
         list = AssetState.cached?.filter {
@@ -142,6 +146,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
+        hideKeyBoard()
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
@@ -162,10 +167,10 @@ class TransactionTransferActivity : BaseActivity() {
                         return
                     }
                     newTx.sign(wif)
-                    HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-                        Log.i("transaction",res)
-                    }, fun(err) {
-                        resolveError(err)
+                    HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                        resolveSuccess(newTx.hash())
+                    }, {
+                        resolveError(it)
                     })
                 }, fun(err) {
                     resolveError(err)
@@ -228,7 +233,14 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSuccess(txid: String) {
-        // todo post new tx to api
+        HttpUtils.postPy(
+            "/client/transaction/unconfirmed",
+            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", txid), Pair("value", "-$amount")), {
+                Log.i("【Transfer】", "submitted 【$txid】")
+            }, {
+                Log.i("【Transfer】", "submit failed【$it】")
+            }
+        )
         step1LL.visibility = View.GONE
         step2LL.visibility = View.VISIBLE
     }

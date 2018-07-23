@@ -37,7 +37,7 @@ class WelcomeActivity : BaseActivity() {
 
     private fun initListen() {
         CommonUtils.onConfigured().subscribe {
-            resolveWallet()
+             resolveWallet()
 //            val intent = Intent(this, DownloadService::class.java)
 //            intent.putExtra("url", "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk")
 //            startService(intent)

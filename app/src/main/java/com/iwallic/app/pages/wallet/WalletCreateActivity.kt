@@ -149,12 +149,7 @@ class WalletCreateActivity : BaseActivity() {
         createPB.visibility = View.VISIBLE
         createB.visibility = View.INVISIBLE
 
-        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        hideKeyBoard()
 
         launch {
             var done = true
