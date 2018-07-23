@@ -179,7 +179,7 @@ class WalletCreateActivity : BaseActivity() {
             Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             return
         }
-        val qrCode = QRCodeUtils.generate(newWif)
+        val qrCode = QRCodeUtils.generate(newWif, this)
         if (qrCode != null) {
             createPB.visibility = View.INVISIBLE
             createB.visibility = View.VISIBLE

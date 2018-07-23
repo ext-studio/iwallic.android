@@ -36,7 +36,7 @@ class TransactionReceiveActivity : BaseActivity() {
 
     private fun initQRCode() {
         address = WalletUtils.address(this)
-        val qrCode = QRCodeUtils.generate(address)
+        val qrCode = QRCodeUtils.generate(address, this)
         addressTV.text = address
         if (qrCode != null) {
             qrIV.setImageBitmap(qrCode)

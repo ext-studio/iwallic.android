@@ -108,7 +108,7 @@ class WalletBackupActivity : BaseActivity() {
     private fun resolveVerified() {
         gateTV.visibility = View.GONE
         clickIV.visibility = View.GONE
-        val qrCode = QRCodeUtils.generate(wif)
+        val qrCode = QRCodeUtils.generate(wif, this)
         if (qrCode != null) {
             qrIV.setImageBitmap(qrCode)
             qrIV.visibility = View.VISIBLE

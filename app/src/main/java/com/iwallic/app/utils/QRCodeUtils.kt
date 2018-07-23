@@ -6,15 +6,17 @@ import android.graphics.Color.WHITE
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
-import java.awt.font.TextAttribute.WIDTH
 import com.google.zxing.EncodeHintType
-import android.R.attr.level
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import java.util.*
-
+import android.graphics.Canvas
+import com.iwallic.app.R
+import android.content.Context
+import android.support.v4.content.ContextCompat
+import android.graphics.drawable.BitmapDrawable
 
 object QRCodeUtils {
-    fun generate(content: String, size: Int = 300): Bitmap? {
+    fun generate(content: String,context:Context, size: Int = 300): Bitmap? {
         val result: BitMatrix
         try {
             result = MultiFormatWriter().encode(content,
@@ -37,8 +39,30 @@ object QRCodeUtils {
                 pixels[offset + x] = if (result.get(x, y)) BLACK else WHITE
             }
         }
-        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        var bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         bitmap.setPixels(pixels, 0, size, 0, 0, w, h)
+
+
+        // 图片绘制在二维码中央，合成二维码图片
+        var logoBmp = (ContextCompat.getDrawable(context, R.drawable.logo) as BitmapDrawable).bitmap
+        val targetSize = 80f
+        val scaleFactor = targetSize / logoBmp.width
+        val logoWidth = logoBmp.width
+        val logoHeight = logoBmp.height
+        try {
+            val canvas = Canvas(bitmap)
+            canvas.drawBitmap(bitmap, 0.0f, 0.0f, null)
+            canvas.scale(scaleFactor, scaleFactor, w / 2.0f,
+                    h / 2.0f)
+            canvas.drawBitmap(logoBmp, (w - logoWidth) / 2.0f,
+                    (h - logoHeight) / 2.0f, null)
+            canvas.save(Canvas.ALL_SAVE_FLAG)
+            canvas.restore()
+        } catch (e: Exception) {
+            bitmap = null
+            e.stackTrace
+        }
+
         return bitmap
     }
 }
