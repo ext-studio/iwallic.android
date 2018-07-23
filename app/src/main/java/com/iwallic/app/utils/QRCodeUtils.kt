@@ -42,8 +42,7 @@ object QRCodeUtils {
         var bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         bitmap.setPixels(pixels, 0, size, 0, 0, w, h)
 
-
-        // 图片绘制在二维码中央，合成二维码图片
+        // The picture is drawn in the center of the QR code to synthesize the QR code image.
         var logoBmp = (ContextCompat.getDrawable(context, R.drawable.logo) as BitmapDrawable).bitmap
         val targetSize = 80f
         val scaleFactor = targetSize / logoBmp.width
@@ -56,7 +55,7 @@ object QRCodeUtils {
                     h / 2.0f)
             canvas.drawBitmap(logoBmp, (w - logoWidth) / 2.0f,
                     (h - logoHeight) / 2.0f, null)
-            canvas.save(Canvas.ALL_SAVE_FLAG)
+            canvas.save()
             canvas.restore()
         } catch (e: Exception) {
             bitmap = null
