@@ -50,11 +50,17 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
         nameTV.text = data.items[position].name
         if (data.items[position].value.startsWith("-")) {
-            val color = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
-            txidTV.setTextColor(color)
-            nameTV.setTextColor(color)
-            valueTV.setTextColor(color)
+            val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
+            txidTV.setTextColor(colorOut)
+            nameTV.setTextColor(colorOut)
+            valueTV.setTextColor(colorOut)
             holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_out)
+        } else {
+            val colorIn = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorDanger)
+            txidTV.setTextColor(colorIn)
+            nameTV.setTextColor(colorIn)
+            valueTV.setTextColor(colorIn)
+            holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_in)
         }
         holder.itemView.setOnClickListener {
             _onEnter.onNext(position)

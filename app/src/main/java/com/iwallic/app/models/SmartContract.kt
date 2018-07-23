@@ -54,7 +54,7 @@ class SmartContract {
             val sc = SmartContract()
             sc.scriptHash = hash
             sc.method = "transfer"
-            sc.args = arrayListOf(Hex.toFixedNum(value, 8), Wallet.addr2Script(from), Wallet.addr2Script(to))
+            sc.args = arrayListOf(Hex.toFixedNum(value, 8), Wallet.addr2Script(to), Wallet.addr2Script(from))
             return sc
         }
     }

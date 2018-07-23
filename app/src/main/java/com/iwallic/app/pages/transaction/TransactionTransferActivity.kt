@@ -184,6 +184,7 @@ class TransactionTransferActivity : BaseActivity() {
                     return
                 }
                 newTx.sign(wif)
+                Log.i("【Transfer】", newTx.serialize(true))
                 HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
