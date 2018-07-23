@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".pages.wallet.WalletActivity"
     android:background="?colorDefault">
     <ImageView
@@ -14,6 +15,7 @@
         android:layout_gravity="center"/>
 
     <LinearLayout
+        android:id="@+id/wallet_gate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|center_vertical"
@@ -34,5 +36,40 @@
             android:textColor="?colorDefault"
             android:layout_marginTop="@dimen/dimenSpace"
             android:text="@string/wallet_create"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/wallet_history_btn"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="?colorPrimary"
+            android:src="@drawable/icon_history"
+            android:tint="?colorDefault"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimenSpace"
+            tools:targetApi="lollipop" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wallet_history_list"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/wallet_history_list_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="?colorPrimary"
+            android:src="@drawable/icon_back"
+            android:tint="?colorDefault"
+            android:layout_margin="@dimen/dimenSpace"
+            tools:targetApi="lollipop" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/wallet_history_list_view"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </FrameLayout>

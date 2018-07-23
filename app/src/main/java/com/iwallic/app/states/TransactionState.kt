@@ -3,23 +3,24 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iwallic.app.models.PageData
-import com.iwallic.app.models.transactions
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.models.PageDataPyModel
+import com.iwallic.app.models.PageDataRes
+import com.iwallic.app.models.TransactionRes
+import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object TransactionState {
-    private var cached = PageData<transactions>()
+    private var cached = PageDataPyModel<TransactionRes>()
     private var address: String = ""
     private var assetId: String = ""
-    private val _list = PublishSubject.create<PageData<transactions>>()
+    private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = "", asset: String? = null): Observable<PageData<transactions>> {
+    fun list(addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
         if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
             fetch(addr, asset)
             return _list
@@ -30,18 +31,22 @@ object TransactionState {
         return _error
     }
     fun next() {
-        if (cached.data.size >= cached.total || fetching || address.isEmpty()) {
+        if (cached.items.size >= cached.total || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(assetId, address, cached.page+1, cached.pageSize, {
-            cached.page = it.page
-            cached.total = it.total
-            cached.pageSize = it.pageSize
-            cached.data.addAll(it.data)
-            Log.i("交易状态", "${cached.data.size} - ${it.data.size}")
-            _list.onNext(cached)
-            fetching = false
+        resolveFetch(assetId, address, cached.page+1, cached.per_page, {
+            if (it.page > 1) {
+                cached.page = it.page
+                cached.total = it.total
+                cached.per_page = it.per_page
+                cached.items.addAll(it.items)
+                _list.onNext(it)
+            }
+            launch {
+                delay(1000)
+                fetching = false
+            }
         }, {
             _error.onNext(it)
             launch {
@@ -55,11 +60,11 @@ object TransactionState {
             return
         }
         if (addr.isNotEmpty()) {
-            Log.i("交易状态", "设置地址")
+            Log.i("【TxState】", "set address")
             address = addr
         }
         if (asset != null) {
-            Log.i("交易状态", "设置资产为【$asset】")
+            Log.i("【TxState】", "set asset")
             assetId = asset
         }
         if (address.isEmpty()) {
@@ -69,22 +74,28 @@ object TransactionState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(assetId, address, 1, cached.pageSize, {pageData ->
+        resolveFetch(assetId, address, 1, cached.per_page, {pageData ->
             if (silent) {
-                val start = pageData.data.indexOfFirst {
-                    it.txid == cached.data[0].txid
+                val start = pageData.items.indexOfFirst {
+                    it.txid == cached.items[0].txid
                 }
-                Log.i("交易状态", "从【$start】开始出现新交易")
+                Log.i("【TxState】", "new tx from index【$start】")
                 if (start > 0) {
-                    pageData.data = ArrayList(pageData.data.subList(0, start))
-                    pageData.data.addAll(cached.data)
+                    pageData.items = ArrayList(pageData.items.subList(0, start))
+                    pageData.items.addAll(cached.items)
                 }
             }
             cached = pageData
             _list.onNext(cached)
-            fetching = false
+            launch {
+                delay(1000)
+                fetching = false
+            }
         }, {
-            fetching = false
+            launch {
+                delay(1000)
+                fetching = false
+            }
             if (silent) {
                 return@resolveFetch
             }
@@ -92,28 +103,42 @@ object TransactionState {
         })
     }
 
-    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageData<transactions>) -> Unit, no: (Int) -> Unit) {
-        HttpClient.post(
-            if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
-            if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
-            fun (res) {
-                if (res.isEmpty()) {
-                    ok(PageData())
-                    return
-                }
-                val data = gson.fromJson<PageData<transactions>>(res, object: TypeToken<PageData<transactions>>() {}.type)
-                if (data == null) {
-                    no(99998)
-                } else {
-                    ok(data)
-                }
-            }, fun (err) {
-                no(err)
-            })
+    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy("/client/transaction/list?page=$page&wallet_address=$addr&assetId=$assetId&confirmed=true", {
+            if (it.isEmpty()) {
+                ok(PageDataPyModel())
+                return@getPy
+            }
+            val data = gson.fromJson<PageDataPyModel<TransactionRes>>(it, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)
+            if (data == null) {
+                no(99998)
+            } else {
+                ok(data)
+            }
+        }, {
+            no(it)
+        })
+//        HttpUtils.post(
+//            if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
+//            if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
+//            fun (res) {
+//                if (res.isEmpty()) {
+//                    ok(PageDataRes())
+//                    return
+//                }
+//                val data = gson.fromJson<PageDataRes<TransactionRes>>(res, object: TypeToken<PageDataRes<TransactionRes>>() {}.type)
+//                if (data == null) {
+//                    no(99998)
+//                } else {
+//                    ok(data)
+//                }
+//            }, fun (err) {
+//                no(err)
+//            })
     }
 
     fun clear() {
-        cached = PageData()
+        cached = PageDataPyModel()
         address = ""
         assetId = ""
         fetching = false

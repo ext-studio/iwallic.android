@@ -3,36 +3,33 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.iwallic.app.models.addrassets
-import com.iwallic.app.utils.ConfigUtils
-import com.iwallic.app.utils.HttpClient
-import com.iwallic.app.utils.SharedPrefUtils
+import com.iwallic.app.models.AssetRes
+import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import kotlin.collections.ArrayList
 
 object AssetState {
-    var cached: ArrayList<addrassets>? = null
+    var cached: ArrayList<AssetRes>? = null
     private var address: String = ""
-    private val _list = PublishSubject.create<ArrayList<addrassets>>()
+    private val _list = PublishSubject.create<ArrayList<AssetRes>>()
     private val _error = PublishSubject.create<Int>()
     var fetching: Boolean = false
     private val gson = Gson()
-    fun list(addr: String = ""): Observable<ArrayList<addrassets>> {
+    fun list(addr: String = ""): Observable<ArrayList<AssetRes>> {
         if (addr.isNotEmpty() && addr != address) {
             fetch(addr)
             return _list
         }
         if (cached != null) {
-            Log.i("资产状态", "缓存获取")
+            Log.i("【AssetState】", "from cache")
             return _list.startWith(cached)
+        } else {
+            fetch()
         }
         return _list
     }
-    fun get(id: String): addrassets? = cached?.find {
+    fun get(id: String): AssetRes? = cached?.find {
         it.assetId == id
     }
     fun error(): Observable<Int> {
@@ -43,7 +40,7 @@ object AssetState {
             return
         }
         if (addr.isNotEmpty()) {
-            Log.i("资产状态", "设置地址")
+            Log.i("【AssetState】", "set address")
             address = addr
         }
         if (address.isEmpty()) {
@@ -53,24 +50,24 @@ object AssetState {
             _error.onNext(99899)
         }
         fetching = true
-        HttpClient.post("getaddrassets", listOf(address, 1), fun (res) {
+        HttpUtils.getPy("/client/index/assets/display?wallet_address=$address", {
             fetching = false
-            val data = gson.fromJson<ArrayList<addrassets>>(res, object: TypeToken<ArrayList<addrassets>>() {}.type)
+            val data = gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)
             if (data == null) {
                 if (silent) {
-                    return
+                    return@getPy
                 }
                 _error.onNext(99998)
             } else {
                 cached = data
                 _list.onNext(data)
             }
-        }, fun (err) {
+        }, {
             fetching = false
             if (silent) {
-                return
+                return@getPy
             }
-            _error.onNext(err)
+            _error.onNext(it)
         })
     }
     fun clear() {

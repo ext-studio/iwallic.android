@@ -4,17 +4,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.Window
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
 import com.iwallic.app.utils.WalletUtils
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 class WalletBackupActivity : BaseActivity() {
 
@@ -87,21 +85,20 @@ class WalletBackupActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.Password(this).subscribe {
-            if (it.isEmpty()) {
+        DialogUtils.password(this).subscribe {pwd ->
+            if (pwd.isEmpty()) {
                 return@subscribe
             }
-            DialogUtils.load(this) { load ->
-                launch {
-                    wif = WalletUtils.verify(baseContext, it)
+            DialogUtils.load(this).subscribe { load ->
+                WalletUtils.verify(baseContext, pwd).subscribe {rs ->
+                    wif = rs
+                    Log.i("【WalletBackup】", wif)
                     load.dismiss()
-                    withContext(UI) {
-                        if (wif.isEmpty()) {
-                            Toast.makeText(baseContext, "密码错误", Toast.LENGTH_SHORT).show()
-                        } else {
-                            verified = true
-                            resolveVerified()
-                        }
+                    if (wif.isEmpty()) {
+                        Toast.makeText(baseContext, R.string.error_password, Toast.LENGTH_SHORT).show()
+                    } else {
+                        verified = true
+                        resolveVerified()
                     }
                 }
             }
@@ -111,7 +108,7 @@ class WalletBackupActivity : BaseActivity() {
     private fun resolveVerified() {
         gateTV.visibility = View.GONE
         clickIV.visibility = View.GONE
-        val qrCode = QRCodeUtils.Generate(wif)
+        val qrCode = QRCodeUtils.generate(wif, this)
         if (qrCode != null) {
             qrIV.setImageBitmap(qrCode)
             qrIV.visibility = View.VISIBLE

@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.MainActivity
@@ -18,14 +20,15 @@ import kotlinx.coroutines.experimental.withContext
 
 class WalletImportActivity : BaseActivity() {
 
-    var backLL: LinearLayout? = null
-    var wifET: EditText? = null
-    var fileB: Button? = null
-    var importB: Button? = null
-    var pwdET: EditText? = null
-    var confirmET: EditText? = null
-    var errorTV: TextView? = null
-    var importPB: ProgressBar? = null
+    private lateinit var backLL: LinearLayout
+    private lateinit var wifET: EditText
+    private lateinit var fileB: Button
+    private lateinit var importB: Button
+    private lateinit var pwdET: EditText
+    private lateinit var confirmET: EditText
+    private lateinit var errorTV: TextView
+    private lateinit var importPB: ProgressBar
+    private lateinit var scanIV: ImageView
     var wif: String = ""
     var pwd: String = ""
     var confirm: String = ""
@@ -37,6 +40,25 @@ class WalletImportActivity : BaseActivity() {
         initInput()
         initClick()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents != null) {
+                Log.i("【WalletImport】", "scanned【${result.contents}】")
+                if (WalletUtils.check(result.contents, "wif")) {
+                    wif = result.contents
+                    wifET.setText(result.contents)
+                } else {
+                    Toast.makeText(this, R.string.error_scan_wif, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.i("【WalletImport】", "scan cancelled")
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
     private fun initDOM() {
         backLL = findViewById(R.id.wallet_import_back)
         wifET = findViewById(R.id.wallet_import_wif)
@@ -46,9 +68,10 @@ class WalletImportActivity : BaseActivity() {
         confirmET = findViewById(R.id.wallet_import_confirm)
         errorTV = findViewById(R.id.wallet_import_error)
         importPB = findViewById(R.id.wallet_import_load_wif)
+        scanIV = findViewById(R.id.wallet_import_scan)
     }
     private fun initInput() {
-        wifET!!.addTextChangedListener(object : TextWatcher {
+        wifET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 wif = p0.toString()
                 resolveError()
@@ -56,7 +79,7 @@ class WalletImportActivity : BaseActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
-        pwdET!!.addTextChangedListener(object : TextWatcher {
+        pwdET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 pwd = p0.toString()
                 resolveError()
@@ -64,7 +87,7 @@ class WalletImportActivity : BaseActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
-        confirmET!!.addTextChangedListener(object : TextWatcher {
+        confirmET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 confirm = p0.toString()
                 resolveError()
@@ -74,10 +97,10 @@ class WalletImportActivity : BaseActivity() {
         })
     }
     private fun initClick() {
-        backLL!!.setOnClickListener {
+        backLL.setOnClickListener {
             finish()
         }
-        importB!!.setOnClickListener {
+        importB.setOnClickListener {
             if (wif.isEmpty() || pwd.isEmpty() || confirm.isEmpty()) {
                 Toast.makeText(this, R.string.error_empty, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -86,22 +109,27 @@ class WalletImportActivity : BaseActivity() {
                 resolveImport()
             }
         }
-        fileB!!.setOnClickListener {
+        fileB.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+        }
+        scanIV.setOnClickListener {
+            val scan = IntentIntegrator(this)
+            scan.setOrientationLocked(true)
+            scan.initiateScan()
         }
     }
     private fun resolveError() {
         if (!WalletUtils.check(wif, "wif")) {
-            errorTV!!.setText(R.string.wallet_import_error_wif)
-            errorTV!!.visibility = View.VISIBLE
+            errorTV.setText(R.string.wallet_import_error_wif)
+            errorTV.visibility = View.VISIBLE
         } else if (pwd.isNotEmpty() && pwd.length < 6) {
-            errorTV!!.setText(R.string.wallet_create_error_short)
-            errorTV!!.visibility = View.VISIBLE
+            errorTV.setText(R.string.wallet_create_error_short)
+            errorTV.visibility = View.VISIBLE
         } else if (confirm.isNotEmpty() && confirm != pwd) {
-            errorTV!!.setText(R.string.wallet_create_error_mismatch)
-            errorTV!!.visibility = View.VISIBLE
+            errorTV.setText(R.string.wallet_create_error_mismatch)
+            errorTV.visibility = View.VISIBLE
         } else {
-            errorTV!!.visibility = View.INVISIBLE
+            errorTV.visibility = View.INVISIBLE
         }
     }
     private fun resolveImport() {
@@ -112,8 +140,8 @@ class WalletImportActivity : BaseActivity() {
         }
         imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-        importB!!.visibility = View.INVISIBLE
-        importPB!!.visibility = View.VISIBLE
+        importB.visibility = View.INVISIBLE
+        importPB.visibility = View.VISIBLE
         launch {
             var done = true
             val w = WalletUtils.import(wif, pwd)
@@ -121,8 +149,8 @@ class WalletImportActivity : BaseActivity() {
                 done = false
             }
             withContext(UI) {
-                importB!!.visibility = View.VISIBLE
-                importPB!!.visibility = View.INVISIBLE
+                importB.visibility = View.VISIBLE
+                importPB.visibility = View.INVISIBLE
                 if (done) {
                     val intent = Intent(baseContext, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

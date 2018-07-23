@@ -15,6 +15,7 @@ object WalletEntry : BaseColumns {
     const val COLUMN_NAME_FILE = "file"
     const val COLUMN_NAME_SNAPSHOT = "snapshot"
     const val COLUMN_NAME_COUNT = "count"
+    const val COLUMN_NAME_ADDR = "address"
     const val COLUMN_NAME_UPDATEAT = "update_at"
 }
 
@@ -24,6 +25,7 @@ private const val SQL_CREATE_ENTRIES =
                 "${WalletEntry.COLUMN_NAME_FILE} TEXT," +
                 "${WalletEntry.COLUMN_NAME_SNAPSHOT} TEXT," +
                 "${WalletEntry.COLUMN_NAME_COUNT} INTEGER," +
+                "${WalletEntry.COLUMN_NAME_ADDR} TEXT," +
                 "${WalletEntry.COLUMN_NAME_UPDATEAT} INTEGER)"
 
 private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${WalletEntry.TABLE_NAME}"
@@ -44,15 +46,16 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
     companion object {
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "iWallic.db"
     }
-    fun add(file: String, snapshot: String? = null, count: Int = 1): Long? {
+    fun add(file: String, addr: String, snapshot: String? = null, count: Int = 1): Long? {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(WalletEntry.COLUMN_NAME_FILE, file)
             put(WalletEntry.COLUMN_NAME_SNAPSHOT, snapshot)
             put(WalletEntry.COLUMN_NAME_COUNT, count)
+            put(WalletEntry.COLUMN_NAME_ADDR, addr)
             put(WalletEntry.COLUMN_NAME_UPDATEAT, System.currentTimeMillis()/1000)
         }
         val newRowId = db?.insert(WalletEntry.TABLE_NAME, null, values)
@@ -72,6 +75,7 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 WalletEntry.COLUMN_NAME_FILE,
                 WalletEntry.COLUMN_NAME_SNAPSHOT,
                 WalletEntry.COLUMN_NAME_COUNT,
+                WalletEntry.COLUMN_NAME_ADDR,
                 WalletEntry.COLUMN_NAME_UPDATEAT
         )
         val sortOrder = "${WalletEntry.COLUMN_NAME_UPDATEAT} DESC"
@@ -92,6 +96,7 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_FILE)),
                         getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_SNAPSHOT)),
                         getInt(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_COUNT)),
+                        getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_ADDR)),
                         getLong(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_UPDATEAT))
                 )
                 items.add(item)
@@ -107,6 +112,7 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 WalletEntry.COLUMN_NAME_FILE,
                 WalletEntry.COLUMN_NAME_SNAPSHOT,
                 WalletEntry.COLUMN_NAME_COUNT,
+                WalletEntry.COLUMN_NAME_ADDR,
                 WalletEntry.COLUMN_NAME_UPDATEAT
         )
         val cursor = db.query(
@@ -125,12 +131,23 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_FILE)),
                     getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_SNAPSHOT)),
                     getInt(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_COUNT)),
+                    getString(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_ADDR)),
                     getLong(getColumnIndexOrThrow(WalletEntry.COLUMN_NAME_UPDATEAT))
                 )
                 db.close()
                 return w
             }
         }
+        db.close()
         return null
+    }
+    fun touch(id: Long): Int? {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(WalletEntry.COLUMN_NAME_UPDATEAT, System.currentTimeMillis()/1000)
+        }
+        val update = db?.update(WalletEntry.TABLE_NAME, values, BaseColumns._ID + "=?", arrayOf(id.toString()))
+        db.close()
+        return update
     }
 }

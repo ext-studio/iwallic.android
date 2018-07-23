@@ -7,7 +7,6 @@ import android.os.IBinder
 import android.util.Log
 import com.iwallic.app.states.BlockState
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -22,22 +21,22 @@ class BlockService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i("区块服务", "服务创建")
+        Log.i("【BlockService】", "create")
         timer = Timer()
         timer!!.schedule(10000, peried) {
             BlockState.fetch()
         }
         blockListen = BlockState.data().subscribe({
-            Log.i("区块服务", "新区块【${it.lastBlockIndex}】已到达")
+            Log.i("【BlockService】", "new block arrived【${it.lastBlockIndex}】")
             sendBroadcast(newBlock)
         }, {
-            Log.i("区块服务", "发生错误【$it】")
+            Log.i("【BlockService】", "error【$it】")
         })
         errorListen = BlockState.error().subscribe({
-            Log.i("区块服务", "发生错误【$it】")
+            Log.i("【BlockService】", "error【$it】")
             sendBroadcast(newBlock)
         }, {
-            Log.i("区块服务", "发生错误【$it】")
+            Log.i("【BlockService】", "error【$it】")
         })
     }
 
@@ -47,7 +46,7 @@ class BlockService : Service() {
         timer!!.purge()
         timer = null
         blockListen.dispose()
-        Log.i("区块服务", "服务销毁")
+        Log.i("【BlockService】", "destroy")
     }
 
     override fun onBind(intent: Intent): IBinder {

@@ -7,6 +7,10 @@ import com.iwallic.app.models.ContractModel
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.models.WalletModel
 import com.iwallic.neon.wallet.Wallet
+import io.reactivex.Observable
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 object WalletUtils {
     private var cached: WalletModel? = null
@@ -69,7 +73,7 @@ object WalletUtils {
     fun save (context: Context, wallet: WalletModel): Boolean {
         val newFile = (System.currentTimeMillis()/1000).toString()
         var snapshot = newFile
-        var defaultAddress: String = ""
+        var defaultAddress = ""
         if (wallet.accounts.isNotEmpty()) {
             snapshot = wallet.accounts[0].address
             defaultAddress = snapshot
@@ -77,13 +81,78 @@ object WalletUtils {
         if (!FileUtils.saveWalletFile(context, newFile, gson.toJson(wallet))) {
             return false
         }
-        val newId = WalletDBUtils(context).add(newFile, snapshot)
+        val newId = WalletDBUtils(context).add(newFile, defaultAddress, snapshot)
         if (newId == null || newId < 1) {
             return false
         }
         SharedPrefUtils.setWallet(context, newId)
         SharedPrefUtils.setAddress(context, defaultAddress)
         return true
+    }
+
+    /**
+     * Switch to another exists wallet
+     * 1. get wallet file
+     * 2. verify pwd
+     * 3. set to SharedPreference
+     */
+    fun switch(context: Context, agent: WalletAgentModel, pwd: String): Observable<Int> {
+        return Observable.create {
+            launch {
+                val content = FileUtils.readWalletFile(context, agent.file)
+                if (content.isNullOrEmpty()) {
+                    withContext(UI) {
+                        it.onNext(99598)
+                    }
+                    it.onComplete()
+                    return@launch
+                }
+                val w = gson.fromJson(content, WalletModel::class.java)
+                if (w == null) {
+                    withContext(UI) {
+                        it.onNext(99998)
+                    }
+                    it.onComplete()
+                    return@launch
+                }
+                val a = w.accounts.find {
+                    it.address == agent.address
+                }
+                if (a == null) {
+                    withContext(UI) {
+                        it.onNext(99597)
+                    }
+                    it.onComplete()
+                    return@launch
+                }
+                val check = Wallet.neP2Decode(a.key, pwd)
+                if (check.isEmpty()) {
+                    withContext(UI) {
+                        it.onNext(99599)
+                    }
+                    it.onComplete()
+                    return@launch
+                }
+                SharedPrefUtils.setWallet(context, agent._ID)
+                SharedPrefUtils.setAddress(context, agent.address)
+                WalletDBUtils(context).touch(agent._ID)
+                withContext(UI) {
+                    it.onNext(0)
+                }
+                it.onComplete()
+                return@launch
+            }
+        }
+    }
+
+    /**
+     * Remove wallet and file forever
+     * 1. remove sql
+     * 2. remove file
+     */
+    fun remove(context: Context, agent: WalletAgentModel) {
+        WalletDBUtils(context).remove(agent._ID)
+        FileUtils.rmWalletFile(context, agent.file)
     }
 
     fun address(context: Context): String {
@@ -143,8 +212,23 @@ object WalletUtils {
         return true
     }
 
-    fun verify(context: Context, pwd: String): String {
-        val account = account(context) ?: return ""
-        return Wallet.neP2Decode(account.key, pwd)
+    fun verify(context: Context, pwd: String): Observable<String> {
+        return Observable.create {
+            launch {
+                val account = account(context)
+                if (account == null) {
+                    withContext(UI) {
+                        it.onNext("")
+                    }
+                    it.onComplete()
+                } else {
+                    val rs = Wallet.neP2Decode(account.key, pwd)
+                    withContext(UI) {
+                        it.onNext(rs)
+                    }
+                    it.onComplete()
+                }
+            }
+        }
     }
 }

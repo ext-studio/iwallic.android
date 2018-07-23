@@ -29,6 +29,18 @@
             android:layout_marginStart="@dimen/dimenSmall"
             android:layout_marginTop="@dimen/dimenLarge"/>
 
+        <ImageView
+            android:id="@+id/asset_detail_transfer"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
+            android:layout_gravity="top|end"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_send"
+            android:tint="?colorDefault"
+            android:layout_marginEnd="@dimen/dimenSmall"
+            android:layout_marginTop="@dimen/dimenLarge"/>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

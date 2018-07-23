@@ -1,34 +1,39 @@
 package com.iwallic.app.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.annotation.Nullable
-import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.iwallic.app.R
 import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
+import android.os.IBinder
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 
 
+@SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
+    private lateinit var mInputMethodManager: InputMethodManager
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mInputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         resolveTheme()
-        ConfigUtils.listen().subscribe({
+        CommonUtils.onConfigured().subscribe({
             if (it) {
                 startService(Intent(this, BlockService::class.java))
             }
         }, {
-            Log.i("基活动", "配置失败，服务将不启动")
+            Log.i("【BaseActivity】", "config failed, block service will not on")
         })
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtils.OnAttach(base))
+        super.attachBaseContext(LocaleUtils.onAttach(base))
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -44,6 +49,17 @@ open class BaseActivity : AppCompatActivity() {
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
         overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+    }
+
+    protected fun hideKeyBoard() {
+        val view = currentFocus
+        if (view != null) {
+            val inputMethodManager = mInputMethodManager
+            val active = inputMethodManager.isActive
+            if (active) {
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
     }
 
     private fun resolveTheme() {

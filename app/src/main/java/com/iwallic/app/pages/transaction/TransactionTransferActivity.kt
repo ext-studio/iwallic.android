@@ -1,8 +1,6 @@
 package com.iwallic.app.pages.transaction
 
-import android.content.Context
 import android.os.Bundle
-import android.renderscript.Sampler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -10,23 +8,17 @@ import android.view.View
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.utils.DialogUtils
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
-import com.iwallic.app.models.addrassets
 import com.iwallic.app.states.AssetState
-import com.iwallic.app.utils.HttpClient
+import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
-import org.w3c.dom.Text
 
 class TransactionTransferActivity : BaseActivity() {
-
     private lateinit var backLL: LinearLayout
     private lateinit var chooseAssetLL: LinearLayout
     private lateinit var targetET: EditText
@@ -36,13 +28,17 @@ class TransactionTransferActivity : BaseActivity() {
     private lateinit var submitB: Button
     private lateinit var submitPB: ProgressBar
     private lateinit var tipTV: TextView
+    private lateinit var successB: Button
+    private lateinit var step1LL: LinearLayout
+    private lateinit var step2LL: LinearLayout
     private val gson = Gson()
     private var wif: String = ""
     private var asset: String = ""
     private var target: String = ""
     private var address: String = ""
     private var amount = 0.0
-    private var list: List<addrassets>? = null
+    private var balance = 0.0
+    private var list: List<AssetRes>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_transfer)
@@ -63,6 +59,9 @@ class TransactionTransferActivity : BaseActivity() {
         submitB = findViewById(R.id.transaction_transfer_btn_submit)
         submitPB = findViewById(R.id.transaction_transfer_load_submit)
         tipTV = findViewById(R.id.transaction_transfer_error)
+        successB = findViewById(R.id.transaction_transfer_success)
+        step1LL = findViewById(R.id.transaction_transfer_step_1)
+        step2LL = findViewById(R.id.transaction_transfer_step_2)
     }
 
     private fun initClick() {
@@ -73,7 +72,8 @@ class TransactionTransferActivity : BaseActivity() {
             resolveAssetPick()
         }
         submitB.setOnClickListener {
-            if (amount <= 0 || target.isEmpty()) {
+            hideKeyBoard()
+            if (amount <= 0 || target.isEmpty() || amount > balance) {
                 return@setOnClickListener
             }
             if (asset.isEmpty()) {
@@ -84,9 +84,12 @@ class TransactionTransferActivity : BaseActivity() {
             submitB.visibility = View.GONE
             resolveVerify()
         }
+        successB.setOnClickListener {
+            finish()
+        }
     }
 
-    private  fun initInput() {
+    private fun initInput() {
         amountET.isEnabled = false
         amountET.setOnFocusChangeListener {_, hasFocus ->
             if(hasFocus) {
@@ -97,8 +100,9 @@ class TransactionTransferActivity : BaseActivity() {
         }
         amountET.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                val value = s.toString().toDouble()
-                amount = value
+                if (s.toString().isNotEmpty()) {
+                    amount = s.toString().toDouble()
+                }
                 resolveErrorTip()
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -116,7 +120,12 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun initAsset() {
         asset = intent.getStringExtra("asset") ?: ""
-        if (asset.isNotEmpty()) {
+        val chosen = AssetState.get(asset)
+        if (asset.isNotEmpty() && chosen != null) {
+            assetNameTV.text = chosen.name
+            balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chosen.balance)
+            amountET.isEnabled = true
+            balance = chosen.balance.toDouble()
             return
         }
         list = AssetState.cached?.filter {
@@ -125,13 +134,19 @@ class TransactionTransferActivity : BaseActivity() {
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()
         } else {
-            DialogUtils.Dialog(this, R.string.dialog_title_primary, R.string.dialog_content_nobalance, R.string.dialog_ok, callback = fun (_) {
+            DialogUtils.confirm(
+                this,
+                R.string.dialog_title_primary,
+                R.string.dialog_content_nobalance,
+                R.string.dialog_ok
+            ).subscribe {
                 finish()
-            })
+            }
         }
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
+        hideKeyBoard()
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
@@ -139,8 +154,8 @@ class TransactionTransferActivity : BaseActivity() {
         }
         when {
             WalletUtils.check(asset, "asset") -> {
-                Log.i("交易转账", "发起资产交易【$asset】*【$amount】to【$target】")
-                HttpClient.post("getutxoes", listOf(from, asset), fun(res) {
+                Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
+                HttpUtils.post("getutxoes", listOf(from, asset), fun(res) {
                     val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                     if (data == null) {
                         resolveError(99998)
@@ -152,25 +167,31 @@ class TransactionTransferActivity : BaseActivity() {
                         return
                     }
                     newTx.sign(wif)
-                    HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-                        Log.i("transaction",res)
-                    }, fun(err) {
-                        resolveError(err)
+                    HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                        resolveSuccess(newTx.hash())
+                    }, {
+                        resolveError(it)
                     })
                 }, fun(err) {
                     resolveError(err)
                 })
             }
             WalletUtils.check(asset, "script") -> {
-                Log.i("交易转账", "发起Token交易【$asset】*【$amount】to【$target】")
+                Log.i("【transfer】", "token tx【$asset】*【$amount】to【$target】")
                 val newTx = TransactionModel.forToken(asset, from, to, amount)
                 if (newTx == null) {
                     resolveError(99699)
                     return
                 }
                 newTx.sign(wif)
-                HttpClient.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-                    Log.i("transaction",res.toString())
+                Log.i("【Transfer】", newTx.serialize(true))
+                HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                    val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
+                    if (rs == true) {
+                        resolveSuccess(newTx.hash())
+                    } else {
+                        resolveError(99698)
+                    }
                 }, fun(err) {
                     resolveError(err)
                 })
@@ -179,45 +200,64 @@ class TransactionTransferActivity : BaseActivity() {
     }
     
     private fun resolveAssetPick() {
-        DialogUtils.DialogList(this, R.string.dialog_title_choose, list, fun(confirm: String) {
+        DialogUtils.list(this, R.string.dialog_title_choose, list, fun(confirm: String) {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
                 it.assetId == confirm
             }
-            assetNameTV.text = chooseAsset?.symbol
-            balanceTV.text ="${resources.getText(R.string.transaction_transfer_balance_hint)}: ${chooseAsset?.balance}"
+            assetNameTV.text = chooseAsset?.name
+            balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
+            balance = chooseAsset?.balance?.toDouble() ?: 0.0
         })
     }
 
     private fun resolveVerify() {
-        DialogUtils.Password(this).subscribe {
-            if (it.isEmpty()) {
+        DialogUtils.password(this).subscribe {pwd ->
+            if (pwd.isEmpty()) {
+                submitPB.visibility = View.GONE
+                submitB.visibility = View.VISIBLE
                 return@subscribe
             }
-            DialogUtils.load(this) { load ->
-                launch {
-                    wif = WalletUtils.verify(baseContext, it)
+            DialogUtils.load(this).subscribe { load ->
+                WalletUtils.verify(baseContext, pwd).subscribe {rs ->
+                    wif = rs
                     load.dismiss()
-                    withContext(UI) {
-                        if (wif.isEmpty()) {
-                            Toast.makeText(baseContext, "密码错误", Toast.LENGTH_SHORT).show()
-                        } else {
-                            resolveSend(address, target, amount)
-                        }
+                    if (wif.isEmpty()) {
+                        resolveError(99599)
+                    } else {
+                        resolveSend(address, target, amount)
                     }
                 }
             }
         }
     }
 
+    private fun resolveSuccess(txid: String) {
+        HttpUtils.postPy(
+            "/client/transaction/unconfirmed",
+            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", txid), Pair("value", "-$amount")), {
+                Log.i("【Transfer】", "submitted 【$txid】")
+            }, {
+                Log.i("【Transfer】", "submit failed【$it】")
+            }
+        )
+        step1LL.visibility = View.GONE
+        step2LL.visibility = View.VISIBLE
+    }
+
     private fun resolveError(code: Int) {
-        if (!DialogUtils.Error(this, code)) {
+        if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
-                99699 -> "交易发起失败"
+                1018 -> resources.getString(R.string.transaction_transfer_error_rpc)
+                99698 -> resources.getString(R.string.transaction_transfer_error_send)
+                99699 -> resources.getString(R.string.transaction_transfer_error_create)
+                99599 -> resources.getString(R.string.error_password)
                 else -> "$code"
             }, Toast.LENGTH_SHORT).show()
         }
+        submitPB.visibility = View.GONE
+        submitB.visibility = View.VISIBLE
     }
 
     private fun resolveErrorTip() {
@@ -228,6 +268,10 @@ class TransactionTransferActivity : BaseActivity() {
             }
             amount <= 0 -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_error)
+                tipTV.visibility = View.VISIBLE
+            }
+            amount > balance -> {
+                tipTV.setText(R.string.transaction_transfer_tips_amount_unenough)
                 tipTV.visibility = View.VISIBLE
             }
             else -> {

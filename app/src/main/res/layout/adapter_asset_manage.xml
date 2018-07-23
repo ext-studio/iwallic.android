@@ -1,38 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:clickable="true"
-    android:focusable="true"
     android:background="?colorDefault">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/asset_manage_name"
+        android:padding="@dimen/dimenDefault"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/dimenSpace">
-        <TextView
-            android:id="@+id/asset_manage_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?colorFont"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:text="NEO"
-            android:textSize="@dimen/dimenDefault"/>
+        android:textColor="?colorFont"
+        android:layout_gravity="start|center_vertical"
+        android:text="NEO"
+        android:textSize="@dimen/dimenDefault"/>
 
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/asset_manage_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="" />
-    </RelativeLayout>
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/asset_manage_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:text=""
+        android:padding="@dimen/dimenDefault"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenLine"
+        android:layout_gravity="bottom"
         android:background="?colorLine"/>
 </FrameLayout>

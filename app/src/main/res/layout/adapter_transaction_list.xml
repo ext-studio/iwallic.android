@@ -1,12 +1,10 @@
 <FrameLayout
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:clickable="true"
-    android:focusable="true">
+    android:layout_height="70dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout android:layout_width="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:paddingTop="@dimen/dimenSpace"
         android:paddingBottom="@dimen/dimenSpace"
         android:orientation="horizontal">
@@ -17,8 +15,7 @@
             android:layout_height="@dimen/dimenLarge"
             android:src="@drawable/icon_tx_in"
             android:layout_marginStart="@dimen/dimenSpace"
-            android:layout_marginEnd="@dimen/dimenSpace"
-            android:layout_gravity="center_vertical"/>
+            android:layout_marginEnd="@dimen/dimenSpace"/>
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
@@ -30,15 +27,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="?colorDanger"
-                android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:text="txidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxid"
                 android:lines="1"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/transaction_list_value"
@@ -61,10 +56,10 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenLine"
-        android:background="?colorLine"/>
-    <View
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenLine"
+        android:background="?colorLine"/>
 </FrameLayout>

@@ -12,7 +12,7 @@ object FileUtils {
         try {
             walletFile = File(context.filesDir, name)
         } catch (e: Throwable) {
-            Log.i("IWALLIC-FILE-READWALLET", e.toString())
+            Log.i("【FileUtil】", "read error【$e】")
             return null
         }
         if (!walletFile.exists()) {
@@ -26,9 +26,17 @@ object FileUtils {
                 it.write(content.toByteArray())
             }
         } catch (e: Throwable) {
-            Log.i("IWALLIC-FILE-SAVEWALLET", e.toString())
+            Log.i("【FileUtil】", "write error【$e】")
             return false
         }
         return true
+    }
+    fun rmWalletFile(context: Context, name: String) {
+        try {
+            val walletFile = File(context.filesDir, name)
+            walletFile.delete()
+        } catch (e: Throwable) {
+            Log.i("【FileUtil】", "delete error【$e】")
+        }
     }
 }

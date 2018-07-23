@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_find"
     android:background="?colorDefault">
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="65dp">
         <View
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:background="?colorPrimary"/>
 
@@ -19,12 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:text="@string/fragment_find_title"
             android:textColor="?colorDefault"
             android:textSize="@dimen/dimenDefault"
             android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_marginTop="@dimen/dimenLarge"/>
+            android:layout_marginBottom="@dimen/dimenSpace"/>
     </RelativeLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_find_refresh"

@@ -12,20 +12,29 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/ThemeDefault">
-        <activity
-            android:name=".base.WelcomeActivity">
+        <provider
+            android:name=".base.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+        <activity android:name=".base.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".base.MainActivity"/>
+        <activity android:name=".base.MainActivity" />
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
         <activity android:name=".pages.user.UserSettingThemeActivity" />
@@ -40,6 +49,7 @@
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
         <activity android:name=".pages.user.UserSettingNetActivity" />
+        <activity android:name=".pages.user.UserBrowserActivity" />
 
         <service
             android:name=".services.BlockService"
@@ -49,6 +59,12 @@
             android:name="android.max_aspect"
             android:value="2.1" />
 
+        <activity android:name=".pages.user.UserSupportActivity" />
+        <activity android:name=".pages.user.UserAboutActivity" />
+
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true" />
     </application>
 
 </manifest>

@@ -15,24 +15,29 @@ import com.iwallic.app.navigations.*
 import com.iwallic.app.R
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var navFAB: FloatingActionButton
+    private lateinit var sendFAB: FloatingActionButton
+    private lateinit var receiveFAB: FloatingActionButton
+
     private val currentNavigation = "currentNavigation"
     private var navPosition: NavigationPosition = NavigationPosition.ASSET
-    var bottomNavigation: BottomNavigationView? = null
-    var navFAB: FloatingActionButton? = null
-    var sendFAB: FloatingActionButton? = null
-    var receiveFAB: FloatingActionButton? = null
+    private var fabOpened: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        // window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-
         restoreSaveInstanceState(savedInstanceState)
         setContentView(R.layout.activity_base_main)
 
+        initDOM()
         initNavigation()
         initFragment(savedInstanceState)
         initFAB()
@@ -48,50 +53,71 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         return switchFragment(navPosition)
     }
 
+    // move to back when back button tapped
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
 
-    private fun initFAB() {
+    private fun initDOM() {
         navFAB = findViewById(R.id.base_main_fab)
         sendFAB = findViewById(R.id.base_main_fab_send)
         receiveFAB = findViewById(R.id.base_main_fab_receive)
-        navFAB!!.bringToFront()
-        navFAB!!.setOnClickListener {
-            if (sendFAB!!.visibility == View.VISIBLE) {
-                sendFAB!!.visibility = View.INVISIBLE
-                receiveFAB!!.visibility = View.INVISIBLE
-
-                navFAB!!.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-                navFAB!!.animation.fillAfter = true
+        bottomNavigation = findViewById(R.id.base_main_navigation)
+    }
+    private fun initFAB() {
+        navFAB.bringToFront()
+        navFAB.setOnClickListener {
+            if (fabOpened) {
+                resolveFABClose()
             } else {
-                sendFAB!!.visibility = View.VISIBLE
-                receiveFAB!!.visibility = View.VISIBLE
-
-                navFAB!!.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_45deg)
-                navFAB!!.animation.fillAfter = true
+                resolveFABOpen()
+                launch {
+                    delay(2500)
+                    withContext(UI) {
+                        if (fabOpened) {
+                            resolveFABClose()
+                        }
+                    }
+                }
             }
         }
-        sendFAB!!.setOnClickListener {
-            sendFAB!!.visibility = View.INVISIBLE
-            receiveFAB!!.visibility = View.INVISIBLE
+        sendFAB.setOnClickListener {
+            sendFAB.visibility = View.INVISIBLE
+            receiveFAB.visibility = View.INVISIBLE
 
-            navFAB!!.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-            navFAB!!.animation.fillAfter = true
+            navFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
+            navFAB.animation.fillAfter = true
             startActivity(Intent(this, TransactionTransferActivity::class.java))
         }
-        receiveFAB!!.setOnClickListener {
-            sendFAB!!.visibility = View.INVISIBLE
-            receiveFAB!!.visibility = View.INVISIBLE
+        receiveFAB.setOnClickListener {
+            sendFAB.visibility = View.INVISIBLE
+            receiveFAB.visibility = View.INVISIBLE
 
-            navFAB!!.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-            navFAB!!.animation.fillAfter = true
+            navFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
+            navFAB.animation.fillAfter = true
             startActivity(Intent(this, TransactionReceiveActivity::class.java))
         }
     }
 
+    private fun resolveFABOpen() {
+        sendFAB.visibility = View.VISIBLE
+        receiveFAB.visibility = View.VISIBLE
+
+        navFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_45deg)
+        navFAB.animation.fillAfter = true
+        fabOpened = true
+    }
+
+    private fun resolveFABClose() {
+        sendFAB.visibility = View.INVISIBLE
+        receiveFAB.visibility = View.INVISIBLE
+
+        navFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
+        navFAB.animation.fillAfter = true
+        fabOpened = false
+    }
+
     private fun restoreSaveInstanceState(savedInstanceState: Bundle?) {
-        // Restore the current navigation position.
         savedInstanceState?.also {
             val id = it.getInt(currentNavigation, NavigationPosition.ASSET.id)
             navPosition = findNavigationPositionById(id)
@@ -99,10 +125,9 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
     }
 
     private fun initNavigation() {
-        bottomNavigation = findViewById(R.id.base_main_navigation)
-        bottomNavigation!!.disableShiftMode() // Extension function
-        bottomNavigation!!.active(navPosition.position)   // Extension function
-        bottomNavigation!!.setOnNavigationItemSelectedListener(this)
+        bottomNavigation.disableShiftMode() // Extension function
+        bottomNavigation.active(navPosition.position)   // Extension function
+        bottomNavigation.setOnNavigationItemSelectedListener(this)
     }
 
     private fun initFragment(savedInstanceState: Bundle?) {
