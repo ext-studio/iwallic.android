@@ -7,6 +7,8 @@ import com.iwallic.app.models.RequestGoModel
 import com.iwallic.app.models.ResponseGoModel
 import com.iwallic.app.models.ResponsePyModel
 import io.reactivex.Observable
+import java.net.HttpURLConnection
+import java.net.URL
 
 object HttpUtils {
     private val gson = Gson()
@@ -38,21 +40,29 @@ object HttpUtils {
             }
     }
 
-    fun postPy(url: String, data: Map<String, Any>): Observable<String> {
-        return Observable.create {
+    fun postPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
             Fuel.post("${CommonUtils.pyApi}$url")
                     .header(Pair("app_version", CommonUtils.versionName))
                     .body(gson.toJson(data))
                     .responseString { _, _, result ->
                         result.fold({ d ->
-                            it.onNext(d)
-                            it.onComplete()
+                            Log.i("【request】", "complete【post】【$url】")
+                            Log.i("【request】", "$data === $d")
+                            val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                            if (rs == null) {
+                                no(99998)
+                                return@fold
+                            }
+                            if (rs.bool_status) {
+                                ok(gson.toJson(rs.data))
+                            } else {
+                                no(rs.error_code ?: 99999)
+                            }
                         }) { err ->
                             Log.i("【request】", "error【${err}】")
-                            it.onError(Throwable(resolveError(err.response.statusCode).toString()))
+                            no(resolveError(err.response.statusCode))
                         }
                     }
-        }
     }
 
     fun putPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
@@ -79,25 +89,31 @@ object HttpUtils {
             }
     }
 
-    fun getPy(url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
-        Fuel.get("${CommonUtils.pyApi}$url")
+    fun getPy(_url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
+        Fuel.get("${CommonUtils.pyApi}$_url")
             .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【get】【$url】")
+                    Log.i("【request】", "【$result】")
+                    Log.i("【request】", "complete【get】【$_url】")
                     val rs = gson.fromJson(d, ResponsePyModel::class.java)
                     if (rs == null) {
                         no(99998)
                         return@fold
                     }
-                    if (rs.bool_status) {
-                        ok(gson.toJson(rs.data))
-                    } else {
-                        Log.i("【request】", "error【$url】【${rs}】")
-                        no(rs.error_code ?: 99999)
+                    when {
+                        rs.bool_status -> ok(gson.toJson(rs.data))
+                        rs.error_code == 200000 -> {
+                            Log.i("【request】", "empty【$_url】【$rs】")
+                            ok("[]")
+                        }
+                        else -> {
+                            Log.i("【request】", "error【$_url】【${rs}】")
+                            no(rs.error_code ?: 99999)
+                        }
                     }
                 }) { err ->
-                    Log.i("【request】", "error【$url】【${err}】")
+                    Log.i("【request】", "error【$_url】【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }

@@ -18,6 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/ThemeDefault">
+        <provider
+            android:name=".base.GenericFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
         <activity android:name=".base.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

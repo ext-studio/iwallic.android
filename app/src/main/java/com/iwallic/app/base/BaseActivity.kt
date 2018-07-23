@@ -10,12 +10,18 @@ import android.util.Log
 import com.iwallic.app.R
 import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
+import android.os.IBinder
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+
 
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
+    private lateinit var mInputMethodManager: InputMethodManager
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mInputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         resolveTheme()
         CommonUtils.onConfigured().subscribe({
             if (it) {
@@ -43,6 +49,17 @@ open class BaseActivity : AppCompatActivity() {
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
         overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+    }
+
+    protected fun hideKeyBoard() {
+        val view = currentFocus
+        if (view != null) {
+            val inputMethodManager = mInputMethodManager
+            val active = inputMethodManager.isActive
+            if (active) {
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
     }
 
     private fun resolveTheme() {

@@ -1,14 +1,17 @@
 package com.iwallic.app.utils
 
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.os.IBinder
 import android.util.TypedValue
+import android.view.inputmethod.InputMethodManager
 import com.iwallic.app.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 object CommonUtils {
     var net: String = "main"
-    var pyApi: String = "http://101.132.97.9:45005"
+    var pyApi: String = "http://192.168.1.106:5000" // http://192.168.1.106:5000 http://101.132.97.9:45005
     var mainApi: String = "https://api.iwallic.com/api/iwallic"
     var testApi: String = "https://teapi.iwallic.com/api/iwallic"
     var versionName: String = BuildConfig.VERSION_NAME

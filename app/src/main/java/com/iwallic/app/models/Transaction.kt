@@ -1,5 +1,6 @@
 package com.iwallic.app.models
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.iwallic.neon.hex.Hex
 import com.iwallic.neon.wallet.Wallet
@@ -63,7 +64,7 @@ class TransactionModel {
     var outputs: ArrayList<OutputModel> = arrayListOf()
     private var result: String = ""
     fun hash(): String {
-        return  Hex.reverse(Hex.hash256(serialize()))
+        return Hex.reverse(Hex.hash256(serialize()))
     }
     fun serialize(signed: Boolean = false): String {
         result = ""

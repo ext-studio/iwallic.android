@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.models.AssetRes
+import com.iwallic.app.utils.ImageUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -20,6 +21,7 @@ class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // ImageUtils.setUrl(holder.itemView.findViewById<ImageView>(R.id.asset_list_logo), data[position].logo)
         holder.itemView.findViewById<TextView>(R.id.asset_list_name).text = data[position].symbol
         holder.itemView.findViewById<TextView>(R.id.asset_list_balance).text = data[position].balance
         holder.itemView.setOnClickListener {

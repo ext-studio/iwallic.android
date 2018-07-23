@@ -156,7 +156,7 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun resolveBalance() {
         val tryGet = AssetState.get(asset.assetId)
-        titleTV.text = tryGet?.name
+        titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
     }
     private fun resolveList(data: PageDataPyModel<TransactionRes>) {
