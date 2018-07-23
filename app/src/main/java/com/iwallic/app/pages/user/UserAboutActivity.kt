@@ -8,6 +8,7 @@ import com.iwallic.app.base.BaseActivity
 
 class UserAboutActivity : BaseActivity() {
     private lateinit var backLL: LinearLayout
+    private lateinit var disclamerLL: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,10 +20,11 @@ class UserAboutActivity : BaseActivity() {
 
     private fun initDOM() {
         backLL = findViewById(R.id.user_about_back)
+        disclamerLL = findViewById(R.id.activity_user_about_disclaimer)
     }
 
     private fun initClick() {
-        findViewById<LinearLayout>(R.id.activity_user_about_disclaimer).setOnClickListener {
+        disclamerLL.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
 

@@ -100,4 +100,10 @@
     <string name="activity_user_support_blockchain_browser">区块浏览器</string>
     <string name="activity_user_support_community">社区</string>
     <string name="activity_user_support_contact">联系我们</string>
+    <string name="activity_transaction_detail_title">我的交易</string>
+    <string name="activity_transaction_detail_blockheight">区块索引</string>
+    <string name="activity_transaction_detail_txid">交易哈希</string>
+    <string name="activity_transaction_detail_time">时间</string>
+    <string name="activity_transaction_detail_from">来自</string>
+    <string name="activity_transaction_detail_to">发给</string>
 </resources>

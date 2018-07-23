@@ -105,4 +105,10 @@
     <string name="activity_user_support_community_link">bbs.iwallic.com</string>
     <string name="activity_user_support_contact">Contact</string>
     <string name="activity_user_support_contact_link">contact@iwallic.com</string>
+    <string name="activity_transaction_detail_title">My transaction</string>
+    <string name="activity_transaction_detail_blockheight">Index</string>
+    <string name="activity_transaction_detail_txid">Transaction hash</string>
+    <string name="activity_transaction_detail_time">Time</string>
+    <string name="activity_transaction_detail_from">Sent from</string>
+    <string name="activity_transaction_detail_to">Sent to</string>
 </resources>

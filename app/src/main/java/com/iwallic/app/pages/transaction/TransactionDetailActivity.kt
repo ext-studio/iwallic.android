@@ -25,8 +25,9 @@ import com.iwallic.app.models.TransactionDetailToRes
 import java.util.*
 
 class TransactionDetailActivity : BaseActivity() {
-    private lateinit var txid: Any
+    private lateinit var txid: String
     private lateinit var loadPB: ProgressBar
+    private lateinit var backLL: LinearLayout
     private var fromFlag: Boolean = true
     private var toFlag: Boolean = true
     private val gson = Gson()
@@ -35,14 +36,18 @@ class TransactionDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_detail)
 
-        loadPB = findViewById(R.id.transaction_detail_load)
-
-        txid = this.intent.extras.get("txid")
-        findViewById<TextView>(R.id.transaction_detail_txid).text = txid.toString()
-
+        initDOM()
+        initClick()
         getnep5transferbytxid()
+    }
+    private fun initDOM() {
+        loadPB = findViewById(R.id.transaction_detail_load)
+        backLL = findViewById(R.id.transaction_detail_back)
+        txid = this.intent.getStringExtra("txid")
+        findViewById<TextView>(R.id.transaction_detail_txid).text = txid
+    }
 
-        val backLL = findViewById<LinearLayout>(R.id.transaction_detail_back)
+    private fun initClick() {
         backLL.setOnClickListener {
             finish()
         }
