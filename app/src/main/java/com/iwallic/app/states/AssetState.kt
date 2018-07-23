@@ -60,7 +60,6 @@ object AssetState {
                 _error.onNext(99998)
             } else {
                 cached = data
-                Log.i("【AssetState】", "$data")
                 _list.onNext(data)
             }
         }, {
