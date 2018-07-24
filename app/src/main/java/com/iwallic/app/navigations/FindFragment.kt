@@ -11,8 +11,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseFragment
 
-class FindFragment : Fragment() {
+class FindFragment : BaseFragment() {
     private lateinit var findWV: WebView
     private lateinit var findSRL: SwipeRefreshLayout
 

@@ -30,7 +30,7 @@ object AssetState {
         return _list
     }
     fun get(id: String): AssetRes? = cached?.find {
-        it.assetId == id
+        it.asset_id == id
     }
     fun error(): Observable<Int> {
         return _error

@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
@@ -26,7 +27,7 @@ import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
 import io.reactivex.disposables.Disposable
 
-class AssetFragment : Fragment() {
+class AssetFragment : BaseFragment() {
     private lateinit var assetRV: RecyclerView
     private lateinit var assetSRL: SwipeRefreshLayout
     private lateinit var assetAdapter: AssetAdapter
@@ -107,11 +108,11 @@ class AssetFragment : Fragment() {
     private fun resolveList(list: ArrayList<AssetRes>) {
         mainAssetTV.text = mainAsset.name
         mainBalanceTV.text = list.find {
-            it.assetId == mainAsset.assetId
+            it.asset_id == mainAsset.asset_id
         }?.balance
         for (asset in SharedPrefUtils.getAsset(context!!)) {
             if (list.indexOfFirst {
-                it.assetId == asset.assetId
+                it.asset_id == asset.asset_id
             } < 0) {
                 list.add(asset)
             }

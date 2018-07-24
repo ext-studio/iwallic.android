@@ -43,7 +43,7 @@ data class BlockTimeRes (
 )
 
 data class AssetRes (
-    val assetId: String = "",
+    val asset_id: String = "",
     val balance: String = "0",
     val name: String = "unknown",
     val symbol: String = "unknown"

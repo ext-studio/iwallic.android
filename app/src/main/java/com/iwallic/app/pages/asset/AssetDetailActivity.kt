@@ -69,7 +69,7 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun initParams() {
         val assetId = intent.getStringExtra("asset")
-        if (assetId.isEmpty()) {
+        if (assetId.isNullOrEmpty()) {
             Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
             finish()
             return
@@ -99,7 +99,7 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        listListen = TransactionState.list(WalletUtils.address(this), asset.assetId).subscribe({
+        listListen = TransactionState.list(WalletUtils.address(this), asset.asset_id).subscribe({
             resolveList(it)
             resolveRefreshed(true)
         }, {
@@ -135,7 +135,7 @@ class AssetDetailActivity : BaseActivity() {
         }
         transferIV.setOnClickListener {
             val intent = Intent(this, TransactionTransferActivity::class.java)
-            intent.putExtra("asset", asset.assetId)
+            intent.putExtra("asset", asset.asset_id)
             startActivity(intent)
         }
         txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -152,10 +152,14 @@ class AssetDetailActivity : BaseActivity() {
             intent.putExtra("txid", txAdapter.getItem(it).txid)
             startActivity(intent)
         }
+        txAdapter.onCopy().subscribe {
+            copy(txAdapter.getItem(it).txid, "txid")
+            vibrate()
+        }
     }
 
     private fun resolveBalance() {
-        val tryGet = AssetState.get(asset.assetId)
+        val tryGet = AssetState.get(asset.asset_id)
         titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
     }

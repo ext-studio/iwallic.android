@@ -111,4 +111,7 @@
     <string name="activity_transaction_detail_time">Time</string>
     <string name="activity_transaction_detail_from">Sent from</string>
     <string name="activity_transaction_detail_to">Sent to</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

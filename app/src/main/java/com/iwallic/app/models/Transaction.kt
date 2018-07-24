@@ -64,7 +64,7 @@ class TransactionModel {
     var outputs: ArrayList<OutputModel> = arrayListOf()
     private var result: String = ""
     fun hash(): String {
-        return Hex.reverse(Hex.hash256(serialize()))
+        return Hex.hash256(serialize())
     }
     fun serialize(signed: Boolean = false): String {
         result = ""

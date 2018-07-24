@@ -146,7 +146,6 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
-        hideKeyBoard()
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
@@ -184,7 +183,7 @@ class TransactionTransferActivity : BaseActivity() {
                     return
                 }
                 newTx.sign(wif)
-                Log.i("【Transfer】", newTx.serialize(true))
+                Log.i("【Transfer】", newTx.serialize())
                 HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
@@ -204,7 +203,7 @@ class TransactionTransferActivity : BaseActivity() {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
-                it.assetId == confirm
+                it.asset_id == confirm
             }
             assetNameTV.text = chooseAsset?.name
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
@@ -224,6 +223,7 @@ class TransactionTransferActivity : BaseActivity() {
                     wif = rs
                     load.dismiss()
                     if (wif.isEmpty()) {
+                        hideKeyBoard()
                         resolveError(99599)
                     } else {
                         resolveSend(address, target, amount)
@@ -234,9 +234,10 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSuccess(txid: String) {
+        hideKeyBoard()
         HttpUtils.postPy(
             "/client/transaction/unconfirmed",
-            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", txid), Pair("value", "-$amount")), {
+            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
@@ -247,6 +248,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveError(code: Int) {
+        hideKeyBoard()
         if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)

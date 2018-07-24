@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
@@ -18,7 +19,7 @@ import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
 import com.iwallic.app.states.AssetState
 
-class UserFragment : Fragment() {
+class UserFragment : BaseFragment() {
     private lateinit var backupLL: LinearLayout
     private lateinit var settingLL: LinearLayout
     private lateinit var supportLL: LinearLayout

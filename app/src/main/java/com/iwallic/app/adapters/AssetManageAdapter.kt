@@ -46,20 +46,20 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
             "81c089ab996fc89c468a26c0a88d23ae2f34b5c0",
             "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b",
             "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7"
-        ).contains(data.items[position].assetId)) {
-            Log.i("【】", data.items[position].assetId)
+        ).contains(data.items[position].asset_id)) {
+            Log.i("【】", data.items[position].asset_id)
             toggleSC.visibility = View.GONE
         } else {
             toggleSC.visibility = View.VISIBLE
             toggleSC.isChecked = display.indexOfFirst {
-                it.assetId == data.items[position].assetId
+                it.asset_id == data.items[position].asset_id
             } >= 0
             toggleSC.setOnClickListener {
                 if (toggleSC.isChecked) {
                     SharedPrefUtils.addAsset(holder.itemView.context, data.items[position])
                     Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【on】")
                 } else {
-                    SharedPrefUtils.rmAsset(holder.itemView.context, data.items[position].assetId)
+                    SharedPrefUtils.rmAsset(holder.itemView.context, data.items[position].asset_id)
                     Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【off】")
                 }
             }

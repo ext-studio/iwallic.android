@@ -62,6 +62,10 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
             valueTV.setTextColor(colorIn)
             holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_in)
         }
+        holder.itemView.setOnLongClickListener {
+            _onCopy.onNext(position)
+            return@setOnLongClickListener true
+        }
         holder.itemView.setOnClickListener {
             _onEnter.onNext(position)
         }
@@ -77,12 +81,12 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
-//    fun onCopy(): Observable<Int> {
-//        return _onCopy
-//    }
-
     fun onEnter(): Observable<Int> {
         return _onEnter
+    }
+
+    fun onCopy(): Observable<Int> {
+        return _onCopy
     }
 
     fun push(newData: PageDataPyModel<TransactionRes>) {

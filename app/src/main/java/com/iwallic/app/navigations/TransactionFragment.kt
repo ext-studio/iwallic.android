@@ -1,10 +1,7 @@
 package com.iwallic.app.navigations
 
 import android.content.*
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -16,18 +13,18 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.iwallic.app.R
-import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.models.PageDataRes
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
 
-class TransactionFragment : Fragment() {
+class TransactionFragment : BaseFragment() {
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
     private lateinit var loadPB: ProgressBar
@@ -100,6 +97,10 @@ class TransactionFragment : Fragment() {
             val intent = Intent(context, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)
             context!!.startActivity(intent)
+        }
+        txAdapter.onCopy().subscribe {
+            copy(txAdapter.getItem(it).txid, "txid")
+            vibrate()
         }
     }
 
