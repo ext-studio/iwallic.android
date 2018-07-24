@@ -28,8 +28,8 @@ class TransactionDetailActivity : BaseActivity() {
     private lateinit var txid: String
     private lateinit var loadPB: ProgressBar
     private lateinit var backLL: LinearLayout
-    private var fromFlag: Boolean = true
-    private var toFlag: Boolean = true
+    private var fromData: ArrayList<TransactionDetailRes> = arrayListOf()
+    private var toData: ArrayList<TransactionDetailRes> = arrayListOf()
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,11 +85,15 @@ class TransactionDetailActivity : BaseActivity() {
             }
 
             // render page
-            if (fromFlag) {
+            if (fromData.size == 0) {
                 findViewById<TextView>(R.id.transaction_detail_from).visibility = View.GONE
+            } else {
+                addTransferView(fromData, "from")
             }
-            if (toFlag) {
+            if (toData.size == 0) {
                 findViewById<TextView>(R.id.transaction_detail_to).visibility = View.GONE
+            } else {
+                addTransferView(toData, "to")
             }
 
             if (loadPB.visibility == View.VISIBLE) {
@@ -107,9 +111,9 @@ class TransactionDetailActivity : BaseActivity() {
                 if (index.address != "") {
                     count++
                     if (direction == "from") {
-                        addTransferView(index, "from")
+                        fromData.add(index)
                     } else {
-                        addTransferView(index, "to")
+                        toData.add(index)
                     }
                 }
             } else { // Nep5 transfer
@@ -117,27 +121,20 @@ class TransactionDetailActivity : BaseActivity() {
                     if (index.from != "") {
                         count++
                         index.address = index.from
-                        addTransferView(index, "from")
+                        fromData.add(index)
                     }
                 } else {
                     if (index.to != "") {
                         count++
                         index.address = index.to
-                        addTransferView(index, "to")
+                        toData.add(index)
                     }
                 }
             }
         }
-        if (count != 0) {
-            if (direction == "from") {
-                fromFlag = false
-            } else {
-                toFlag = false
-            }
-        }
     }
 
-    private fun addTransferView(data: TransactionDetailRes, direction: String) {
+    private fun addTransferView(data: ArrayList<TransactionDetailRes>, direction: String) {
         lateinit var linearLayout: LinearLayout
         when (direction) {
             "from" -> {
@@ -147,42 +144,46 @@ class TransactionDetailActivity : BaseActivity() {
                 linearLayout = findViewById(R.id.transaction_detail_to_list)
             }
         }
-        val row = LinearLayout(this)
-        val address = TextView(this)
-        val line = LinearLayout(this)
-        val value = TextView(this)
-        val name = TextView(this)
-        val rowParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        val colParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 0.5F)
-        row.orientation = VERTICAL
-        row.gravity = CENTER
-        row.layoutParams = rowParams
+        val j = data.size - 1
+        for (i in 0..j) {
+            val row = LinearLayout(this)
+            val address = TextView(this)
+            val line = LinearLayout(this)
+            val value = TextView(this)
+            val name = TextView(this)
+            val rowParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+            val colParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 0.5F)
+            row.orientation = VERTICAL
+            row.gravity = CENTER
+            row.layoutParams = rowParams
 
-        address.gravity = CENTER
-        address.text = data.address
-        address.layoutParams = rowParams
-        address.setPadding(0, 8, 0, 8)
+            address.gravity = CENTER
+            address.layoutParams = rowParams
+            address.setPadding(0, 8, 0, 8)
 
-        line.orientation = HORIZONTAL
-        line.setPadding(0, 8, 0, 8)
-        line.weightSum = 1F
-        line.layoutParams = rowParams
+            line.orientation = HORIZONTAL
+            line.setPadding(0, 8, 0, 8)
+            line.weightSum = 1F
+            line.layoutParams = rowParams
 
-        value.text = data.value.toString()
-        value.setPadding(0, 0, 12, 0)
-        value.layoutParams = colParams
-        value.gravity = END
+            value.setPadding(0, 0, 12, 0)
+            value.layoutParams = colParams
+            value.gravity = END
 
-        name.text = data.name
-        name.layoutParams = colParams
-        name.gravity = START
-        name.setPadding(12, 0, 0, 0)
+            name.layoutParams = colParams
+            name.gravity = START
+            name.setPadding(12, 0, 0, 0)
 
-        line.addView(value)
-        line.addView(name)
-        row.addView(address)
-        row.addView(line)
-        linearLayout.addView(row)
+            address.text = data[i].address
+            value.text = data[i].value.toString()
+            name.text = data[i].name
+
+            line.addView(value)
+            line.addView(name)
+            row.addView(address)
+            row.addView(line)
+            linearLayout.addView(row)
+        }
     }
 }
 
