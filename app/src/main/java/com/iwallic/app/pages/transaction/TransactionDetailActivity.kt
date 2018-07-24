@@ -38,8 +38,9 @@ class TransactionDetailActivity : BaseActivity() {
 
         initDOM()
         initClick()
-        getnep5transferbytxid()
+        initTransfer()
     }
+
     private fun initDOM() {
         loadPB = findViewById(R.id.transaction_detail_load)
         backLL = findViewById(R.id.transaction_detail_back)
@@ -52,8 +53,11 @@ class TransactionDetailActivity : BaseActivity() {
             finish()
         }
     }
+    private fun initTransfer() {
+        resolveNep5Transfer()
+    }
 
-    private fun getnep5transferbytxid() {  // from and to
+    private fun resolveNep5Transfer() {  // from and to
         HttpUtils.post("getnep5transferbytxid", listOf(txid), fun (nep5Res) {
             Log.i("【nep5交易详情】", "result 【${nep5Res}】")
             if (nep5Res != "") {
@@ -67,13 +71,13 @@ class TransactionDetailActivity : BaseActivity() {
                     resolveData(data, false, "to")
                 }
             }
-            gettransferbytxid()
+            resolveTransfer()
         }, fun(err) {
             Log.i("【接收nep5交易详情失败】", "error 【${err}】")
         })
     }
 
-    private fun gettransferbytxid() {  // address
+    private fun resolveTransfer() {  // address
         HttpUtils.post("gettransferbytxid", listOf(txid), fun (res) {
             Log.i("【交易详情】", "result 【${res}】")
             if (res != "") {
@@ -88,12 +92,12 @@ class TransactionDetailActivity : BaseActivity() {
             if (fromData.size == 0) {
                 findViewById<TextView>(R.id.transaction_detail_from).visibility = View.GONE
             } else {
-                addTransferView(fromData, "from")
+                resolveTransferView(fromData, "from")
             }
             if (toData.size == 0) {
                 findViewById<TextView>(R.id.transaction_detail_to).visibility = View.GONE
             } else {
-                addTransferView(toData, "to")
+                resolveTransferView(toData, "to")
             }
 
             if (loadPB.visibility == View.VISIBLE) {
@@ -134,7 +138,7 @@ class TransactionDetailActivity : BaseActivity() {
         }
     }
 
-    private fun addTransferView(data: ArrayList<TransactionDetailRes>, direction: String) {
+    private fun resolveTransferView(data: ArrayList<TransactionDetailRes>, direction: String) {
         lateinit var linearLayout: LinearLayout
         when (direction) {
             "from" -> {
