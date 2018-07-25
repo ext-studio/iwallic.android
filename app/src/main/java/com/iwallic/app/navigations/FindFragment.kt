@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseFragment
 
-class FindFragment : Fragment() {
+class FindFragment : BaseFragment() {
     private lateinit var findWV: WebView
     private lateinit var findSRL: SwipeRefreshLayout
 
@@ -27,6 +29,7 @@ class FindFragment : Fragment() {
         findWV = view.findViewById(R.id.fragment_find_webview)
         findSRL = view.findViewById(R.id.fragment_find_refresh)
         findSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     @SuppressLint("SetJavaScriptEnabled")

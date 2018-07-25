@@ -104,7 +104,7 @@ object TransactionState {
     }
 
     private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&wallet_address=$addr&assetId=$assetId&confirmed=true", {
+        HttpUtils.getPy("/client/transaction/list?page=$page&per_page=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy
@@ -118,23 +118,6 @@ object TransactionState {
         }, {
             no(it)
         })
-//        HttpUtils.post(
-//            if (assetId.isNotEmpty()) "getassettxes" else "getaccounttxes",
-//            if (assetId.isNotEmpty()) listOf(page, size, addr, asset) else listOf(page, size, addr),
-//            fun (res) {
-//                if (res.isEmpty()) {
-//                    ok(PageDataRes())
-//                    return
-//                }
-//                val data = gson.fromJson<PageDataRes<TransactionRes>>(res, object: TypeToken<PageDataRes<TransactionRes>>() {}.type)
-//                if (data == null) {
-//                    no(99998)
-//                } else {
-//                    ok(data)
-//                }
-//            }, fun (err) {
-//                no(err)
-//            })
     }
 
     fun clear() {

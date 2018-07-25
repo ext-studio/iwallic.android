@@ -1,13 +1,9 @@
 package com.iwallic.app.base
 
-import android.app.Notification
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.Toast
 import com.google.gson.Gson
 import com.iwallic.app.BuildConfig
@@ -29,6 +25,7 @@ class WelcomeActivity : BaseActivity() {
         initNet()
         initVersion()
         initListen()
+
     }
 
     override fun onBackPressed() {
@@ -46,13 +43,17 @@ class WelcomeActivity : BaseActivity() {
 
     private fun initVersion () {
         HttpUtils.getPy("/client/index/app_version/detail", {
-            val config = gson.fromJson(it, VersionRes::class.java)
-            if (config.code > BuildConfig.VERSION_CODE) {
-                Log.i("【WelcomeActivity】", "version new【${config.name} -> ${config.code}】")
-                resolveNewVersion(config)
-                return@getPy
+            if (it.isNotEmpty()) {
+                val config = gson.fromJson(it, VersionRes::class.java)
+                if (config.code > BuildConfig.VERSION_CODE) {
+                    Log.i("【WelcomeActivity】", "version new【${config.name} -> ${config.code}】")
+                    resolveNewVersion(config)
+                    return@getPy
+                }
+                Log.i("【WelcomeActivity】", "version already latest")
+            } else {
+                Log.i("【WelcomeActivity】", "no version data")
             }
-            Log.i("【WelcomeActivity】", "version already latest")
             CommonUtils.notifyVersion()
         }, {
             Log.i("【WelcomeActivity】", "version error【$it】")

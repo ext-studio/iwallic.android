@@ -7,7 +7,7 @@
     tools:context=".pages.asset.AssetManageActivity">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="@dimen/dimenTopBar"
         android:background="?colorPrimary">
 
         <LinearLayout

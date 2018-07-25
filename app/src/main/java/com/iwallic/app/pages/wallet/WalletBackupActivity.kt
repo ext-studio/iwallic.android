@@ -13,6 +13,10 @@ import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
 import com.iwallic.app.utils.WalletUtils
 import kotlinx.coroutines.experimental.launch
+import android.content.Intent
+import android.net.Uri
+import java.io.File
+
 
 class WalletBackupActivity : BaseActivity() {
 
@@ -77,6 +81,12 @@ class WalletBackupActivity : BaseActivity() {
             Toast.makeText(baseContext, R.string.error_copied, Toast.LENGTH_SHORT).show()
         }
         saveB.setOnClickListener {
+//            todo export wallet as json file
+//            val intent = Intent("android.intent.action.VIEW")
+//            intent.addCategory("android.intent.category.DEFAULT")
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            val uri = Uri.fromFile(File(filesDir, ""))
+//            intent.setDataAndType(uri, "text/plain")
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
         backLL.setOnClickListener {

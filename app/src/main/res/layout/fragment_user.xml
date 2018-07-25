@@ -7,28 +7,27 @@
     android:background="?colorDefault"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?colorPrimary">
         <View
+            android:id="@+id/app_top_space"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:background="?colorPrimary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/fragment_user_title"
-            android:textColor="?colorDefault"
-            android:textSize="@dimen/dimenDefault"
-            android:layout_marginBottom="@dimen/dimenSpace"
-            android:layout_marginTop="@dimen/dimenLarge"/>
-    </RelativeLayout>
-
+            android:layout_height="@dimen/dimenStatusBar"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimenTopBar">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/fragment_user_title"
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenDefault"/>
+        </RelativeLayout>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"

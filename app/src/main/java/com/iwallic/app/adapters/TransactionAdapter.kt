@@ -1,7 +1,9 @@
 package com.iwallic.app.adapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -49,6 +51,7 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         valueTV.text = data.items[position].value
         val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
         nameTV.text = data.items[position].name
+        val statusTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_status)
         if (data.items[position].value.startsWith("-")) {
             val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
             txidTV.setTextColor(colorOut)
@@ -61,6 +64,16 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
             nameTV.setTextColor(colorIn)
             valueTV.setTextColor(colorIn)
             holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_in)
+        }
+        if (data.items[position].status != "confirmed") {
+            statusTV.setText(if (data.items[position].status == "unconfirmed") R.string.adapter_tx_status_un else R.string.adapter_tx_status_no)
+            statusTV.visibility = View.VISIBLE
+        } else {
+            statusTV.visibility = View.GONE
+        }
+        holder.itemView.setOnLongClickListener {
+            _onCopy.onNext(position)
+            return@setOnLongClickListener true
         }
         holder.itemView.setOnClickListener {
             _onEnter.onNext(position)
@@ -77,26 +90,26 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
-//    fun onCopy(): Observable<Int> {
-//        return _onCopy
-//    }
-
     fun onEnter(): Observable<Int> {
         return _onEnter
     }
 
+    fun onCopy(): Observable<Int> {
+        return _onCopy
+    }
+
     fun push(newData: PageDataPyModel<TransactionRes>) {
         if (newData.page == 1) {
+            notifyItemRangeRemoved(0, data.items.size)
             data = newData
-            notifyDataSetChanged()
+            notifyItemRangeInserted(0, data.items.size)
         } else {
             val p = data.items.size
             data.page = newData.page
-            // data.pageSize = newData.pageSize
             data.total = newData.total
             data.per_page = newData.per_page
             data.items.addAll(newData.items)
-            notifyItemRangeInserted(p + 1, newData.items.size)
+            notifyItemRangeInserted(p, newData.items.size)
         }
         pagerTV?.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         paging = false

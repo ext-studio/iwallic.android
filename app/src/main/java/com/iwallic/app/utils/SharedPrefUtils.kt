@@ -52,7 +52,7 @@ class SharedPrefUtils {
         }
         fun addAsset(context: Context, data: AssetRes) {
             val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", emptySet()).toMutableSet()
-            tryGet.add(arrayOf(data.assetId, "0", data.name, data.symbol).joinToString(","))
+            tryGet.add(arrayOf(data.asset_id, "0", data.name, data.symbol).joinToString(","))
             context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", tryGet).apply()
         }
         fun getAsset(context: Context): ArrayList<AssetRes> {

@@ -4,6 +4,7 @@
     <string name="welcome_enter">进入钱包</string>
     <string name="navigation_asset_title">资产</string>
     <string name="navigation_transaction_title">交易</string>
+    <string name="fragment_transaction_unconfirmed">未确认交易</string>
     <string name="navigation_find_title">发现</string>
     <string name="navigation_user_title">我的</string>
     <string name="fragment_asset_title">我的资产</string>
@@ -17,6 +18,12 @@
     <string name="fragment_user_about">关于</string>
     <string name="asset_manage">资产管理</string>
     <string name="asset_manage_save">保存</string>
+    <string name="asset_detail_claim_enter">提取 GAS</string>
+    <string name="asset_detail_claim_collect">转化</string>
+    <string name="asset_detail_claim_claim">提取</string>
+    <string name="asset_detail_claim_cancel">取消</string>
+    <string name="asset_detail_claim_un_claimed">可提取: %1$s</string>
+    <string name="asset_detail_claim_un_collect">可转化: %1$s</string>
     <string name="user_setting_language">显示语言</string>
     <string name="user_setting_skin">应用皮肤</string>
     <string name="user_setting_skin_default">默认</string>
@@ -65,6 +72,7 @@
     <string name="transaction_transfer_error_create">交易创建失败</string>
     <string name="transaction_transfer_error_send">转账未成功</string>
     <string name="transaction_transfer_error_rpc">区块网络错误</string>
+    <string name="transaction_unconfirmed">未确认交易</string>
     <string name="dialog_title_primary">注意</string>
     <string name="dialog_title_warn">警告</string>
     <string name="dialog_title_choose">选择</string>
@@ -90,6 +98,8 @@
     <string name="error_request">请求失败</string>
     <string name="error_parse">数据解析错误</string>
     <string name="error_server">服务器错误</string>
+    <string name="error_claim_claim">没有GAS可以提取，若有未转化的GAS请先转化</string>
+    <string name="error_claim_collect">没有GAS可以转化</string>
     <string name="list_loadmore">加载更多数据</string>
     <string name="list_nomore">没有更多数据</string>
     <string name="list_loading">努力加载中</string>
@@ -106,4 +116,6 @@
     <string name="activity_transaction_detail_time">时间</string>
     <string name="activity_transaction_detail_from">来自</string>
     <string name="activity_transaction_detail_to">发给</string>
+    <string name="adapter_tx_status_un">带确认</string>
+    <string name="adapter_tx_status_no">已失效</string>
 </resources>

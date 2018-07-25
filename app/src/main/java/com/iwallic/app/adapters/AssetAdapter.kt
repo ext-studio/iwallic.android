@@ -1,6 +1,7 @@
 package com.iwallic.app.adapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
@@ -45,7 +46,7 @@ class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter
     }
 
     fun getAssetId(position: Int): String {
-        return data[position].assetId
+        return data[position].asset_id
     }
 
     class ViewHolder(

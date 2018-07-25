@@ -27,4 +27,5 @@
     <color name="colorFontNight">#C8FFFFFF</color>
     <color name="colorFont2Night">#9398B2</color>
     <color name="colorFont3Night">#595E79</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>

@@ -15,6 +15,7 @@ import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
@@ -62,6 +63,7 @@ class TransactionTransferActivity : BaseActivity() {
         successB = findViewById(R.id.transaction_transfer_success)
         step1LL = findViewById(R.id.transaction_transfer_step_1)
         step2LL = findViewById(R.id.transaction_transfer_step_2)
+        setStatusBar(findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -119,6 +121,9 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun initAsset() {
+        list = AssetState.cached?.filter {
+            it.balance.toDouble() > 0
+        }
         asset = intent.getStringExtra("asset") ?: ""
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
@@ -127,9 +132,6 @@ class TransactionTransferActivity : BaseActivity() {
             amountET.isEnabled = true
             balance = chosen.balance.toDouble()
             return
-        }
-        list = AssetState.cached?.filter {
-            it.balance.toDouble() > 0
         }
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()
@@ -146,7 +148,6 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
-        hideKeyBoard()
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
@@ -184,7 +185,7 @@ class TransactionTransferActivity : BaseActivity() {
                     return
                 }
                 newTx.sign(wif)
-                Log.i("【Transfer】", newTx.serialize(true))
+                Log.i("【Transfer】", newTx.serialize())
                 HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
@@ -204,7 +205,7 @@ class TransactionTransferActivity : BaseActivity() {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
-                it.assetId == confirm
+                it.asset_id == confirm
             }
             assetNameTV.text = chooseAsset?.name
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
@@ -224,6 +225,7 @@ class TransactionTransferActivity : BaseActivity() {
                     wif = rs
                     load.dismiss()
                     if (wif.isEmpty()) {
+                        hideKeyBoard()
                         resolveError(99599)
                     } else {
                         resolveSend(address, target, amount)
@@ -234,10 +236,12 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSuccess(txid: String) {
+        hideKeyBoard()
         HttpUtils.postPy(
             "/client/transaction/unconfirmed",
-            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", txid), Pair("value", "-$amount")), {
+            mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
+                UnconfirmedState.fetch()
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
             }
@@ -247,6 +251,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveError(code: Int) {
+        hideKeyBoard()
         if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)

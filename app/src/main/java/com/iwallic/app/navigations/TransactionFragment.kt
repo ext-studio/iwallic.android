@@ -1,11 +1,7 @@
 package com.iwallic.app.navigations
 
 import android.content.*
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,26 +9,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.iwallic.app.R
-import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.models.PageDataRes
-import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
-import com.iwallic.app.services.new_block_action
+import com.iwallic.app.pages.transaction.TransactionUnconfirmedActivity
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
 
-class TransactionFragment : Fragment() {
+class TransactionFragment : BaseFragment() {
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
     private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
+    private lateinit var unconfirmedLL: LinearLayout
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
@@ -41,7 +39,7 @@ class TransactionFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
         initDOM(view)
         initListener()
-        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
+        context!!.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
         return view
     }
 
@@ -56,7 +54,11 @@ class TransactionFragment : Fragment() {
         txRV = view.findViewById(R.id.transaction_list)
         txSRL = view.findViewById(R.id.transaction_list_refresh)
         loadPB = view.findViewById(R.id.fragment_transaction_load)
+        unconfirmedLL = view.findViewById(R.id.transaction_unconfirmed_enter)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+
+        setStatusBar(view.findViewById(R.id.app_top_space))
+
         txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(context!!)
         txRV.layoutManager = txManager
@@ -65,11 +67,14 @@ class TransactionFragment : Fragment() {
 
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
-            resolveList(it)
+            txAdapter.push(it)
+            if (it.page == 1) {
+                txRV.scrollToPosition(0)
+            }
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
-            Log.i("交易列表", "发生错误【${it}】")
+            Log.i("【TxList】", "error【${it}】")
         })
         errorListen = TransactionState.error().subscribe({
             resolveRefreshed()
@@ -78,7 +83,7 @@ class TransactionFragment : Fragment() {
             }
         }, {
             resolveRefreshed()
-            Log.i("交易列表", "发生错误【${it}】")
+            Log.i("【TxList】", "error【${it}】")
         })
         txSRL.setOnRefreshListener {
             if (TransactionState.fetching) {
@@ -101,11 +106,13 @@ class TransactionFragment : Fragment() {
             intent.putExtra("txid", txAdapter.getItem(it).txid)
             context!!.startActivity(intent)
         }
-    }
-
-    private fun resolveList(data: PageDataPyModel<TransactionRes>) {
-        txAdapter.push(data)
-        resolveRefreshed(true)
+        txAdapter.onCopy().subscribe {
+            copy(txAdapter.getItem(it).txid, "txid")
+            vibrate()
+        }
+        unconfirmedLL.setOnClickListener {
+            context!!.startActivity(Intent(context, TransactionUnconfirmedActivity::class.java))
+        }
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

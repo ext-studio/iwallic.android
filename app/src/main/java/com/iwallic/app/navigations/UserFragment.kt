@@ -3,12 +3,14 @@ package com.iwallic.app.navigations
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
@@ -16,9 +18,12 @@ import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
+import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.states.TransactionState
+import com.iwallic.app.states.UnconfirmedState
 
-class UserFragment : Fragment() {
+class UserFragment : BaseFragment() {
     private lateinit var backupLL: LinearLayout
     private lateinit var settingLL: LinearLayout
     private lateinit var supportLL: LinearLayout
@@ -38,6 +43,7 @@ class UserFragment : Fragment() {
         supportLL = view.findViewById(R.id.fragment_user_support)
         aboutLL = view.findViewById(R.id.fragment_user_about)
         closeLL = view.findViewById(R.id.fragment_user_signout)
+        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -62,6 +68,9 @@ class UserFragment : Fragment() {
         DialogUtils.confirm(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no).subscribe {
             if (it) {
                 AssetState.clear()
+                TransactionState.clear()
+                UnconfirmedState.clear()
+                AssetManageState.clear()
                 WalletUtils.close(context!!)
                 val intent = Intent(context, WalletActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

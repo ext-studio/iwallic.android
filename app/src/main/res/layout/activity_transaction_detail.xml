@@ -40,16 +40,6 @@
         </LinearLayout>
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/transaction_detail_load"
-        android:visibility="visible"
-        android:layout_margin="@dimen/dimenSpace"
-        android:foregroundTint="?colorPrimary"
-        android:layout_width="@dimen/dimenLarge"
-        android:layout_height="@dimen/dimenLarge"
-        android:layout_gravity="center"
-        tools:targetApi="lollipop" />
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -139,6 +129,16 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?colorLine"/>
+
+        <ProgressBar
+            android:id="@+id/transaction_detail_load"
+            android:visibility="visible"
+            android:layout_margin="@dimen/dimenSpace"
+            android:foregroundTint="?colorPrimary"
+            android:layout_width="@dimen/dimenLarge"
+            android:layout_height="@dimen/dimenLarge"
+            android:layout_gravity="center"
+            tools:targetApi="lollipop" />
 
         <TextView
             android:id="@+id/transaction_detail_from"

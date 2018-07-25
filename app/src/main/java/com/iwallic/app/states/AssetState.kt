@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.AssetRes
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -30,7 +31,7 @@ object AssetState {
         return _list
     }
     fun get(id: String): AssetRes? = cached?.find {
-        it.assetId == id
+        it.asset_id == id
     }
     fun error(): Observable<Int> {
         return _error
@@ -69,6 +70,19 @@ object AssetState {
             }
             _error.onNext(it)
         })
+    }
+
+    fun checkClaim(): Boolean {
+        if (cached == null) {
+            return false
+        }
+        return cached!!.indexOfFirst { it.asset_id == CommonUtils.NEO && it.balance != "0" } >= 0
+    }
+
+    fun touch() {
+        if (cached != null) {
+            _list.onNext(cached!!)
+        }
     }
     fun clear() {
         cached = null

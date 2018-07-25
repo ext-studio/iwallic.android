@@ -28,7 +28,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="?colorDanger"
                 android:ellipsize="end"
-                android:text="txidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxidtxid"
                 android:lines="1"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,8 +38,7 @@
                     android:id="@+id/transaction_list_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?colorDanger"
-                    android:text="value"/>
+                    android:textColor="?colorDanger"/>
 
                 <TextView
                     android:id="@+id/transaction_list_name"
@@ -48,11 +46,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimenSpace"
                     android:layout_marginEnd="@dimen/dimenSpace"
-                    android:textColor="?colorDanger"
-                    android:text="name"
-                    android:textSize="@dimen/dimenDefault"/>
+                    android:textColor="?colorDanger"/>
             </LinearLayout>
         </LinearLayout>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/transaction_list_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dimenSpace"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

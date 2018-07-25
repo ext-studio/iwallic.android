@@ -41,33 +41,37 @@ object HttpUtils {
     }
 
     fun postPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
-            Fuel.post("${CommonUtils.pyApi}$url")
-                    .header(Pair("app_version", CommonUtils.versionName))
-                    .body(gson.toJson(data))
-                    .responseString { _, _, result ->
-                        result.fold({ d ->
-                            Log.i("【request】", "complete【post】【$url】")
-                            Log.i("【request】", "$data === $d")
-                            val rs = gson.fromJson(d, ResponsePyModel::class.java)
-                            if (rs == null) {
-                                no(99998)
-                                return@fold
-                            }
-                            if (rs.bool_status) {
-                                ok(gson.toJson(rs.data))
-                            } else {
-                                no(rs.error_code ?: 99999)
-                            }
-                        }) { err ->
-                            Log.i("【request】", "error【${err}】")
-                            no(resolveError(err.response.statusCode))
-                        }
+        Fuel.post("${CommonUtils.pyApi}$url")
+            .header(
+                Pair("app_version", CommonUtils.versionName),
+                Pair("network", CommonUtils.net),
+                Pair("Content-Type", "application/json")
+            )
+            .body(gson.toJson(data))
+            .responseString { _, _, result ->
+                result.fold({ d ->
+                    Log.i("【request】", "complete【post】【$url】")
+                    Log.i("【request】", "$data === $d")
+                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    if (rs == null) {
+                        no(99998)
+                        return@fold
                     }
+                    if (rs.bool_status) {
+                        ok(gson.toJson(rs.data))
+                    } else {
+                        no(rs.error_code ?: 99999)
+                    }
+                }) { err ->
+                    Log.i("【request】", "error【${err}】")
+                    no(resolveError(err.response.statusCode))
+                }
+            }
     }
 
     fun putPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.put("${CommonUtils.pyApi}$url")
-            .header(Pair("app_version", CommonUtils.versionName))
+            .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .body(gson.toJson(data))
             .responseString { _, _, result ->
                 result.fold({ d ->
@@ -94,7 +98,6 @@ object HttpUtils {
             .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "【$result】")
                     Log.i("【request】", "complete【get】【$_url】")
                     val rs = gson.fromJson(d, ResponsePyModel::class.java)
                     if (rs == null) {
@@ -105,7 +108,7 @@ object HttpUtils {
                         rs.bool_status -> ok(gson.toJson(rs.data))
                         rs.error_code == 200000 -> {
                             Log.i("【request】", "empty【$_url】【$rs】")
-                            ok("[]")
+                            ok("")
                         }
                         else -> {
                             Log.i("【request】", "error【$_url】【${rs}】")

@@ -120,7 +120,7 @@ object DialogUtils {
             val listValue = arrayOfNulls<String>(list.size)
             val listKey = arrayOfNulls<String>(list.size)
             for ((index, i) in list.iterator().withIndex()) {
-                listKey[index] = i.assetId
+                listKey[index] = i.asset_id
                 listValue[index] = i.name
             }
             builder.setItems(listValue) { _, i ->

@@ -1,11 +1,5 @@
 package com.iwallic.app.models
 
-//data class BalanceRes (
-//    val assetId: String = "",
-//    val balance: String = "0",
-//    val name: String = "unknown"
-//)
-
 data class PageDataRes<T>(
     var page: Int = 1,
     var pageSize: Int = 10,
@@ -16,7 +10,8 @@ data class PageDataRes<T>(
 data class TransactionRes (
     val name: String = "",
     val txid: String = "",
-    val value: String = ""
+    val value: String = "",
+    val status: String = "confirmed"
 )
 
 data class TransactionDetailRes (
@@ -43,7 +38,7 @@ data class BlockTimeRes (
 )
 
 data class AssetRes (
-    val assetId: String = "",
+    val asset_id: String = "",
     val balance: String = "0",
     val name: String = "unknown",
     val symbol: String = "unknown"
@@ -68,7 +63,7 @@ data class PageDataPyModel<T> (
     var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 10,
+    var per_page: Int = 15,
     var total: Int = 0
 )
 
@@ -87,4 +82,16 @@ data class ResponseGoModel (
     val code: Int,
     val msg: String,
     val result: Any?
+)
+
+data class ClaimsRes (
+    val unSpentClaim: String = "0",
+    val unCollectClaim: String = "0",
+    var claims: ArrayList<ClaimItemRes> = arrayListOf()
+)
+
+data class ClaimItemRes (
+    val txid: String = "",
+    val claim: String = "",
+    val index: String = ""
 )

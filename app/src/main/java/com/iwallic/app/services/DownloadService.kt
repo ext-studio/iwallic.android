@@ -7,14 +7,13 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Binder
 import android.os.Build
-import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
 import com.iwallic.app.R
+import com.iwallic.app.utils.CommonUtils
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.experimental.launch
 import java.io.BufferedInputStream
 import java.io.File
@@ -24,19 +23,16 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class DownloadService : Service() {
-    private val downloadProgressId = 1
-    private val downloadChannelId = "com.iwallic.app.download"
     private lateinit var notificationBuilder: NotificationCompat.Builder
     private var state = "waiting"
     private var percent = 0
     private var filePath = ""
-    // private var listen
 
     @Suppress("DEPRECATION")
     override fun onCreate() {
         super.onCreate()
         notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(applicationContext, downloadChannelId)
+            NotificationCompat.Builder(applicationContext, CommonUtils.CHANNEL_DOWNLOAD)
         } else {
             NotificationCompat.Builder(applicationContext)
         }
@@ -238,7 +234,7 @@ class DownloadService : Service() {
             }
         }
         val notification = notificationBuilder.build()
-        startForeground(downloadProgressId, notification)
+        startForeground(CommonUtils.ID_DOWNLOAD, notification)
     }
 
     private fun getFileName(src: String): String {

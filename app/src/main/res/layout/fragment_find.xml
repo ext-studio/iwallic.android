@@ -5,26 +5,27 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_find"
     android:background="?colorDefault">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp">
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:orientation="vertical">
         <View
+            android:id="@+id/app_top_space"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:background="?colorPrimary"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentBottom="true"
-            android:text="@string/fragment_find_title"
-            android:textColor="?colorDefault"
-            android:textSize="@dimen/dimenDefault"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_marginBottom="@dimen/dimenSpace"/>
-    </RelativeLayout>
+            android:layout_height="@dimen/dimenStatusBar"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimenTopBar">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/fragment_find_title"
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenDefault"/>
+        </RelativeLayout>
+    </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_find_refresh"
         android:layout_width="match_parent"
