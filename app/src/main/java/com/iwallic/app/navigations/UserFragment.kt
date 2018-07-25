@@ -18,7 +18,10 @@ import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
+import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.states.TransactionState
+import com.iwallic.app.states.UnconfirmedState
 
 class UserFragment : BaseFragment() {
     private lateinit var backupLL: LinearLayout
@@ -65,6 +68,9 @@ class UserFragment : BaseFragment() {
         DialogUtils.confirm(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no).subscribe {
             if (it) {
                 AssetState.clear()
+                TransactionState.clear()
+                UnconfirmedState.clear()
+                AssetManageState.clear()
                 WalletUtils.close(context!!)
                 val intent = Intent(context, WalletActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
