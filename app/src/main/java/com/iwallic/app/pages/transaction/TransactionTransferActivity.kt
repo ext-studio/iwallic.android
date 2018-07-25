@@ -239,7 +239,7 @@ class TransactionTransferActivity : BaseActivity() {
         hideKeyBoard()
         HttpUtils.postPy(
             "/client/transaction/unconfirmed",
-            mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
+            mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
                 UnconfirmedState.fetch()
             }, {

@@ -6,8 +6,8 @@
     <string name="fragment_transaction_unconfirmed">Unconfirmed</string>
     <string name="navigation_find_title">Find</string>
     <string name="navigation_user_title">User</string>
-    <string name="fragment_asset_title">My Assets</string>
-    <string name="fragment_transaction_title">My Transactions</string>
+    <string name="fragment_asset_title">Assets</string>
+    <string name="fragment_transaction_title">Transactions</string>
     <string name="fragment_find_title">Find</string>
     <string name="fragment_user_title">User Center</string>
     <string name="fragment_user_setting">Settings</string>
