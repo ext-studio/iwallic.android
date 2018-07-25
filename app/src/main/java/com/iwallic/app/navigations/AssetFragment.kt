@@ -6,13 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -22,7 +20,6 @@ import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
-import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
 import io.reactivex.disposables.Disposable
@@ -45,7 +42,7 @@ class AssetFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
         initListener()
-        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
+        context!!.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
         return view
     }
 

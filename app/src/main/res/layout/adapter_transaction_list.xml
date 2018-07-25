@@ -49,6 +49,13 @@
                     android:textColor="?colorDanger"/>
             </LinearLayout>
         </LinearLayout>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/transaction_list_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dimenSpace"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

@@ -72,6 +72,7 @@
     <string name="transaction_transfer_error_create">交易创建失败</string>
     <string name="transaction_transfer_error_send">转账未成功</string>
     <string name="transaction_transfer_error_rpc">区块网络错误</string>
+    <string name="transaction_unconfirmed">未确认交易</string>
     <string name="dialog_title_primary">注意</string>
     <string name="dialog_title_warn">警告</string>
     <string name="dialog_title_choose">选择</string>
@@ -115,4 +116,6 @@
     <string name="activity_transaction_detail_time">时间</string>
     <string name="activity_transaction_detail_from">来自</string>
     <string name="activity_transaction_detail_to">发给</string>
+    <string name="adapter_tx_status_un">带确认</string>
+    <string name="adapter_tx_status_no">已失效</string>
 </resources>

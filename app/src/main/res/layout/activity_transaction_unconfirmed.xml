@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenTopBar"
+        android:background="?colorPrimary">
 
+        <LinearLayout
+            android:id="@+id/transaction_unconfirmed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:layout_gravity="center_vertical|start"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:contentDescription="@null"
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:scaleType="fitXY"
+                android:tint="?colorDefault"
+                android:src="@drawable/icon_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_unconfirmed"
+                android:textColor="?colorDefault"
+                android:layout_gravity="center"
+                android:textSize="@dimen/dimenDefault"/>
+        </LinearLayout>
+    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/transaction_unconfirmed_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimenSpace"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/transaction_unconfirmed_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/transaction_unconfirmed_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

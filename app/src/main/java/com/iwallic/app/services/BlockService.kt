@@ -6,14 +6,13 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import com.iwallic.app.states.BlockState
+import com.iwallic.app.utils.CommonUtils
 import io.reactivex.disposables.Disposable
 import java.util.*
 import kotlin.concurrent.schedule
 
-const val new_block_action = "com.iwallic.app.block"
-
 class BlockService : Service() {
-    private val newBlock = Intent(new_block_action)
+    private val newBlock = Intent(CommonUtils.ACTION_NEWBLOCK)
     private var timer: Timer? = null
     private val peried: Long = 60000
     private lateinit var blockListen: Disposable

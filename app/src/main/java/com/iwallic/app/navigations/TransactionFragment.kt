@@ -18,8 +18,8 @@ import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionUnconfirmedActivity
-import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
@@ -39,7 +39,7 @@ class TransactionFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
         initDOM(view)
         initListener()
-        context!!.registerReceiver(BlockListener, IntentFilter(new_block_action))
+        context!!.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
         return view
     }
 
@@ -102,13 +102,11 @@ class TransactionFragment : BaseFragment() {
             }
         })
         txAdapter.onEnter().subscribe {
-            Log.i("【】", "【】【】【】【】【")
             val intent = Intent(context, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)
             context!!.startActivity(intent)
         }
         txAdapter.onCopy().subscribe {
-            Log.i("【】", "【】【】【】【】【")
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
         }

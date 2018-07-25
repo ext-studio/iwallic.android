@@ -18,9 +18,12 @@ object UnconfirmedState {
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
+    fun has(): Boolean {
+        return cached.items.size > 0
+    }
+    fun list(addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
         if ((addr.isNotEmpty() && addr != address)) {
-            fetch(addr, asset)
+            fetch(addr)
             return _list
         }
         return _list.startWith(cached)
@@ -53,7 +56,7 @@ object UnconfirmedState {
             }
         })
     }
-    fun fetch(addr: String = "", asset: String? = null, silent: Boolean = false) {
+    fun fetch(addr: String = "", silent: Boolean = false) {
         if (fetching) {
             return
         }

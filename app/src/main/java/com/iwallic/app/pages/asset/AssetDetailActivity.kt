@@ -19,7 +19,6 @@ import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.*
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
-import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.CommonUtils
@@ -66,7 +65,7 @@ class AssetDetailActivity : BaseActivity() {
         initGAS()
         initListener()
         resolveBalance()
-        registerReceiver(BlockListener, IntentFilter(new_block_action))
+        registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
     }
 
     override fun onDestroy() {

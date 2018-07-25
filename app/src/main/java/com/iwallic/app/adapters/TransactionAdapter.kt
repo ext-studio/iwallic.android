@@ -3,6 +3,7 @@ package com.iwallic.app.adapters
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -50,6 +51,7 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         valueTV.text = data.items[position].value
         val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
         nameTV.text = data.items[position].name
+        val statusTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_status)
         if (data.items[position].value.startsWith("-")) {
             val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
             txidTV.setTextColor(colorOut)
@@ -62,6 +64,12 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
             nameTV.setTextColor(colorIn)
             valueTV.setTextColor(colorIn)
             holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_in)
+        }
+        if (data.items[position].status != "confirmed") {
+            statusTV.setText(if (data.items[position].status == "unconfirmed") R.string.adapter_tx_status_un else R.string.adapter_tx_status_no)
+            statusTV.visibility = View.VISIBLE
+        } else {
+            statusTV.visibility = View.GONE
         }
         holder.itemView.setOnLongClickListener {
             _onCopy.onNext(position)
