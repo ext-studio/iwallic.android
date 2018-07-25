@@ -3,6 +3,7 @@
     <string name="welcome_enter">Enter iWallic</string>
     <string name="navigation_asset_title">Asset</string>
     <string name="navigation_transaction_title">Transaction</string>
+    <string name="fragment_transaction_unconfirmed">Unconfirmed</string>
     <string name="navigation_find_title">Find</string>
     <string name="navigation_user_title">User</string>
     <string name="fragment_asset_title">My Assets</string>
@@ -16,6 +17,12 @@
     <string name="fragment_user_about">About</string>
     <string name="asset_manage">Assets manage</string>
     <string name="asset_manage_save">Save</string>
+    <string name="asset_detail_claim_enter">Claim GAS</string>
+    <string name="asset_detail_claim_collect">Collect</string>
+    <string name="asset_detail_claim_claim">Claim</string>
+    <string name="asset_detail_claim_cancel">Cancel</string>
+    <string name="asset_detail_claim_un_claimed">Can claim: %1$s</string>
+    <string name="asset_detail_claim_un_collect">Can collect: %1$s</string>
     <string name="user_setting_language">Language</string>
     <string name="user_setting_skin">Theme</string>
     <string name="user_setting_skin_default">Default</string>
@@ -91,6 +98,8 @@
     <string name="error_server">Server error</string>
     <string name="error_scan_wif">No WIF key found</string>
     <string name="error_scan_address">No address found</string>
+    <string name="error_claim_claim">No GAS to claim, please collect first if uncollected GAS exists</string>
+    <string name="error_claim_collect">No GAS to collect</string>
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>

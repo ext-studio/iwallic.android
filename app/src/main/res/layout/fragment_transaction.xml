@@ -26,6 +26,30 @@
             android:textSize="@dimen/dimenDefault"
             android:layout_marginStart="@dimen/dimenSmall"
             android:layout_marginBottom="@dimen/dimenSpace"/>
+
+        <LinearLayout
+            android:id="@+id/transaction_unconfirmed_enter"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimenSmall"
+            android:layout_marginBottom="@dimen/dimenSpace"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_transaction_unconfirmed"
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenDefault"/>
+            <ImageView
+                android:layout_width="@dimen/dimenDefault"
+                android:layout_height="@dimen/dimenDefault"
+                android:src="@drawable/icon_arrowright"
+                android:tint="?colorDefault"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <ProgressBar
@@ -47,5 +71,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
-
 </LinearLayout>

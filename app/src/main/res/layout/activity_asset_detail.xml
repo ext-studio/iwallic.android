@@ -31,8 +31,8 @@
 
         <ImageView
             android:id="@+id/asset_detail_transfer"
-            android:layout_width="@dimen/dimenLarge"
-            android:layout_height="@dimen/dimenLarge"
+            android:layout_width="@dimen/dimenIcon"
+            android:layout_height="@dimen/dimenIcon"
             android:layout_gravity="top|end"
             android:contentDescription="@null"
             android:scaleType="fitXY"
@@ -42,6 +42,8 @@
             android:layout_marginTop="@dimen/dimenLarge"/>
 
         <LinearLayout
+            android:visibility="visible"
+            android:id="@+id/asset_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -49,19 +51,75 @@
             android:gravity="center"
             android:layout_marginTop="@dimen/dimenSpace">
             <TextView
-                android:id="@+id/asset_detail"
+                android:id="@+id/asset_detail_title"
                 android:textColor="?colorDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dimenLarge"
-                android:text="NEO"/>
+                android:textSize="@dimen/dimenLarge"/>
             <TextView
                 android:id="@+id/asset_detail_balance"
                 android:textColor="?colorDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dimenDefault"
-                android:text="999999999"/>
+                android:textSize="@dimen/dimenIcon"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/asset_detail_claim_enter"
+                android:layout_marginTop="@dimen/dimenSpace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorDefault"
+                android:background="#44000000"
+                android:padding="@dimen/dimenSmall"
+                android:text="@string/asset_detail_claim_enter"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/asset_detail_claim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimenSpace">
+            <TextView
+                android:id="@+id/asset_detail_claim_un_collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorDefault"/>
+            <TextView
+                android:id="@+id/asset_detail_claim_un_claim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?colorDefault"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+                <Button
+                    android:id="@+id/asset_detail_claim_collect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/asset_detail_claim_collect"
+                    android:textColor="?colorDefault"/>
+                <Button
+                    android:id="@+id/asset_detail_claim_claim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/asset_detail_claim_claim"
+                    android:textColor="?colorDefault"/>
+                <TextView
+                    android:layout_marginStart="@dimen/dimenMini"
+                    android:id="@+id/asset_detail_claim_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorDefault"
+                    android:background="#44000000"
+                    android:padding="@dimen/dimenSmall"
+                    android:text="@string/asset_detail_claim_cancel"/>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 

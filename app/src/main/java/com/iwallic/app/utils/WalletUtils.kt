@@ -13,6 +13,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
 object WalletUtils {
+    private var cachedAddress: String? = null
     private var cached: WalletModel? = null
     private var gson = Gson()
     /**
@@ -157,7 +158,14 @@ object WalletUtils {
 
     fun address(context: Context): String {
         // if address empty, check if wallet exists, if not then jump to gate
-        return SharedPrefUtils.getAddress(context)
+        if (!cachedAddress.isNullOrEmpty()) {
+            return cachedAddress!!
+        }
+        val addr = SharedPrefUtils.getAddress(context)
+        if (!addr.isEmpty()) {
+            cachedAddress = addr
+        }
+        return addr
     }
 
     fun account(context: Context): AccountModel? {
@@ -209,6 +217,7 @@ object WalletUtils {
     fun close(context: Context): Boolean {
         SharedPrefUtils.rmAddress(context)
         cached = null
+        cachedAddress = null
         return true
     }
 

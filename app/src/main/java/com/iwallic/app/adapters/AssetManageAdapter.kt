@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.iwallic.app.R
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.utils.SharedPrefUtils
+import com.iwallic.app.utils.*
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -41,13 +41,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
         }
         holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data.items[position].symbol
         val toggleSC = holder.itemView.findViewById<SwitchCompat>(R.id.asset_manage_toggle)
-        if (listOf(
-            "e8f98440ad0d7a6e76d84fb1c3d3f8a16e162e97",
-            "81c089ab996fc89c468a26c0a88d23ae2f34b5c0",
-            "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b",
-            "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7"
-        ).contains(data.items[position].asset_id)) {
-            Log.i("【】", data.items[position].asset_id)
+        if (listOf(EXT, EDS, NEO, GAS).contains(data.items[position].asset_id)) {
             toggleSC.visibility = View.GONE
         } else {
             toggleSC.visibility = View.VISIBLE
@@ -79,7 +73,11 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
     fun push(newData: PageDataPyModel<AssetRes>) {
         if (newData.page == 1) {
             data = newData
-            notifyDataSetChanged()
+            var i = 0
+            while (i < data.items.size) {
+                notifyItemChanged(i)
+                i++
+            }
         } else {
             val p = data.items.size
             data.page = newData.page

@@ -15,10 +15,10 @@ import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.HttpUtils
-import com.iwallic.app.utils.SharedPrefUtils
-import com.iwallic.app.utils.WalletUtils
+import android.content.Intent
+import com.iwallic.app.states.AssetState
+import com.iwallic.app.utils.*
+
 
 class AssetManageActivity : BaseActivity() {
     private lateinit var backIV: LinearLayout
@@ -55,6 +55,9 @@ class AssetManageActivity : BaseActivity() {
 
     private fun initListener() {
         backIV.setOnClickListener {
+//            val intent = Intent()
+//            intent.putExtra("assetManage", true)
+//            setResult(CommonUtils.CODE_ASSET_MANAGE, intent)
             finish()
         }
         amRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -69,6 +72,11 @@ class AssetManageActivity : BaseActivity() {
         amSRL.setOnRefreshListener {
             resolveFetch()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AssetState.touch()
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

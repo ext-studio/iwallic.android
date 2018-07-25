@@ -49,6 +49,14 @@ class AssetFragment : BaseFragment() {
         return view
     }
 
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == CommonUtils.CODE_ASSET_MANAGE) {
+//            loadPB.visibility = View.VISIBLE
+//            AssetState.fetch()
+//        }
+//    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         listListen.dispose()

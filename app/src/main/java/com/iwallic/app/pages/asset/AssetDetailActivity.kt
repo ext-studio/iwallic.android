@@ -11,23 +11,20 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.google.gson.Gson
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
-import com.iwallic.app.models.AssetRes
-import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.models.PageDataRes
-import com.iwallic.app.models.TransactionRes
+import com.iwallic.app.models.*
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.GAS
+import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
 
@@ -41,12 +38,24 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SwipeRefreshLayout
 
+    private lateinit var detailLL: LinearLayout
+    private lateinit var claimLL: LinearLayout
+    private lateinit var claimEnterTV: TextView
+    private lateinit var claimCancelTV: TextView
+    private lateinit var claimUnClaimTV: TextView
+    private lateinit var claimUnCollectTV: TextView
+    private lateinit var claimCollectB: Button
+    private lateinit var claimClaimB: Button
+
+    private var claims: ClaimsRes? = null
+
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
 
     private lateinit var balanceListen: Disposable
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +63,7 @@ class AssetDetailActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         initParams()
         initDOM()
+        initGAS()
         initListener()
         resolveBalance()
         registerReceiver(BlockListener, IntentFilter(new_block_action))
@@ -84,18 +94,72 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        titleTV = findViewById(R.id.asset_detail)
+        titleTV = findViewById(R.id.asset_detail_title)
         backIV = findViewById(R.id.asset_detail_back)
         transferIV = findViewById(R.id.asset_detail_transfer)
         balanceTV = findViewById(R.id.asset_detail_balance)
         txRV = findViewById(R.id.asset_detail_list)
         txSRL = findViewById(R.id.asset_detail_list_refresh)
         loadPB = findViewById(R.id.asset_detail_load)
+
+        detailLL = findViewById(R.id.asset_detail)
+        claimLL = findViewById(R.id.asset_detail_claim)
+        claimEnterTV = findViewById(R.id.asset_detail_claim_enter)
+        claimCancelTV = findViewById(R.id.asset_detail_claim_cancel)
+        claimUnCollectTV = findViewById(R.id.asset_detail_claim_un_collect)
+        claimUnClaimTV = findViewById(R.id.asset_detail_claim_un_claim)
+        claimClaimB = findViewById(R.id.asset_detail_claim_claim)
+        claimCollectB = findViewById(R.id.asset_detail_claim_collect)
+
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
         txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(this)
         txRV.layoutManager = txManager
         txRV.adapter = txAdapter
+    }
+
+    private fun initGAS() {
+        if (asset.asset_id != GAS || !AssetState.checkClaim()) {
+            return
+        }
+        HttpUtils.post("getclaim", listOf(WalletUtils.address(this)), {
+            claims = gson.fromJson(it, ClaimsRes::class.java)
+            if (claims != null) {
+                claimEnterTV.visibility = View.VISIBLE
+                claimUnCollectTV.text = resources.getString(R.string.asset_detail_claim_un_collect, claims!!.unCollectClaim)
+                claimUnClaimTV.text = resources.getString(R.string.asset_detail_claim_un_claimed, claims!!.unSpentClaim)
+                if (claims!!.unCollectClaim == "0") {
+                    claimCollectB.visibility = View.GONE
+                }
+                if (claims!!.unSpentClaim == "0") {
+                    claimClaimB.visibility = View.GONE
+                }
+            }
+        }, {
+            Log.i("【GASDetail】", "check failed【$it】")
+        })
+        claimEnterTV.setOnClickListener {
+            detailLL.visibility = View.GONE
+            claimLL.visibility = View.VISIBLE
+        }
+        claimCancelTV.setOnClickListener {
+            detailLL.visibility = View.VISIBLE
+            claimLL.visibility = View.GONE
+        }
+        claimClaimB.setOnClickListener {
+            if (claims!!.unSpentClaim == "0") {
+                Toast.makeText(this, R.string.error_claim_claim, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+        }
+        claimCollectB.setOnClickListener {
+            if (claims!!.unCollectClaim == "0") {
+                Toast.makeText(this, R.string.error_claim_collect, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun initListener() {

@@ -88,3 +88,15 @@ data class ResponseGoModel (
     val msg: String,
     val result: Any?
 )
+
+data class ClaimsRes (
+    val unSpentClaim: String = "0",
+    val unCollectClaim: String = "0",
+    var claims: ArrayList<ClaimItemRes> = arrayListOf()
+)
+
+data class ClaimItemRes (
+    val txid: String = "",
+    val claim: String = "",
+    val index: String = ""
+)
