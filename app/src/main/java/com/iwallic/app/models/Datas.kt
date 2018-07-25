@@ -1,11 +1,5 @@
 package com.iwallic.app.models
 
-//data class BalanceRes (
-//    val assetId: String = "",
-//    val balance: String = "0",
-//    val name: String = "unknown"
-//)
-
 data class PageDataRes<T>(
     var page: Int = 1,
     var pageSize: Int = 10,
@@ -16,7 +10,8 @@ data class PageDataRes<T>(
 data class TransactionRes (
     val name: String = "",
     val txid: String = "",
-    val value: String = ""
+    val value: String = "",
+    val status: String = "confirmed"
 )
 
 data class TransactionDetailRes (

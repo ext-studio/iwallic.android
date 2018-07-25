@@ -15,6 +15,7 @@ import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
@@ -240,6 +241,7 @@ class TransactionTransferActivity : BaseActivity() {
             "/client/transaction/unconfirmed",
             mapOf(Pair("wallet_address", address), Pair("assetId", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
+                UnconfirmedState.fetch()
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
             }
