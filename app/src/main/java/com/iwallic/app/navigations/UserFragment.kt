@@ -3,6 +3,7 @@ package com.iwallic.app.navigations
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class UserFragment : BaseFragment() {
         supportLL = view.findViewById(R.id.fragment_user_support)
         aboutLL = view.findViewById(R.id.fragment_user_about)
         closeLL = view.findViewById(R.id.fragment_user_signout)
+        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {

@@ -11,7 +11,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="@dimen/dimenTopBar"
         android:background="?colorPrimary">
 
         <LinearLayout
@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimenSmall"
             android:layout_gravity="center_vertical|left"
-            android:clickable="true">
+            android:clickable="true"
+            android:focusable="true">
             <ImageView
                 android:contentDescription="@string/wallet_create"
                 android:layout_width="@dimen/dimenLarge"
@@ -159,6 +160,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="@dimen/dimenSpace">
                     <LinearLayout
+                        android:contentDescription="@null"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -170,6 +172,7 @@
                             android:text="@string/wallet_create_new_title"
                             android:textColor="?colorFont"/>
                         <ImageView
+                            android:contentDescription="@null"
                             android:id="@+id/wallet_create_eye"
                             android:layout_width="@dimen/dimenIcon"
                             android:layout_height="@dimen/dimenIcon"
@@ -184,8 +187,7 @@
                         android:background="?colorDefault"
                         android:textColor="?colorPrimary"
                         android:layout_margin="@dimen/dimenSpace"
-                        android:padding="@dimen/dimenSpace"
-                        android:text="New WIF Content New WIF Content New WIF Content New WIF Content New WIF Content New WIF Content New WIF Content New WIF Content New WIF Content"/>
+                        android:padding="@dimen/dimenSpace"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

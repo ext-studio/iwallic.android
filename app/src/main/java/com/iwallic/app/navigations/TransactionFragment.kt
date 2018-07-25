@@ -2,7 +2,6 @@ package com.iwallic.app.navigations
 
 import android.content.*
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,14 +9,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
+import com.iwallic.app.pages.transaction.TransactionUnconfirmedActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.DialogUtils
@@ -30,6 +30,7 @@ class TransactionFragment : BaseFragment() {
     private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
+    private lateinit var unconfirmedLL: LinearLayout
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
@@ -53,7 +54,11 @@ class TransactionFragment : BaseFragment() {
         txRV = view.findViewById(R.id.transaction_list)
         txSRL = view.findViewById(R.id.transaction_list_refresh)
         loadPB = view.findViewById(R.id.fragment_transaction_load)
+        unconfirmedLL = view.findViewById(R.id.transaction_unconfirmed_enter)
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+
+        setStatusBar(view.findViewById(R.id.app_top_space))
+
         txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(context!!)
         txRV.layoutManager = txManager
@@ -62,11 +67,14 @@ class TransactionFragment : BaseFragment() {
 
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
-            resolveList(it)
+            txAdapter.push(it)
+            if (it.page == 1) {
+                txRV.scrollToPosition(0)
+            }
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
-            Log.i("交易列表", "发生错误【${it}】")
+            Log.i("【TxList】", "error【${it}】")
         })
         errorListen = TransactionState.error().subscribe({
             resolveRefreshed()
@@ -75,7 +83,7 @@ class TransactionFragment : BaseFragment() {
             }
         }, {
             resolveRefreshed()
-            Log.i("交易列表", "发生错误【${it}】")
+            Log.i("【TxList】", "error【${it}】")
         })
         txSRL.setOnRefreshListener {
             if (TransactionState.fetching) {
@@ -94,19 +102,19 @@ class TransactionFragment : BaseFragment() {
             }
         })
         txAdapter.onEnter().subscribe {
+            Log.i("【】", "【】【】【】【】【")
             val intent = Intent(context, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)
             context!!.startActivity(intent)
         }
         txAdapter.onCopy().subscribe {
+            Log.i("【】", "【】【】【】【】【")
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
         }
-    }
-
-    private fun resolveList(data: PageDataPyModel<TransactionRes>) {
-        txAdapter.push(data)
-        resolveRefreshed(true)
+        unconfirmedLL.setOnClickListener {
+            context!!.startActivity(Intent(context, TransactionUnconfirmedActivity::class.java))
+        }
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

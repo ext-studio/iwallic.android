@@ -6,31 +6,28 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.iwallic.app.models.WalletAgentModel
-import com.iwallic.app.utils.WalletEntry.TABLE_NAME
 import java.util.*
 
-// Table contents are grouped together in an anonymous object.
-object WalletEntry : BaseColumns {
-    const val TABLE_NAME = "wallet"
-    const val COLUMN_NAME_FILE = "file"
-    const val COLUMN_NAME_SNAPSHOT = "snapshot"
-    const val COLUMN_NAME_COUNT = "count"
-    const val COLUMN_NAME_ADDR = "address"
-    const val COLUMN_NAME_UPDATEAT = "update_at"
-}
-
-private const val SQL_CREATE_ENTRIES =
-        "CREATE TABLE ${WalletEntry.TABLE_NAME} (" +
-                "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-                "${WalletEntry.COLUMN_NAME_FILE} TEXT," +
-                "${WalletEntry.COLUMN_NAME_SNAPSHOT} TEXT," +
-                "${WalletEntry.COLUMN_NAME_COUNT} INTEGER," +
-                "${WalletEntry.COLUMN_NAME_ADDR} TEXT," +
-                "${WalletEntry.COLUMN_NAME_UPDATEAT} INTEGER)"
-
-private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${WalletEntry.TABLE_NAME}"
-
 class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    object WalletEntry : BaseColumns {
+        const val TABLE_NAME = "wallet"
+        const val COLUMN_NAME_FILE = "file"
+        const val COLUMN_NAME_SNAPSHOT = "snapshot"
+        const val COLUMN_NAME_COUNT = "count"
+        const val COLUMN_NAME_ADDR = "address"
+        const val COLUMN_NAME_UPDATEAT = "update_at"
+    }
+
+    private val SQL_CREATE_ENTRIES =
+            "CREATE TABLE ${WalletEntry.TABLE_NAME} (" +
+                    "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+                    "${WalletEntry.COLUMN_NAME_FILE} TEXT," +
+                    "${WalletEntry.COLUMN_NAME_SNAPSHOT} TEXT," +
+                    "${WalletEntry.COLUMN_NAME_COUNT} INTEGER," +
+                    "${WalletEntry.COLUMN_NAME_ADDR} TEXT," +
+                    "${WalletEntry.COLUMN_NAME_UPDATEAT} INTEGER)"
+
+    private val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${WalletEntry.TABLE_NAME}"
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
@@ -64,7 +61,7 @@ class WalletDBUtils(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
     fun remove(id: Long): Boolean {
         val db = this.writableDatabase
-        val success = db.delete(TABLE_NAME, BaseColumns._ID + "=?", arrayOf(id.toString())).toLong()
+        val success = db.delete(WalletEntry.TABLE_NAME, BaseColumns._ID + "=?", arrayOf(id.toString())).toLong()
         db.close()
         return Integer.parseInt("$success") != -1
     }

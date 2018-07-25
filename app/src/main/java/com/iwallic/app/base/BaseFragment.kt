@@ -3,15 +3,23 @@ package com.iwallic.app.base
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.iwallic.app.R
+import android.view.Window.ID_ANDROID_CONTENT
+
+
 
 open class BaseFragment: Fragment() {
     private lateinit var mInputMethodManager: InputMethodManager
@@ -19,6 +27,17 @@ open class BaseFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mInputMethodManager = activity?.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
+
+    protected fun setStatusBar(space: View?) {
+        if (space != null) {
+            var result = 0
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                result = resources.getDimensionPixelSize(resourceId)
+            }
+            space.layoutParams.height = result
+        }
     }
 
     protected fun hideKeyBoard() {

@@ -12,15 +12,13 @@ import com.iwallic.app.R
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.utils.*
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 
 class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<AssetRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = _data
     private var display = _display
     private val VIEW_TYPE_CELL = 1
     private val VIEW_TYPE_FOOTER = 0
-    private lateinit var pagerTV: TextView
+    private var pagerTV: TextView? = null
     private var paging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +28,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
         } else {
             view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
             pagerTV = view.findViewById(R.id.adapter_pager)
-            pagerTV.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
+            pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
         }
         return ViewHolder(view)
     }
@@ -41,7 +39,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
         }
         holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data.items[position].symbol
         val toggleSC = holder.itemView.findViewById<SwitchCompat>(R.id.asset_manage_toggle)
-        if (listOf(EXT, EDS, NEO, GAS).contains(data.items[position].asset_id)) {
+        if (listOf(CommonUtils.EXT, CommonUtils.EDS, CommonUtils.NEO, CommonUtils.GAS).contains(data.items[position].asset_id)) {
             toggleSC.visibility = View.GONE
         } else {
             toggleSC.visibility = View.VISIBLE
@@ -72,12 +70,9 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
 
     fun push(newData: PageDataPyModel<AssetRes>) {
         if (newData.page == 1) {
+            notifyItemRangeRemoved(0, data.items.size)
             data = newData
-            var i = 0
-            while (i < data.items.size) {
-                notifyItemChanged(i)
-                i++
-            }
+            notifyItemRangeInserted(0, data.items.size)
         } else {
             val p = data.items.size
             data.page = newData.page
@@ -85,9 +80,9 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
             data.total = newData.total
             data.per_page = newData.per_page
             data.items.addAll(newData.items)
-            notifyItemRangeInserted(p + 1, newData.items.size)
+            notifyItemRangeInserted(p, newData.items.size)
         }
-        pagerTV.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
+        pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
         paging = false
     }
 
@@ -107,7 +102,7 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
             return
         }
         paging = true
-        pagerTV.setText(R.string.list_loading)
+        pagerTV?.setText(R.string.list_loading)
     }
 
     fun getItem(position: Int): AssetRes {

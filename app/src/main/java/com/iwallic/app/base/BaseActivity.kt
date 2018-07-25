@@ -5,10 +5,14 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.*
 import android.support.annotation.Nullable
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import com.iwallic.app.R
 import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
@@ -22,6 +26,15 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mInputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val space = findViewById<View>(R.id.app_top_space)
+        if (space != null) {
+            val rectangle = Rect()
+            window.decorView.getWindowVisibleDisplayFrame(rectangle)
+            val statusBarHeight = rectangle.top
+            val contentViewTop = window.findViewById<View>(Window.ID_ANDROID_CONTENT).top
+            val titleBarHeight = contentViewTop - statusBarHeight
+            space.layoutParams = ViewGroup.LayoutParams(0, titleBarHeight)
+        }
         resolveTheme()
         CommonUtils.onConfigured().subscribe({
             if (it) {
@@ -30,6 +43,17 @@ open class BaseActivity : AppCompatActivity() {
         }, {
             Log.i("【BaseActivity】", "config failed, block service will not on")
         })
+    }
+
+    protected fun setStatusBar(space: View?) {
+        if (space != null) {
+            var result = 0
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                result = resources.getDimensionPixelSize(resourceId)
+            }
+            space.layoutParams.height = result
+        }
     }
 
     override fun attachBaseContext(base: Context) {

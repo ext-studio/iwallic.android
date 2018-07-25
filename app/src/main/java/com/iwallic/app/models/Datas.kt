@@ -68,7 +68,7 @@ data class PageDataPyModel<T> (
     var items: ArrayList<T> = arrayListOf(),
     var page: Int = 1,
     var pages: Int = 1,
-    var per_page: Int = 10,
+    var per_page: Int = 15,
     var total: Int = 0
 )
 

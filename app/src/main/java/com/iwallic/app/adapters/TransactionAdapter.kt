@@ -1,6 +1,7 @@
 package com.iwallic.app.adapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -91,16 +92,16 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
 
     fun push(newData: PageDataPyModel<TransactionRes>) {
         if (newData.page == 1) {
+            notifyItemRangeRemoved(0, data.items.size)
             data = newData
-            notifyDataSetChanged()
+            notifyItemRangeInserted(0, data.items.size)
         } else {
             val p = data.items.size
             data.page = newData.page
-            // data.pageSize = newData.pageSize
             data.total = newData.total
             data.per_page = newData.per_page
             data.items.addAll(newData.items)
-            notifyItemRangeInserted(p + 1, newData.items.size)
+            notifyItemRangeInserted(p, newData.items.size)
         }
         pagerTV?.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
         paging = false

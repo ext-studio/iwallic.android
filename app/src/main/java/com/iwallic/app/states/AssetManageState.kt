@@ -3,26 +3,24 @@ package com.iwallic.app.states
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
-import com.iwallic.app.models.PageDataRes
-import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
-object TransactionState {
-    private var cached = PageDataPyModel<TransactionRes>()
+object AssetManageState {
+    private var cached = PageDataPyModel<AssetRes>()
     private var address: String = ""
-    private var assetId: String = ""
-    private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
+    private val _list = PublishSubject.create<PageDataPyModel<AssetRes>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
-        if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
-            fetch(addr, asset)
+    fun list(addr: String = ""): Observable<PageDataPyModel<AssetRes>> {
+        if ((addr.isNotEmpty() && addr != address)) {
+            fetch(addr)
             return _list
         }
         return _list.startWith(cached)
@@ -35,7 +33,7 @@ object TransactionState {
             return
         }
         fetching = true
-        resolveFetch(assetId, address, cached.page+1, cached.per_page, {
+        resolveFetch(address, cached.page+1, cached.per_page, {
             if (it.page > 1) {
                 cached.page = it.page
                 cached.total = it.total
@@ -55,17 +53,13 @@ object TransactionState {
             }
         })
     }
-    fun fetch(addr: String = "", asset: String? = null, silent: Boolean = false) {
+    fun fetch(addr: String = "", silent: Boolean = false) {
         if (fetching) {
             return
         }
         if (addr.isNotEmpty()) {
             Log.i("【TxState】", "set address")
             address = addr
-        }
-        if (asset != null) {
-            Log.i("【TxState】", "set asset")
-            assetId = asset
         }
         if (address.isEmpty()) {
             if (silent) {
@@ -74,17 +68,7 @@ object TransactionState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(assetId, address, 1, cached.per_page, {pageData ->
-            if (silent) {
-                val start = pageData.items.indexOfFirst {
-                    it.txid == cached.items[0].txid
-                }
-                Log.i("【TxState】", "new tx from index【$start】")
-                if (start > 0) {
-                    pageData.items = ArrayList(pageData.items.subList(0, start))
-                    pageData.items.addAll(cached.items)
-                }
-            }
+        resolveFetch(address, 1, cached.per_page, {pageData ->
             cached = pageData
             _list.onNext(cached)
             launch {
@@ -103,13 +87,13 @@ object TransactionState {
         })
     }
 
-    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&per_page=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
+    private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<AssetRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy("/client/assets/list?page=$page&per_page=$size&wallet_address=$addr", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy
             }
-            val data = gson.fromJson<PageDataPyModel<TransactionRes>>(it, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)
+            val data = gson.fromJson<PageDataPyModel<AssetRes>>(it, object: TypeToken<PageDataPyModel<AssetRes>>() {}.type)
             if (data == null) {
                 no(99998)
             } else {
@@ -123,7 +107,6 @@ object TransactionState {
     fun clear() {
         cached = PageDataPyModel()
         address = ""
-        assetId = ""
         fetching = false
     }
 }

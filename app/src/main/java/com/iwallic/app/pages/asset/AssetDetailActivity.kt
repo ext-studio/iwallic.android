@@ -22,8 +22,8 @@ import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.new_block_action
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.GAS
 import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 import io.reactivex.disposables.Disposable
@@ -111,6 +111,8 @@ class AssetDetailActivity : BaseActivity() {
         claimClaimB = findViewById(R.id.asset_detail_claim_claim)
         claimCollectB = findViewById(R.id.asset_detail_claim_collect)
 
+        setStatusBar(findViewById(R.id.app_top_space))
+
         txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
         txAdapter = TransactionAdapter(PageDataPyModel())
         txManager = LinearLayoutManager(this)
@@ -119,7 +121,7 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initGAS() {
-        if (asset.asset_id != GAS || !AssetState.checkClaim()) {
+        if (asset.asset_id != CommonUtils.GAS || !AssetState.checkClaim()) {
             return
         }
         HttpUtils.post("getclaim", listOf(WalletUtils.address(this)), {
@@ -164,7 +166,10 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(this), asset.asset_id).subscribe({
-            resolveList(it)
+            txAdapter.push(it)
+            if (it.page == 1) {
+                txRV.scrollToPosition(0)
+            }
             resolveRefreshed(true)
         }, {
             resolveRefreshed()
@@ -226,10 +231,6 @@ class AssetDetailActivity : BaseActivity() {
         val tryGet = AssetState.get(asset.asset_id)
         titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
-    }
-    private fun resolveList(data: PageDataPyModel<TransactionRes>) {
-        txAdapter.push(data)
-        resolveRefreshed(true)
     }
 
     private fun resolveRefreshed(success: Boolean = false) {

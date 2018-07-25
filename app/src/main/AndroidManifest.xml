@@ -25,8 +25,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
         <activity android:name=".base.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,11 +46,14 @@
         <activity android:name=".pages.wallet.WalletVerifyActivity" />
         <activity android:name=".pages.transaction.TransactionTransferActivity" />
         <activity android:name=".pages.transaction.TransactionDetailActivity" />
+        <activity android:name=".pages.transaction.TransactionUnconfirmedActivity"/>
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
         <activity android:name=".pages.user.UserSettingNetActivity" />
         <activity android:name=".pages.user.UserBrowserActivity" />
+        <activity android:name=".pages.user.UserSupportActivity" />
+        <activity android:name=".pages.user.UserAboutActivity" />
 
         <service
             android:name=".services.BlockService"
@@ -59,12 +63,8 @@
             android:name="android.max_aspect"
             android:value="2.1" />
 
-        <activity android:name=".pages.user.UserSupportActivity" />
-        <activity android:name=".pages.user.UserAboutActivity" />
-
         <service
             android:name=".services.DownloadService"
             android:enabled="true" />
     </application>
-
 </manifest>

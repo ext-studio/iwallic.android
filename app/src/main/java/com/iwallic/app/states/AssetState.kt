@@ -4,8 +4,8 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.AssetRes
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.HttpUtils
-import com.iwallic.app.utils.NEO
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlin.collections.ArrayList
@@ -76,7 +76,7 @@ object AssetState {
         if (cached == null) {
             return false
         }
-        return cached!!.indexOfFirst { it.asset_id == NEO && it.balance != "0" } >= 0
+        return cached!!.indexOfFirst { it.asset_id == CommonUtils.NEO && it.balance != "0" } >= 0
     }
 
     fun touch() {

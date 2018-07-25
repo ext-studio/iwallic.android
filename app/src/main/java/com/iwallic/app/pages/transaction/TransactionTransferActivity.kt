@@ -62,6 +62,7 @@ class TransactionTransferActivity : BaseActivity() {
         successB = findViewById(R.id.transaction_transfer_success)
         step1LL = findViewById(R.id.transaction_transfer_step_1)
         step2LL = findViewById(R.id.transaction_transfer_step_2)
+        setStatusBar(findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -119,6 +120,9 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun initAsset() {
+        list = AssetState.cached?.filter {
+            it.balance.toDouble() > 0
+        }
         asset = intent.getStringExtra("asset") ?: ""
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
@@ -127,9 +131,6 @@ class TransactionTransferActivity : BaseActivity() {
             amountET.isEnabled = true
             balance = chosen.balance.toDouble()
             return
-        }
-        list = AssetState.cached?.filter {
-            it.balance.toDouble() > 0
         }
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()

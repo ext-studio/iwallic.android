@@ -4,38 +4,36 @@
     android:background="@drawable/shap_receive_bg"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:id="@+id/app_top_space"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenStatusBar"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="32dp">
+        <LinearLayout
+            android:id="@+id/transaction_receive_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="@dimen/dimenSmall"
+            android:clickable="true"
+            android:focusable="true">
 
-            <LinearLayout
-                android:id="@+id/transaction_receive_back"
+            <ImageView
+                android:layout_width="@dimen/dimenLarge"
+                android:layout_height="@dimen/dimenLarge"
+                android:contentDescription="@string/wallet_import"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_back"
+                android:tint="?colorDefault" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:layout_marginStart="@dimen/dimenSmall"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="@dimen/dimenLarge"
-                    android:layout_height="@dimen/dimenLarge"
-                    android:contentDescription="@string/wallet_import"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_back"
-                    android:tint="?colorDefault" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/transaction_receive"
-                    android:textColor="?colorDefault"
-                    android:textSize="@dimen/dimenDefault" />
-            </LinearLayout>
-        </FrameLayout>
+                android:layout_gravity="center"
+                android:text="@string/transaction_receive"
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenDefault" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
