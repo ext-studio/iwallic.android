@@ -23,6 +23,8 @@
     <string name="asset_detail_claim_cancel">Cancel</string>
     <string name="asset_detail_claim_un_claimed">Can claim: %1$s</string>
     <string name="asset_detail_claim_un_collect">Can collect: %1$s</string>
+    <string name="asset_detail_claim_success">Claim is submitted, please wait for confirm</string>
+    <string name="asset_detail_collect_success">Collection is submitted, please wait for confirm</string>
     <string name="user_setting_language">Language</string>
     <string name="user_setting_skin">Theme</string>
     <string name="user_setting_skin_default">Default</string>
@@ -101,6 +103,9 @@
     <string name="error_scan_address">No address found</string>
     <string name="error_claim_claim">No GAS to claim, please collect first if uncollected GAS exists</string>
     <string name="error_claim_collect">No GAS to collect</string>
+    <string name="error_claim_claiming">Last claim has not completed yet</string>
+    <string name="error_claim_collecting">Last collection has not completed yet</string>
+    <string name="error_version_latest">Already the latest version</string>
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>

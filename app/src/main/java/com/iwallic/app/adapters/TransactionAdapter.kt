@@ -20,31 +20,13 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
     private var data = _data
     private val _onEnter = PublishSubject.create<Int>()
     private val _onCopy = PublishSubject.create<Int>()
-    private val VIEW_TYPE_CELL = 1
-    private val VIEW_TYPE_FOOTER = 0
-    private var pagerTV: TextView? = null
-    private var paging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: FrameLayout
-        if (viewType == VIEW_TYPE_CELL) {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_list, parent, false) as FrameLayout
-        } else {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
-            pagerTV = view.findViewById(R.id.adapter_pager)
-            pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
-        }
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_list, parent, false) as ViewGroup
         return ViewHolder(view)
     }
 
-    @Suppress("DEPRECATION")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == data.items.size) {
-            if (pagerTV == null) {
-                pagerTV = holder.itemView.findViewById(R.id.adapter_pager)
-            }
-            return
-        }
         val txidTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_txid)
         txidTV.text = data.items[position].txid
         val valueTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_value)
@@ -80,14 +62,10 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         }
     }
 
-    override fun getItemCount() = data.items.size + 1
+    override fun getItemCount() = data.items.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
     fun onEnter(): Observable<Int> {
@@ -111,27 +89,6 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
             data.items.addAll(newData.items)
             notifyItemRangeInserted(p, newData.items.size)
         }
-        pagerTV?.setText(if (data.items.size != data.total) R.string.list_loadmore else R.string.list_nomore)
-        paging = false
-    }
-
-    fun checkNext(position: Int): Boolean {
-        if (paging) {
-            return false
-        }
-        return position == data.items.size && data.items.size < data.total
-    }
-
-    fun getPage(): Int {
-        return data.page
-    }
-
-    fun setPaging() {
-        if (paging) {
-            return
-        }
-        paging = true
-        pagerTV?.setText(R.string.list_loading)
     }
 
     fun getItem(position: Int): TransactionRes {
@@ -139,6 +96,6 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
     }
 
     class ViewHolder(
-        listView: FrameLayout
+        listView: ViewGroup
     ): RecyclerView.ViewHolder(listView)
 }

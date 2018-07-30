@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?colorDefault">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimenTopBar"
@@ -33,19 +35,36 @@
                 android:textSize="@dimen/dimenDefault"/>
         </LinearLayout>
     </FrameLayout>
-    <ProgressBar
-        android:id="@+id/transaction_unconfirmed_load"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimenSpace"/>
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/transaction_unconfirmed_refresh"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/transaction_unconfirmed_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlAccentColor="?colorPrimary"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transaction_unconfirmed_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlAccentColor="?colorPrimary"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <!--<ProgressBar-->
+        <!--android:id="@+id/transaction_unconfirmed_load"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="@dimen/dimenSpace"/>-->
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/transaction_unconfirmed_refresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/transaction_unconfirmed_list"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

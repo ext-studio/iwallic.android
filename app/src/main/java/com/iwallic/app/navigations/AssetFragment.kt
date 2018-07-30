@@ -1,6 +1,7 @@
 package com.iwallic.app.navigations
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,16 +23,18 @@ import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import io.reactivex.disposables.Disposable
 
 class AssetFragment : BaseFragment() {
     private lateinit var assetRV: RecyclerView
-    private lateinit var assetSRL: SwipeRefreshLayout
+    private lateinit var assetSRL: SmartRefreshLayout
+    private lateinit var refreshCH: ClassicsHeader
     private lateinit var assetAdapter: AssetAdapter
     private lateinit var assetManager: RecyclerView.LayoutManager
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
-    private lateinit var loadPB: ProgressBar
     private lateinit var manageIV: ImageView
     private val mainAsset = AssetRes("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b", "0", "NEO", "NEO")
 
@@ -53,43 +56,40 @@ class AssetFragment : BaseFragment() {
         context!!.unregisterReceiver(BlockListener)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private fun initDOM(view: View) {
         assetRV = view.findViewById(R.id.asset_list)
-        assetSRL = view.findViewById(R.id.asset_list_refresh)
-        assetSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        assetSRL = view.findViewById(R.id.asset_list_pager)
+        refreshCH = view.findViewById(R.id.asset_list_refresh)
         mainAssetTV = view.findViewById(R.id.fragment_asset_main_asset)
         mainBalanceTV = view.findViewById(R.id.fragment_asset_main_balance)
-        loadPB = view.findViewById(R.id.fragment_asset_load)
         manageIV = view.findViewById(R.id.fragment_asset_manage)
         assetAdapter = AssetAdapter(arrayListOf())
         assetManager = LinearLayoutManager(context!!)
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
+
+        assetSRL.setEnableLoadMore(false)
+        assetSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {
         listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
             resolveList(it)
-            resolveRefreshed(true)
+            assetSRL.finishRefresh(true)
         }, {
-            resolveRefreshed()
+            assetSRL.finishRefresh(false)
             Log.i("【AssetList】", "error【${it}】")
         })
         errorListen = AssetState.error().subscribe({
-            resolveRefreshed()
+            assetSRL.finishRefresh(false)
             if (!DialogUtils.error(context!!, it)) {
                 Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
             }
         }, {
-            resolveRefreshed()
+            assetSRL.finishRefresh(false)
             Log.i("【AssetList】", "error【${it}】")
         })
         assetSRL.setOnRefreshListener {
-            if (AssetState.fetching) {
-                assetSRL.isRefreshing = false
-                return@setOnRefreshListener
-            }
             AssetState.fetch()
         }
         manageIV.setOnClickListener {
@@ -115,19 +115,6 @@ class AssetFragment : BaseFragment() {
             }
         }
         assetAdapter.set(list)
-    }
-
-    private fun resolveRefreshed(success: Boolean = false) {
-        if (loadPB.visibility == View.VISIBLE) {
-            loadPB.visibility = View.GONE
-        }
-        if (!assetSRL.isRefreshing) {
-            return
-        }
-        assetSRL.isRefreshing = false
-        if (success) {
-            Toast.makeText(context!!, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
-        }
     }
 
     companion object BlockListener: BroadcastReceiver() {

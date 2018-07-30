@@ -88,7 +88,7 @@ object AssetManageState {
     }
 
     private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<AssetRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/assets/list?page=$page&per_page=$size&wallet_address=$addr", {
+        HttpUtils.getPy("/client/assets/list?page=$page&page_size=$size&wallet_address=$addr", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy

@@ -24,6 +24,8 @@
     <string name="asset_detail_claim_cancel">取消</string>
     <string name="asset_detail_claim_un_claimed">可提取: %1$s</string>
     <string name="asset_detail_claim_un_collect">可转化: %1$s</string>
+    <string name="asset_detail_claim_success">提取操作已提交，请等待区块确认</string>
+    <string name="asset_detail_collect_success">转化操作已提交，请等待区块确认，然后可以进行提取操作</string>
     <string name="user_setting_language">显示语言</string>
     <string name="user_setting_skin">应用皮肤</string>
     <string name="user_setting_skin_default">默认</string>
@@ -100,6 +102,9 @@
     <string name="error_server">服务器错误</string>
     <string name="error_claim_claim">没有GAS可以提取，若有未转化的GAS请先转化</string>
     <string name="error_claim_collect">没有GAS可以转化</string>
+    <string name="error_claim_claiming">上一次提取操作尚未完成</string>
+    <string name="error_claim_collecting">上一次转化操作尚未完成</string>
+    <string name="error_version_latest">已经是最新版本</string>
     <string name="list_loadmore">加载更多数据</string>
     <string name="list_nomore">没有更多数据</string>
     <string name="list_loading">努力加载中</string>

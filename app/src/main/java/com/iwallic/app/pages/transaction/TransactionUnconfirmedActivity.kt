@@ -1,9 +1,5 @@
 package com.iwallic.app.pages.transaction
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -17,17 +13,18 @@ import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.models.PageDataPyModel
+import com.iwallic.app.models.SmartContract
 import com.iwallic.app.states.UnconfirmedState
-import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
 class TransactionUnconfirmedActivity : BaseActivity() {
     private lateinit var backLL: LinearLayout
     private lateinit var unRV: RecyclerView
-    private lateinit var unSRL: SwipeRefreshLayout
-    private lateinit var unPB: ProgressBar
+    private lateinit var unSRL: SmartRefreshLayout
+    // private lateinit var unPB: ProgressBar
 
     private lateinit var unManager: LinearLayoutManager
     private lateinit var unAdapter: TransactionAdapter
@@ -38,7 +35,6 @@ class TransactionUnconfirmedActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_unconfirmed)
         initDOM()
-        registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
         initListen()
     }
 
@@ -46,21 +42,22 @@ class TransactionUnconfirmedActivity : BaseActivity() {
         super.onDestroy()
         listen.dispose()
         error.dispose()
-        unregisterReceiver(BlockListener)
     }
 
     private fun initDOM() {
         backLL = findViewById(R.id.transaction_unconfirmed)
-        unPB = findViewById(R.id.transaction_unconfirmed_load)
-        unSRL = findViewById(R.id.transaction_unconfirmed_refresh)
+        // unPB = findViewById(R.id.transaction_unconfirmed_load)
+        unSRL = findViewById(R.id.transaction_unconfirmed_pager)
         unRV = findViewById(R.id.transaction_unconfirmed_list)
 
-        unSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
+        // unSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         unManager = LinearLayoutManager(this)
         unAdapter = TransactionAdapter(PageDataPyModel())
         unRV.layoutManager = unManager
         unRV.adapter = unAdapter
+
+        unSRL.setEnableOverScrollDrag(true)
     }
     private fun initListen() {
         listen = UnconfirmedState.list(WalletUtils.address(this)).subscribe({
@@ -68,36 +65,44 @@ class TransactionUnconfirmedActivity : BaseActivity() {
             if (it.page == 1) {
                 unRV.scrollToPosition(0)
             }
-            resolveRefreshed(true)
+            unSRL.finishRefresh(true)
+            if (it.items.size >= it.total) {
+                unSRL.finishLoadMoreWithNoMoreData()
+            } else {
+                unSRL.finishLoadMore(true)
+            }
         }, {
-            resolveRefreshed()
+            unSRL.finishRefresh(false)
+            unSRL.finishLoadMore(false)
             Log.i("【Unconfirmed】", "error【$it】")
         })
         error = UnconfirmedState.error().subscribe({
             if (!DialogUtils.error(this, it)) {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
-            resolveRefreshed()
+            unSRL.finishRefresh(false)
+            unSRL.finishLoadMore(false)
         }, {
-            resolveRefreshed()
+            unSRL.finishRefresh(false)
+            unSRL.finishLoadMore(false)
             Log.i("【Unconfirmed】", "error【$it】")
         })
-        unRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!UnconfirmedState.fetching && newState == 1 && unAdapter.checkNext(unManager.findLastVisibleItemPosition())) {
-                    unAdapter.setPaging()
-                    UnconfirmedState.next()
-                }
-            }
-        })
-        unSRL.setOnRefreshListener {
-            if (UnconfirmedState.fetching) {
-                unSRL.isRefreshing = false
-                return@setOnRefreshListener
-            }
-            UnconfirmedState.fetch()
-        }
+//        unRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (!UnconfirmedState.fetching && newState == 1 && unAdapter.checkNext(unManager.findLastVisibleItemPosition())) {
+//                    unAdapter.setPaging()
+//                    UnconfirmedState.next()
+//                }
+//            }
+//        })
+//        unSRL.setOnRefreshListener {
+//            if (UnconfirmedState.fetching) {
+//                unSRL.isRefreshing = false
+//                return@setOnRefreshListener
+//            }
+//            UnconfirmedState.fetch()
+//        }
         unAdapter.onCopy().subscribe {
             copy(unAdapter.getItem(it).txid, "txid")
             vibrate()
@@ -105,26 +110,24 @@ class TransactionUnconfirmedActivity : BaseActivity() {
         backLL.setOnClickListener {
             finish()
         }
-    }
-
-    private fun resolveRefreshed(success: Boolean = false) {
-        if (unPB.visibility == View.VISIBLE) {
-            unPB.visibility = View.GONE
+        unSRL.setOnRefreshListener {
+            UnconfirmedState.fetch()
         }
-        if (!unSRL.isRefreshing) {
-            return
-        }
-        unSRL.isRefreshing = false
-        if (success) {
-            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
+        unSRL.setOnLoadMoreListener {
+            UnconfirmedState.next()
         }
     }
 
-    companion object BlockListener: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (UnconfirmedState.has()) {
-                UnconfirmedState.fetch()
-            }
-        }
-    }
+//    private fun resolveRefreshed(success: Boolean = false) {
+//        if (unPB.visibility == View.VISIBLE) {
+//            unPB.visibility = View.GONE
+//        }
+//        if (!unSRL.isRefreshing) {
+//            return
+//        }
+//        unSRL.isRefreshing = false
+//        if (success) {
+//            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
+//        }
+//    }
 }

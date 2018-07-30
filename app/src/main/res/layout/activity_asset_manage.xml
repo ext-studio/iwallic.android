@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".pages.asset.AssetManageActivity">
     <FrameLayout
@@ -37,22 +38,39 @@
         </LinearLayout>
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/asset_manage_load"
-        android:visibility="visible"
-        android:layout_margin="@dimen/dimenSpace"
-        android:foregroundTint="?colorPrimary"
-        android:layout_width="@dimen/dimenLarge"
-        android:layout_height="@dimen/dimenLarge"
-        android:layout_gravity="center"
-        tools:targetApi="lollipop" />
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/asset_manage_list_refresh"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/asset_manage_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlAccentColor="?colorPrimary"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/asset_manage_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlAccentColor="?colorPrimary"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <!--<ProgressBar-->
+        <!--android:id="@+id/asset_manage_load"-->
+        <!--android:visibility="visible"-->
+        <!--android:layout_margin="@dimen/dimenSpace"-->
+        <!--android:foregroundTint="?colorPrimary"-->
+        <!--android:layout_width="@dimen/dimenLarge"-->
+        <!--android:layout_height="@dimen/dimenLarge"-->
+        <!--android:layout_gravity="center"-->
+        <!--tools:targetApi="lollipop" />-->
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/asset_manage_list_refresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/asset_manage_list"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

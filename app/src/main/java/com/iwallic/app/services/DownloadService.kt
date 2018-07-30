@@ -1,13 +1,15 @@
 package com.iwallic.app.services
 
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -18,21 +20,27 @@ import kotlinx.coroutines.experimental.launch
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.net.URL
+import java.net.URLConnection
 import java.util.*
 import kotlin.concurrent.schedule
+
 
 class DownloadService : Service() {
     private lateinit var notificationBuilder: NotificationCompat.Builder
     private var state = "waiting"
     private var percent = 0
     private var filePath = ""
+    private var connection: URLConnection? = null
+    private var output: FileOutputStream? = null
+    private var input: BufferedInputStream? = null
 
     @Suppress("DEPRECATION")
     override fun onCreate() {
         super.onCreate()
         notificationBuilder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(applicationContext, CommonUtils.CHANNEL_DOWNLOAD)
+            NotificationCompat.Builder(applicationContext, createNotificationChannel())
         } else {
             NotificationCompat.Builder(applicationContext)
         }
@@ -93,47 +101,50 @@ class DownloadService : Service() {
                 try {
                     filePath = ""
                     val url = URL(_url)
-                    val connection = url.openConnection()
-                    connection.connect()
-                    val fileLength = connection.contentLength
-
-                    val input = BufferedInputStream(url.openStream(), 8192)
-                    val path = getFileName(_url)
-                    val file = File(filesDir, path)
+                    val parent = File(filesDir, "installers")
+                    if (!parent.exists()) {
+                        parent.mkdir()
+                    }
+                    val file = File(parent, getFileName(_url))
                     if (file.exists()) {
                         Log.i("【DownloadService】", "complete 【exists】")
-                        filePath = path
+                        filePath = file.absolutePath
                         percent = 101
                         state = "finished"
                         return@launch
                     }
+                    connection = url.openConnection()
+                    connection!!.connect()
+                    connection!!.readTimeout = 5000
+                    connection!!.connectTimeout = 5000
+                    val fileLength = connection!!.contentLength
+                    input = BufferedInputStream(url.openStream(), 8192)
                     Log.i("【DownloadService】", "start download")
-                    val output = FileOutputStream(File(filesDir, path))
-
+                    output = FileOutputStream(File(parent, getFileName(_url)))
                     val data = ByteArray(1024)
                     var total: Long = 0
-                    var count = input.read(data)
+                    var count = input!!.read(data)
                     while (count != -1) {
                         total += count
-                        output.write(data, 0, count)
+                        output!!.write(data, 0, count)
                         percent = (total * 100 / fileLength).toInt()
-                        count = input.read(data)
+                        count = input!!.read(data)
                         if (count == -1) {
                             break
                         }
                     }
-                    filePath = path
+                    filePath = file.absolutePath
                     percent = 101
                     state = "finished"
-                    output.flush()
-                    output.close()
-                    input.close()
+                    output!!.flush()
+                    output!!.close()
+                    input!!.close()
                     Log.i("【DownloadService】", "finish download")
                 } catch (e: Throwable) {
                     Log.i("【DownloadService】", "error【$e】")
                     state = "failed"
                     percent = -1
-                    // stopSelf()
+                    stopSelf()
                 }
             }
     }
@@ -141,13 +152,13 @@ class DownloadService : Service() {
     private fun resolveFailed() {
 //        state = "waiting"
         percent = 0
-        val file = File(filesDir, filePath)
+        val file = File(filePath)
         if (file.exists()) {
             file.delete()
         }
     }
     private fun resolveCancel() {
-        val file = File(filesDir, filePath)
+        val file = File(filePath)
         if (file.exists()) {
             file.delete()
         }
@@ -183,22 +194,26 @@ class DownloadService : Service() {
             }
             state = "installing"
             Log.i("【DownloadService】", "install")
-            val file = File(filesDir, filePath)
-            var uri = Uri.fromFile(file)
+            val file = File(filePath)
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            if (Build.VERSION.SDK_INT >= 24) {
-                uri = FileProvider.getUriForFile(this, applicationContext.packageName + ".provider", file)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true)
+            val apkUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                FileProvider.getUriForFile(this, applicationContext.packageName + ".provider", file)
+            } else {
+                stopSelf()
+                return
             }
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
             startActivity(intent)
             state = "finished"
+            stopSelf()
         } catch (e: Throwable) {
             Log.i("【DownloadService】", "error【$e】")
             state = "failed"
             percent = -1
-            // stopSelf()
+            stopSelf()
         }
     }
 
@@ -235,6 +250,19 @@ class DownloadService : Service() {
         }
         val notification = notificationBuilder.build()
         startForeground(CommonUtils.ID_DOWNLOAD, notification)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(): String{
+        val channelId = "iwallic_update"
+        val channelName = "iWallic update"
+        val chan = NotificationChannel(channelId,
+                channelName, NotificationManager.IMPORTANCE_NONE)
+        chan.lightColor = Color.BLUE
+        chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+        val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        service.createNotificationChannel(chan)
+        return channelId
     }
 
     private fun getFileName(src: String): String {

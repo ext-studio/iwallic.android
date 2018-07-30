@@ -104,7 +104,7 @@ object TransactionState {
     }
 
     private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&per_page=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
+        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy

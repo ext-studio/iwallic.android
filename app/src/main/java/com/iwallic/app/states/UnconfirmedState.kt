@@ -1,11 +1,13 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.HttpUtils
+import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.experimental.delay
@@ -56,7 +58,7 @@ object UnconfirmedState {
             }
         })
     }
-    fun fetch(addr: String = "", silent: Boolean = false) {
+    fun fetch(addr: String = "", context: Context? = null) {
         if (fetching) {
             return
         }
@@ -65,25 +67,15 @@ object UnconfirmedState {
             address = addr
         }
         if (address.isEmpty()) {
-            if (silent) {
-                return
-            }
             _error.onNext(99899)
         }
         fetching = true
         resolveFetch(address, 1, cached.per_page, {pageData ->
-            if (silent) {
-                val start = pageData.items.indexOfFirst {
-                    it.txid == cached.items[0].txid
-                }
-                Log.i("【UnconfirmedState】", "new tx from index【$start】")
-                if (start > 0) {
-                    pageData.items = ArrayList(pageData.items.subList(0, start))
-                    pageData.items.addAll(cached.items)
-                }
-            }
             cached = pageData
             _list.onNext(cached)
+            if (context != null) {
+                resolveClaim(context)
+            }
             launch {
                 delay(1000)
                 fetching = false
@@ -93,15 +85,37 @@ object UnconfirmedState {
                 delay(1000)
                 fetching = false
             }
-            if (silent) {
-                return@resolveFetch
-            }
             _error.onNext(it)
         })
     }
 
+    private fun resolveClaim(context: Context) {
+        val claim = SharedPrefUtils.getClaim(context)
+        val collect = SharedPrefUtils.getCollect(context)
+        if (claim.isNotEmpty()) {
+            if (cached.items.indexOfFirst {
+                it.txid == claim
+            } < 0) {
+                Log.i("【Unconfirmed】", "claim complete【$claim】")
+                SharedPrefUtils.setClaim(context, "")
+            } else {
+                Log.i("【Unconfirmed】", "claim incomplete【$claim】")
+            }
+        }
+        if (collect.isNotEmpty()) {
+            if (cached.items.indexOfFirst {
+                it.txid == collect
+            } < 0) {
+                Log.i("【Unconfirmed】", "collect complete【$collect】")
+                SharedPrefUtils.setCollect(context, "")
+            } else {
+                Log.i("【Unconfirmed】", "collect incomplete【$collect】")
+            }
+        }
+    }
+
     private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&per_page=$size&wallet_address=$addr&confirmed=false", {
+        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&confirmed=false", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy
