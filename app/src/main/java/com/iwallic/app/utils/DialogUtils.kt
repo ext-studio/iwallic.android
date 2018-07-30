@@ -137,6 +137,10 @@ object DialogUtils {
 
     fun error(context: Context, code: Int): Boolean {
         when (code) {
+            1013 -> {
+                Toast.makeText(context, R.string.error_rpc, Toast.LENGTH_SHORT).show()
+                return true
+            }
             99998 -> {
                 Toast.makeText(context, R.string.error_parse, Toast.LENGTH_SHORT).show()
                 return true

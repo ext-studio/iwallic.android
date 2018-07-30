@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:name=".base.BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
@@ -59,8 +58,7 @@
 
         <service
             android:name=".services.BlockService"
-            android:enabled="true"
-            android:stopWithTask="false" />
+            android:enabled="true"/>
 
         <meta-data
             android:name="android.max_aspect"

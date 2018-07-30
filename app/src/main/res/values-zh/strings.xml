@@ -105,6 +105,7 @@
     <string name="error_claim_claiming">上一次提取操作尚未完成</string>
     <string name="error_claim_collecting">上一次转化操作尚未完成</string>
     <string name="error_version_latest">已经是最新版本</string>
+    <string name="error_rpc">RPC节点暂不可用，请稍后重试</string>
     <string name="list_loadmore">加载更多数据</string>
     <string name="list_nomore">没有更多数据</string>
     <string name="list_loading">努力加载中</string>

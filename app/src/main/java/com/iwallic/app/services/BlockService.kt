@@ -55,9 +55,5 @@ class BlockService : Service() {
         return BlockBinder
     }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        stopSelf()
-    }
-
     companion object BlockBinder: Binder()
 }

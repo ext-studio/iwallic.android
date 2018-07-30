@@ -55,6 +55,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable
     private val gson = Gson()
+    private var noNeed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +123,7 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initGAS() {
-        if (asset.asset_id != CommonUtils.GAS || !AssetState.checkClaim()) {
+        if (asset.asset_id != CommonUtils.GAS) {
             return
         }
         claimEnterTV.setOnClickListener {
@@ -203,6 +204,7 @@ class AssetDetailActivity : BaseActivity() {
         })
         balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({
             resolveBalance()
+            resolveFetchClaim()
         }, {
             Log.i("【AssetDetail】", "error【${it}】")
         })
@@ -251,6 +253,9 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun resolveFetchClaim() {
+        if (asset.asset_id != CommonUtils.GAS || noNeed) {
+            return
+        }
         HttpUtils.post("getclaim", listOf(WalletUtils.address(this)), {
             claims = gson.fromJson(it, ClaimsRes::class.java)
             if (claims != null) {
@@ -262,6 +267,9 @@ class AssetDetailActivity : BaseActivity() {
                 }
                 if (claims!!.unSpentClaim == "0") {
                     claimClaimB.visibility = View.GONE
+                    if (!AssetState.checkClaim()) {
+                        noNeed = true
+                    }
                 }
             }
         }, {
@@ -316,14 +324,14 @@ class AssetDetailActivity : BaseActivity() {
                             }
                             newTx.sign(wif)
                             Log.i("【Claim】", newTx.serialize(true))
-                            resolveSuccess(newTx.hash(), addr, amount, "collect")
-//                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
-//                                load.dismiss()
-//                                resolveSuccess(newTx.hash(), addr, amount, "collect")
-//                            }, {
-//                                load.dismiss()
-//                                resolveError(it)
-//                            })
+//                            resolveSuccess(newTx.hash(), addr, amount, "collect")
+                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                                load.dismiss()
+                                resolveSuccess(newTx.hash(), addr, amount, "collect")
+                            }, {
+                                load.dismiss()
+                                resolveError(it)
+                            })
                         }, {
                             load.dismiss()
                             resolveError(it)
@@ -353,14 +361,14 @@ class AssetDetailActivity : BaseActivity() {
                         } else {
                             newTx.sign(wif)
                             Log.i("【Claim】", newTx.serialize(true))
-                            resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
-//                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
-//                                load.dismiss()
-//                                resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
-//                            }, {
-//                                load.dismiss()
-//                                resolveError(it)
-//                            })
+//                            resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
+                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                                load.dismiss()
+                                resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
+                            }, {
+                                load.dismiss()
+                                resolveError(it)
+                            })
                         }
                     }
                 }, {
@@ -403,9 +411,6 @@ class AssetDetailActivity : BaseActivity() {
     companion object BlockListener: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             AssetState.fetch("", silent = true)
-            if (p0 != null) {
-                (p0 as AssetDetailActivity).resolveFetchClaim()
-            }
         }
     }
 }

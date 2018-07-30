@@ -106,6 +106,7 @@
     <string name="error_claim_claiming">Last claim has not completed yet</string>
     <string name="error_claim_collecting">Last collection has not completed yet</string>
     <string name="error_version_latest">Already the latest version</string>
+    <string name="error_rpc">RPC servers are drunk, Please try later</string>
     <string name="list_loadmore">load more</string>
     <string name="list_nomore">no more</string>
     <string name="list_loading">loading</string>

@@ -36,6 +36,13 @@ open class BaseActivity : AppCompatActivity() {
             space.layoutParams = ViewGroup.LayoutParams(0, titleBarHeight)
         }
         resolveTheme()
+        CommonUtils.onConfigured().subscribe({
+            if (it) {
+                startService(Intent(this, BlockService::class.java))
+            }
+        }, {
+            Log.i("【BaseActivity】", "config failed, block service will not on")
+        })
     }
 
     protected fun setStatusBar(space: View?) {
