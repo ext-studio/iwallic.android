@@ -14,14 +14,17 @@ data class TransactionRes (
     val status: String = "confirmed"
 )
 
+data class  TransactionDetailInfo (
+        val blockIndex: Int = 0,
+        val blockTime: Double = 0.0
+)
+
 data class TransactionDetailRes (
         val from: String = "",
         val to: String = "",
         var address: String = "",
         val name: String = "",
-        val value: Double = 0.0,
-        val blockIndex: Int = 0,
-        val time: Double = 0.0
+        val value: Double = 0.0
 )
 
 data class TransactionDetailFromRes(

@@ -54,7 +54,19 @@ class TransactionDetailActivity : BaseActivity() {
         }
     }
     private fun initTransfer() {
+        resolveTxInfo()
         resolveNep5Transfer()
+    }
+
+    private fun resolveTxInfo() {
+        HttpUtils.post("gettxbytxid", listOf(txid), fun (infoRes) {
+            val data = gson.fromJson<TransactionDetailInfo>(infoRes, object : TypeToken<TransactionDetailInfo>() {}.type)
+            val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(data.blockTime * 1000)
+            findViewById<TextView>(R.id.transaction_detail_txTime).text = time
+            findViewById<TextView>(R.id.transaction_detail_txBlockIndex).text = data.blockIndex.toString()
+        }, fun (err) {
+            Log.i("【接收交易详情失败】", "error 【${err}】")
+        })
     }
 
     private fun resolveNep5Transfer() {  // from and to
@@ -63,10 +75,6 @@ class TransactionDetailActivity : BaseActivity() {
             if (nep5Res != "") {
                 val data = gson.fromJson<ArrayList<TransactionDetailRes>>(nep5Res, object : TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
                 if (data.size > 0) {
-                    val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(data[0].time * 1000)
-                    findViewById<TextView>(R.id.transaction_detail_txTime).text = time
-                    findViewById<TextView>(R.id.transaction_detail_txBlockIndex).text = data[0].blockIndex.toString()
-
                     resolveData(data, false, "from")
                     resolveData(data, false, "to")
                 }
