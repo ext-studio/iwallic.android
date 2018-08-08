@@ -89,7 +89,7 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
 
     fun push(newData: PageDataPyModel<TransactionRes>) {
         if (newData.page == 1) {
-            notifyItemRangeRemoved(0, data.items.size)
+            notifyItemRangeRemoved(0,  if (data.items.size == 0) 1 else data.items.size)
             data = newData
             notifyItemRangeInserted(0, data.items.size)
         } else {

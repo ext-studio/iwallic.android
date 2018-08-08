@@ -1,7 +1,8 @@
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?colorDefault">
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
