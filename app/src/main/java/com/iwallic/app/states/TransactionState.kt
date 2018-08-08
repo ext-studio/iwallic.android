@@ -9,11 +9,12 @@ import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object TransactionState {
-    private var cached = PageDataPyModel<TransactionRes>()
+    private var cached: PageDataPyModel<TransactionRes>? = null
     private var address: String = ""
     private var assetId: String = ""
     private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
@@ -21,7 +22,7 @@ object TransactionState {
     private val gson = Gson()
     var fetching: Boolean = false
     fun list(addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
-        if ((addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
+        if (cached == null || (addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
             fetch(addr, asset)
             return _list
         }
@@ -31,26 +32,26 @@ object TransactionState {
         return _error
     }
     fun next() {
-        if (cached.items.size >= cached.total || fetching || address.isEmpty()) {
+        if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(assetId, address, cached.page+1, cached.per_page, {
+        resolveFetch(assetId, address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
-                cached.page = it.page
-                cached.total = it.total
-                cached.per_page = it.per_page
-                cached.items.addAll(it.items)
-                _list.onNext(it)
+                cached!!.page = it.page
+                cached!!.total = it.total
+                cached!!.per_page = it.per_page
+                cached!!.items.addAll(it.items)
             }
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _list.onNext(it)
                 fetching = false
             }
         }, {
-            _error.onNext(it)
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _error.onNext(it)
                 fetching = false
             }
         })
@@ -74,32 +75,31 @@ object TransactionState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(assetId, address, 1, cached.per_page, {pageData ->
+        resolveFetch(assetId, address, 1, 15, {pageData ->
             if (silent) {
                 val start = pageData.items.indexOfFirst {
-                    it.txid == cached.items[0].txid
+                    it.txid == cached!!.items[0].txid
                 }
                 Log.i("【TxState】", "new tx from index【$start】")
                 if (start > 0) {
                     pageData.items = ArrayList(pageData.items.subList(0, start))
-                    pageData.items.addAll(cached.items)
+                    pageData.items.addAll(cached!!.items)
                 }
             }
             cached = pageData
-            _list.onNext(cached)
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _list.onNext(cached!!)
                 fetching = false
             }
         }, {
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                if (!silent) {
+                    _error.onNext(it)
+                }
                 fetching = false
             }
-            if (silent) {
-                return@resolveFetch
-            }
-            _error.onNext(it)
         })
     }
 
@@ -121,7 +121,7 @@ object TransactionState {
     }
 
     fun clear() {
-        cached = PageDataPyModel()
+        cached = null
         address = ""
         assetId = ""
         fetching = false

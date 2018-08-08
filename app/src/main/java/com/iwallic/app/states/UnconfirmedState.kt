@@ -10,21 +10,22 @@ import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object UnconfirmedState {
-    private var cached = PageDataPyModel<TransactionRes>()
+    private var cached: PageDataPyModel<TransactionRes>? = null
     private var address: String = ""
     private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
     fun has(): Boolean {
-        return cached.items.size > 0
+        return cached?.items!!.size > 0
     }
     fun list(addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
-        if ((addr.isNotEmpty() && addr != address)) {
+        if (cached == null || (addr.isNotEmpty() && addr != address)) {
             fetch(addr)
             return _list
         }
@@ -34,26 +35,26 @@ object UnconfirmedState {
         return _error
     }
     fun next() {
-        if (cached.items.size >= cached.total || fetching || address.isEmpty()) {
+        if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(address, cached.page+1, cached.per_page, {
+        resolveFetch(address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
-                cached.page = it.page
-                cached.total = it.total
-                cached.per_page = it.per_page
-                cached.items.addAll(it.items)
-                _list.onNext(it)
+                cached!!.page = it.page
+                cached!!.total = it.total
+                cached!!.per_page = it.per_page
+                cached!!.items.addAll(it.items)
             }
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _list.onNext(it)
                 fetching = false
             }
         }, {
-            _error.onNext(it)
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _error.onNext(it)
                 fetching = false
             }
         })
@@ -70,22 +71,22 @@ object UnconfirmedState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(address, 1, cached.per_page, {pageData ->
+        resolveFetch(address, 1, 15, {pageData ->
             cached = pageData
-            _list.onNext(cached)
             if (context != null) {
                 resolveClaim(context)
             }
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _list.onNext(cached!!)
                 fetching = false
             }
         }, {
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _error.onNext(it)
                 fetching = false
             }
-            _error.onNext(it)
         })
     }
 
@@ -93,7 +94,7 @@ object UnconfirmedState {
         val claim = SharedPrefUtils.getClaim(context)
         val collect = SharedPrefUtils.getCollect(context)
         if (claim.isNotEmpty()) {
-            if (cached.items.indexOfFirst {
+            if (cached!!.items.indexOfFirst {
                 it.txid == claim
             } < 0) {
                 Log.i("【Unconfirmed】", "claim complete【$claim】")
@@ -103,7 +104,7 @@ object UnconfirmedState {
             }
         }
         if (collect.isNotEmpty()) {
-            if (cached.items.indexOfFirst {
+            if (cached!!.items.indexOfFirst {
                 it.txid == collect
             } < 0) {
                 Log.i("【Unconfirmed】", "collect complete【$collect】")
@@ -132,7 +133,7 @@ object UnconfirmedState {
     }
 
     fun clear() {
-        cached = PageDataPyModel()
+        cached = null
         address = ""
         fetching = false
     }

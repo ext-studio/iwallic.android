@@ -22,11 +22,18 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
     private val _onCopy = PublishSubject.create<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_list, parent, false) as ViewGroup
+        val view = if (viewType == 0) {
+            LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as ViewGroup
+        } else {
+            LayoutInflater.from(parent.context).inflate(R.layout.adapter_transaction_list, parent, false) as ViewGroup
+        }
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (data.items.size == 0) {
+            return
+        }
         val txidTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_txid)
         txidTV.text = data.items[position].txid
         val valueTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_value)
@@ -62,7 +69,11 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         }
     }
 
-    override fun getItemCount() = data.items.size
+    override fun getItemViewType(position: Int): Int {
+        return if (data.items.size == 0) 0 else 1
+    }
+
+    override fun getItemCount() = if (data.items.size == 0) 1 else data.items.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()

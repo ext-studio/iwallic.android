@@ -18,7 +18,7 @@
     <string name="fragment_user_about">关于</string>
     <string name="asset_manage">资产管理</string>
     <string name="asset_manage_save">保存</string>
-    <string name="asset_detail_claim_enter">提取 GAS</string>
+    <string name="asset_detail_claim_enter">提取 GAS (beta)</string>
     <string name="asset_detail_claim_collect">转化</string>
     <string name="asset_detail_claim_claim">提取</string>
     <string name="asset_detail_claim_cancel">取消</string>
@@ -124,4 +124,6 @@
     <string name="activity_transaction_detail_to">发给</string>
     <string name="adapter_tx_status_un">带确认</string>
     <string name="adapter_tx_status_no">已失效</string>
+
+    <string name="adapter_pager_nomore">已经到达底线</string>
 </resources>
