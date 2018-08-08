@@ -70,11 +70,8 @@ class TransactionFragment : BaseFragment() {
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
             txAdapter.push(it)
-            if (it.page == 1) {
-                txRV.scrollToPosition(0)
-            }
             txSRL.finishRefresh(true)
-            if (it.items.size >= it.total) {
+            if (it.page >= it.pages) {
                 txSRL.finishLoadMoreWithNoMoreData()
             } else {
                 txSRL.finishLoadMore(true)

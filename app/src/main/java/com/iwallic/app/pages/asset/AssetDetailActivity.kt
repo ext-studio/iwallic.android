@@ -177,29 +177,26 @@ class AssetDetailActivity : BaseActivity() {
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(this), asset.asset_id).subscribe({
             txAdapter.push(it)
-            if (it.page == 1) {
-                txRV.scrollToPosition(0)
-            }
             txSRL.finishRefresh()
-            if (it.items.size >= it.total) {
+            if (it.page >= it.pages) {
                 txSRL.finishLoadMoreWithNoMoreData()
             } else {
                 txSRL.finishLoadMore(true)
             }
         }, {
-            txSRL.finishRefresh(false)
-            txSRL.finishLoadMore(false)
+            txSRL.finishRefresh()
+            txSRL.finishLoadMore()
             Log.i("【AssetDetail】", "error【${it}】")
         })
         errorListen = TransactionState.error().subscribe({
-            txSRL.finishRefresh(false)
-            txSRL.finishLoadMore(false)
+            txSRL.finishRefresh()
+            txSRL.finishLoadMore()
             if (!DialogUtils.error(this, it)) {
                 Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
             }
         }, {
-            txSRL.finishRefresh(false)
-            txSRL.finishLoadMore(false)
+            txSRL.finishRefresh()
+            txSRL.finishLoadMore()
             Log.i("【AssetDetail】", "error【${it}】")
         })
         balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({
