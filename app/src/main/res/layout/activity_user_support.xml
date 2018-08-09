@@ -122,26 +122,26 @@
                 <View style="@style/option_item_line"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
 
-                <LinearLayout
-                    android:id="@+id/activity_user_support_community"
-                    style="@style/option_item_rl">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/activity_user_support_community"-->
+                    <!--style="@style/option_item_rl">-->
 
-                    <TextView
-                        android:text="@string/activity_user_support_community"
-                        style="@style/option_item_text"/>
+                    <!--<TextView-->
+                        <!--android:text="@string/activity_user_support_community"-->
+                        <!--style="@style/option_item_text"/>-->
 
-                    <TextView
-                        android:text="@string/activity_user_support_community_link"
-                        style="@style/option_item_imgarrow" />
-                </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:text="@string/activity_user_support_community_link"-->
+                        <!--style="@style/option_item_imgarrow" />-->
+                <!--</LinearLayout>-->
 
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
+                <!--<View style="@style/option_item_line"/>-->
+            <!--</LinearLayout>-->
 
 
             <LinearLayout
