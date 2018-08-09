@@ -1,11 +1,9 @@
 package com.iwallic.app.models
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.neon.hex.Hex
 import com.iwallic.neon.wallet.Wallet
-
-const val ASSET_GAS = ""
 
 const val TxVersionClaim = 0
 const val TxVersionContract = 0
@@ -47,15 +45,10 @@ data class UtxoModel(
     @SerializedName("assetId") val asset: String
 )
 
-data class ClaimModel(
-    val txid: String,
-    val index: Int
-)
-
 class TransactionModel {
     var type: Int = TxTypeContract
     var version: Int = TxVersionContract
-    var claims: ArrayList<InputModel> = arrayListOf()
+    var claims: List<InputModel> = listOf()
     var attributes: ArrayList<AttributeModel> = arrayListOf()
     var gas: Double = 0.toDouble()
     var script: String = ""
@@ -192,12 +185,14 @@ class TransactionModel {
             newTx.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
             return newTx
         }
-        fun forClaim(claims: ArrayList<InputModel>, value: Double, to: String): TransactionModel? {
+        fun forClaim(claims: ArrayList<ClaimItemRes>, value: Double, to: String): TransactionModel? {
             val newTX = TransactionModel()
             newTX.type = TxTypeClaim
             newTX.version = TxVersionClaim
-            newTX.claims = claims
-            newTX.outputs.add(OutputModel(ASSET_GAS, Wallet.addr2Script(to), value))
+            newTX.claims = claims.map {
+                InputModel(it.txid, it.index.toInt())
+            }
+            newTX.outputs.add(OutputModel(CommonUtils.GAS, Wallet.addr2Script(to), value))
             return newTX
         }
     }

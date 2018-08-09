@@ -6,7 +6,9 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import com.iwallic.app.states.BlockState
+import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.CommonUtils
+import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.disposables.Disposable
 import java.util.*
 import kotlin.concurrent.schedule
@@ -27,6 +29,7 @@ class BlockService : Service() {
         }
         blockListen = BlockState.data().subscribe({
             Log.i("【BlockService】", "new block arrived【${it.lastBlockIndex}】")
+            UnconfirmedState.fetch(context = this)
             sendBroadcast(newBlock)
         }, {
             Log.i("【BlockService】", "error【$it】")

@@ -8,6 +8,7 @@
         android:maxSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:allowBackup="true"
@@ -46,7 +47,7 @@
         <activity android:name=".pages.wallet.WalletVerifyActivity" />
         <activity android:name=".pages.transaction.TransactionTransferActivity" />
         <activity android:name=".pages.transaction.TransactionDetailActivity" />
-        <activity android:name=".pages.transaction.TransactionUnconfirmedActivity"/>
+        <activity android:name=".pages.transaction.TransactionUnconfirmedActivity" />
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
@@ -57,7 +58,7 @@
 
         <service
             android:name=".services.BlockService"
-            android:enabled="true" />
+            android:enabled="true"/>
 
         <meta-data
             android:name="android.max_aspect"
@@ -67,4 +68,5 @@
             android:name=".services.DownloadService"
             android:enabled="true" />
     </application>
+
 </manifest>

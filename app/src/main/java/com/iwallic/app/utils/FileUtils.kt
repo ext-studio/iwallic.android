@@ -39,4 +39,12 @@ object FileUtils {
             Log.i("【FileUtil】", "delete error【$e】")
         }
     }
+    fun cleanApkFile(context: Context) {
+        try {
+            File(context.filesDir, "installers").deleteOnExit()
+            Log.i("【FileUtil】", "delete exist apk")
+        } catch (e: Throwable) {
+            Log.i("【FileUtil】", "delete error【$e】")
+        }
+    }
 }

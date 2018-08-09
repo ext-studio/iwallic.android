@@ -16,27 +16,13 @@ import com.iwallic.app.utils.*
 class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<AssetRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = _data
     private var display = _display
-    private val VIEW_TYPE_CELL = 1
-    private val VIEW_TYPE_FOOTER = 0
-    private var pagerTV: TextView? = null
-    private var paging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: FrameLayout
-        if (viewType == VIEW_TYPE_CELL) {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as FrameLayout
-        } else {
-            view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_pager, parent, false) as FrameLayout
-            pagerTV = view.findViewById(R.id.adapter_pager)
-            pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
-        }
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as ViewGroup
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == data.items.size) {
-            return
-        }
         holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data.items[position].symbol
         val toggleSC = holder.itemView.findViewById<SwitchCompat>(R.id.asset_manage_toggle)
         if (listOf(CommonUtils.EXT, CommonUtils.EDS, CommonUtils.NEO, CommonUtils.GAS).contains(data.items[position].asset_id)) {
@@ -58,14 +44,10 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
         }
     }
 
-    override fun getItemCount() = data.items.size + 1
+    override fun getItemCount() = data.items.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (position == data.items.size) VIEW_TYPE_FOOTER else VIEW_TYPE_CELL
     }
 
     fun push(newData: PageDataPyModel<AssetRes>) {
@@ -82,27 +64,6 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
             data.items.addAll(newData.items)
             notifyItemRangeInserted(p, newData.items.size)
         }
-        pagerTV?.setText(if (data.items.size < data.total) R.string.list_loadmore else R.string.list_nomore)
-        paging = false
-    }
-
-    fun checkNext(position: Int): Boolean {
-        if (paging) {
-            return false
-        }
-        return position == data.items.size && data.items.size < data.total
-    }
-
-    fun getPage(): Int {
-        return data.page
-    }
-
-    fun setPaging() {
-        if (paging) {
-            return
-        }
-        paging = true
-        pagerTV?.setText(R.string.list_loading)
     }
 
     fun getItem(position: Int): AssetRes {
@@ -110,6 +71,6 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
     }
 
     class ViewHolder(
-        listView: FrameLayout
+        listView: ViewGroup
     ): RecyclerView.ViewHolder(listView)
 }

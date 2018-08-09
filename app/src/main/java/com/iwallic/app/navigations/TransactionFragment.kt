@@ -22,12 +22,13 @@ import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
 class TransactionFragment : BaseFragment() {
     private lateinit var txRV: RecyclerView
-    private lateinit var txSRL: SwipeRefreshLayout
-    private lateinit var loadPB: ProgressBar
+    private lateinit var txSRL: SmartRefreshLayout
+    // private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
     private lateinit var unconfirmedLL: LinearLayout
@@ -52,10 +53,9 @@ class TransactionFragment : BaseFragment() {
 
     private fun initDOM(view: View) {
         txRV = view.findViewById(R.id.transaction_list)
-        txSRL = view.findViewById(R.id.transaction_list_refresh)
-        loadPB = view.findViewById(R.id.fragment_transaction_load)
+        txSRL = view.findViewById(R.id.transaction_pager)
+        // loadPB = view.findViewById(R.id.fragment_transaction_load)
         unconfirmedLL = view.findViewById(R.id.transaction_unconfirmed_enter)
-        txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
 
         setStatusBar(view.findViewById(R.id.app_top_space))
 
@@ -63,44 +63,57 @@ class TransactionFragment : BaseFragment() {
         txManager = LinearLayoutManager(context!!)
         txRV.layoutManager = txManager
         txRV.adapter = txAdapter
+
+        txSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {
         listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
             txAdapter.push(it)
-            if (it.page == 1) {
-                txRV.scrollToPosition(0)
+            txSRL.finishRefresh(true)
+            if (it.page >= it.pages) {
+                txSRL.finishLoadMoreWithNoMoreData()
+            } else {
+                txSRL.finishLoadMore(true)
             }
-            resolveRefreshed(true)
         }, {
-            resolveRefreshed()
+            txSRL.finishRefresh(false)
+            txSRL.finishLoadMore(false)
             Log.i("【TxList】", "error【${it}】")
         })
         errorListen = TransactionState.error().subscribe({
-            resolveRefreshed()
+            txSRL.finishRefresh(false)
+            txSRL.finishLoadMore(false)
             if (!DialogUtils.error(context!!, it)) {
                 Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
             }
         }, {
-            resolveRefreshed()
+            txSRL.finishRefresh(false)
+            txSRL.finishLoadMore(false)
             Log.i("【TxList】", "error【${it}】")
         })
         txSRL.setOnRefreshListener {
-            if (TransactionState.fetching) {
-                txSRL.isRefreshing = false
-                return@setOnRefreshListener
-            }
-            TransactionState.fetch(asset = "")
+            TransactionState.fetch()
         }
-        txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!TransactionState.fetching && newState == 1 && txAdapter.checkNext(txManager.findLastVisibleItemPosition())) {
-                    txAdapter.setPaging()
-                    TransactionState.next()
-                }
-            }
-        })
+        txSRL.setOnLoadMoreListener {
+            TransactionState.next()
+        }
+//        txSRL.setOnRefreshListener {
+//            if (TransactionState.fetching) {
+//                txSRL.isRefreshing = false
+//                return@setOnRefreshListener
+//            }
+//            TransactionState.fetch(asset = "")
+//        }
+//        txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (!TransactionState.fetching && newState == 1 && txAdapter.checkNext(txManager.findLastVisibleItemPosition())) {
+//                    txAdapter.setPaging()
+//                    TransactionState.next()
+//                }
+//            }
+//        })
         txAdapter.onEnter().subscribe {
             val intent = Intent(context, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)
@@ -115,18 +128,18 @@ class TransactionFragment : BaseFragment() {
         }
     }
 
-    private fun resolveRefreshed(success: Boolean = false) {
-        if (loadPB.visibility == View.VISIBLE) {
-            loadPB.visibility = View.GONE
-        }
-        if (!txSRL.isRefreshing) {
-            return
-        }
-        txSRL.isRefreshing = false
-        if (success) {
-            Toast.makeText(context!!, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
-        }
-    }
+//    private fun resolveRefreshed(success: Boolean = false) {
+//        if (loadPB.visibility == View.VISIBLE) {
+//            loadPB.visibility = View.GONE
+//        }
+//        if (!txSRL.isRefreshing) {
+//            return
+//        }
+//        txSRL.isRefreshing = false
+//        if (success) {
+//            Toast.makeText(context!!, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
     companion object BlockListener: BroadcastReceiver() {
         val TAG: String = TransactionFragment::class.java.simpleName

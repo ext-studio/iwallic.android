@@ -1,28 +1,31 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.TransactionRes
 import com.iwallic.app.utils.HttpUtils
+import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object UnconfirmedState {
-    private var cached = PageDataPyModel<TransactionRes>()
+    private var cached: PageDataPyModel<TransactionRes>? = null
     private var address: String = ""
     private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
     fun has(): Boolean {
-        return cached.items.size > 0
+        return cached?.items!!.size > 0
     }
     fun list(addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
-        if ((addr.isNotEmpty() && addr != address)) {
+        if (cached == null || (addr.isNotEmpty() && addr != address)) {
             fetch(addr)
             return _list
         }
@@ -32,31 +35,31 @@ object UnconfirmedState {
         return _error
     }
     fun next() {
-        if (cached.items.size >= cached.total || fetching || address.isEmpty()) {
+        if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(address, cached.page+1, cached.per_page, {
+        resolveFetch(address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
-                cached.page = it.page
-                cached.total = it.total
-                cached.per_page = it.per_page
-                cached.items.addAll(it.items)
-                _list.onNext(it)
+                cached!!.page = it.page
+                cached!!.total = it.total
+                cached!!.per_page = it.per_page
+                cached!!.items.addAll(it.items)
             }
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _list.onNext(it)
                 fetching = false
             }
         }, {
-            _error.onNext(it)
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _error.onNext(it)
                 fetching = false
             }
         })
     }
-    fun fetch(addr: String = "", silent: Boolean = false) {
+    fun fetch(addr: String = "", context: Context? = null) {
         if (fetching) {
             return
         }
@@ -65,43 +68,55 @@ object UnconfirmedState {
             address = addr
         }
         if (address.isEmpty()) {
-            if (silent) {
-                return
-            }
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(address, 1, cached.per_page, {pageData ->
-            if (silent) {
-                val start = pageData.items.indexOfFirst {
-                    it.txid == cached.items[0].txid
-                }
-                Log.i("【UnconfirmedState】", "new tx from index【$start】")
-                if (start > 0) {
-                    pageData.items = ArrayList(pageData.items.subList(0, start))
-                    pageData.items.addAll(cached.items)
-                }
-            }
+        resolveFetch(address, 1, 15, {pageData ->
             cached = pageData
-            _list.onNext(cached)
-            launch {
-                delay(1000)
+            if (context != null) {
+                resolveClaim(context)
+            }
+            launch (UI) {
+                delay(500)
+                _list.onNext(cached!!)
                 fetching = false
             }
         }, {
-            launch {
-                delay(1000)
+            launch (UI) {
+                delay(500)
+                _error.onNext(it)
                 fetching = false
             }
-            if (silent) {
-                return@resolveFetch
-            }
-            _error.onNext(it)
         })
     }
 
+    private fun resolveClaim(context: Context) {
+        val claim = SharedPrefUtils.getClaim(context)
+        val collect = SharedPrefUtils.getCollect(context)
+        if (claim.isNotEmpty()) {
+            if (cached!!.items.indexOfFirst {
+                it.txid == claim
+            } < 0) {
+                Log.i("【Unconfirmed】", "claim complete【$claim】")
+                SharedPrefUtils.setClaim(context, "")
+            } else {
+                Log.i("【Unconfirmed】", "claim incomplete【$claim】")
+            }
+        }
+        if (collect.isNotEmpty()) {
+            if (cached!!.items.indexOfFirst {
+                it.txid == collect
+            } < 0) {
+                Log.i("【Unconfirmed】", "collect complete【$collect】")
+                SharedPrefUtils.setCollect(context, "")
+            } else {
+                Log.i("【Unconfirmed】", "collect incomplete【$collect】")
+            }
+        }
+    }
+
     private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&per_page=$size&wallet_address=$addr&confirmed=false", {
+        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&confirmed=false", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy
@@ -118,7 +133,7 @@ object UnconfirmedState {
     }
 
     fun clear() {
-        cached = PageDataPyModel()
+        cached = null
         address = ""
         fetching = false
     }

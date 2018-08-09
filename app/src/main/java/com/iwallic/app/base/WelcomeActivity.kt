@@ -1,6 +1,8 @@
 package com.iwallic.app.base
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -35,20 +37,20 @@ class WelcomeActivity : BaseActivity() {
     private fun initListen() {
         CommonUtils.onConfigured().subscribe {
              resolveWallet()
-//            val intent = Intent(this, DownloadService::class.java)
-//            intent.putExtra("url", "http://sqdd.myapp.com/myapp/qqteam/tim/down/tim.apk")
-//            startService(intent)
         }
     }
 
     private fun initVersion () {
         HttpUtils.getPy("/client/index/app_version/detail", {
             if (it.isNotEmpty()) {
+                Log.i("【WelcomeActivity】", "【$it】")
                 val config = gson.fromJson(it, VersionRes::class.java)
                 if (config.code > BuildConfig.VERSION_CODE) {
-                    Log.i("【WelcomeActivity】", "version new【${config.name} -> ${config.code}】")
+                    Log.i("【WelcomeActivity】", "version new【${BuildConfig.VERSION_CODE} -> ${config.name}:${config.code}】")
                     resolveNewVersion(config)
                     return@getPy
+                } else {
+                    FileUtils.cleanApkFile(this)
                 }
                 Log.i("【WelcomeActivity】", "version already latest")
             } else {
@@ -86,7 +88,14 @@ class WelcomeActivity : BaseActivity() {
             R.string.dialog_no
         ).subscribe {
             if (it) {
-                // TODO start download service
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    val intent = Intent(this, DownloadService::class.java)
+                    intent.putExtra("url", config.url)
+                    startService(intent)
+                } else {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(config.url))
+                    startActivity(intent)
+                }
             }
             CommonUtils.notifyVersion()
         }
