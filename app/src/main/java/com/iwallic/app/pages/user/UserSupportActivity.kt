@@ -16,7 +16,7 @@ class UserSupportActivity : BaseActivity() {
     private lateinit var walletGuideLL: LinearLayout
     private lateinit var transactionGuideLL: LinearLayout
     private lateinit var browser: LinearLayout
-    private lateinit var community: LinearLayout
+    // private lateinit var community: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +31,7 @@ class UserSupportActivity : BaseActivity() {
         walletGuideLL = findViewById(R.id.activity_user_support_wallet_guide)
         transactionGuideLL = findViewById(R.id.activity_user_support_transaction_guide)
         browser = findViewById(R.id.activity_user_support_blockchain_browser)
-        community = findViewById(R.id.activity_user_support_community)
+        // community = findViewById(R.id.activity_user_support_community)
     }
 
     private fun initClick() {
@@ -49,11 +49,11 @@ class UserSupportActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        community.setOnClickListener {
-            val intent = Intent(this, UserBrowserActivity::class.java)
-            intent.putExtra("url", "https://bbs.iwallic.com")
-            startActivity(intent)
-        }
+//        community.setOnClickListener {
+//            val intent = Intent(this, UserBrowserActivity::class.java)
+//            intent.putExtra("url", "https://bbs.iwallic.com")
+//            startActivity(intent)
+//        }
 
         backLL.setOnClickListener {
             finish()
