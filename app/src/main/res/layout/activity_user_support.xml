@@ -42,7 +42,6 @@
 
 
     <ScrollView
-        android:background="?colorDefault"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -96,10 +95,11 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <View style="@style/option_item_line_full"
-                android:layout_marginBottom="30dp"/>
 
             <View style="@style/option_item_line_full"/>
+
+            <View style="@style/option_item_line_full"
+                android:layout_marginTop="@dimen/dimenSpace"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

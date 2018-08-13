@@ -52,10 +52,6 @@ class WalletCreateActivity : BaseActivity() {
         initClick()
     }
 
-    override fun onBackPressed() {
-        return
-    }
-
     private fun initDOM() {
         backLL = findViewById(R.id.wallet_create_back)
         pwdET = findViewById(R.id.wallet_create_pwd)
@@ -87,7 +83,7 @@ class WalletCreateActivity : BaseActivity() {
             }
             resolveCreate()
         }
-        enterB.setOnClickListener {
+        enterB.setOnClickListener {_ ->
             if (copied || saved) {
                 resolveEnter()
                 return@setOnClickListener

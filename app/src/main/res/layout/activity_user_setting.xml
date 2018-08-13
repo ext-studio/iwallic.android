@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault"
+    android:background="?colorDefault2"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingActivity">
@@ -41,7 +41,6 @@
 
 
     <ScrollView
-        android:background="?colorDefault"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
