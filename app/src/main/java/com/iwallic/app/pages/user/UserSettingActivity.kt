@@ -2,15 +2,17 @@ package com.iwallic.app.pages.user
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 
 class UserSettingActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
-    private lateinit var skinLL: LinearLayout
-    private lateinit var netLL: LinearLayout
-    private lateinit var langLL: LinearLayout
+    private lateinit var backTV: TextView
+    private lateinit var skinFL: FrameLayout
+    private lateinit var netFL: FrameLayout
+    private lateinit var langFL: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,23 +23,23 @@ class UserSettingActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        backLL = findViewById(R.id.user_setting_back)
-        langLL = findViewById(R.id.user_setting_lang)
-        skinLL = findViewById(R.id.user_setting_skin)
-        netLL = findViewById(R.id.user_setting_net)
+        backTV = findViewById(R.id.user_setting_back)
+        langFL = findViewById(R.id.user_setting_lang)
+        skinFL = findViewById(R.id.user_setting_skin)
+        netFL = findViewById(R.id.user_setting_net)
     }
 
     private fun initClick() {
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
-        langLL.setOnClickListener {
+        langFL.setOnClickListener {
             startActivity(Intent(this, UserSettingLanguageActivity::class.java))
         }
-        skinLL.setOnClickListener {
+        skinFL.setOnClickListener {
             startActivity(Intent(this, UserSettingThemeActivity::class.java))
         }
-        netLL.setOnClickListener {
+        netFL.setOnClickListener {
             startActivity(Intent(this, UserSettingNetActivity::class.java))
         }
     }

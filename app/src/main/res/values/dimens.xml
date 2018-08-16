@@ -1,12 +1,16 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="dimenLine">1dp</dimen>
+    <dimen name="dimenLine">0.5dp</dimen>
     <dimen name="dimenMini">4dp</dimen>
     <dimen name="dimenSmall">8dp</dimen>
     <dimen name="dimenSpace">12dp</dimen>
     <dimen name="dimenDefault">16dp</dimen>
     <dimen name="dimenIcon">24dp</dimen>
     <dimen name="dimenLarge">32dp</dimen>
-    <dimen name="dimenStatusBar">20dp</dimen>
+    <dimen name="dimenStatusBar">25dp</dimen>
     <dimen name="dimenTopBar">50dp</dimen>
+
+    <dimen name="dimenFont">15sp</dimen>
+    <dimen name="dimenFontL">17sp</dimen>
+    <dimen name="dimenFontM">12sp</dimen>
 </resources>

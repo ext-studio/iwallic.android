@@ -18,38 +18,28 @@
             android:layout_height="@dimen/dimenStatusBar"/>
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimenTopBar">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimenSpace">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/fragment_transaction_title"
                 android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenDefault"/>
-
-            <LinearLayout
+                android:textSize="@dimen/dimenFontL"/>
+            <TextView
                 android:id="@+id/transaction_unconfirmed_enter"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimenSmall"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_transaction_unconfirmed"
-                    android:textColor="?colorDefault"
-                    android:textSize="@dimen/dimenDefault"/>
-                <ImageView
-                    android:contentDescription="@null"
-                    android:layout_width="@dimen/dimenDefault"
-                    android:layout_height="@dimen/dimenDefault"
-                    android:src="@drawable/icon_arrowright"
-                    android:tint="?colorDefault"/>
-            </LinearLayout>
+                android:text="@string/fragment_transaction_unconfirmed"
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenFont"
+                android:drawableEnd="@drawable/icon_arrowright"
+                android:drawableTint="?colorDefault"
+                tools:targetApi="m"
+                tools:ignore="RelativeOverlap" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -70,23 +60,4 @@
             android:layout_height="wrap_content"
             app:srlAccentColor="?colorPrimary"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/fragment_transaction_load"-->
-        <!--android:visibility="visible"-->
-        <!--android:layout_margin="@dimen/dimenSpace"-->
-        <!--android:foregroundTint="?colorPrimary"-->
-        <!--android:layout_width="@dimen/dimenLarge"-->
-        <!--android:layout_height="@dimen/dimenLarge"-->
-        <!--android:layout_gravity="center"-->
-        <!--tools:targetApi="lollipop" />-->
-
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/transaction_list_refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/transaction_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

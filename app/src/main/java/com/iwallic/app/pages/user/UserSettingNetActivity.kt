@@ -3,11 +3,13 @@ package com.iwallic.app.pages.user
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
-import com.iwallic.app.base.MainActivity
+import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.TransactionState
@@ -15,10 +17,10 @@ import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.SharedPrefUtils
 
 class UserSettingNetActivity : BaseActivity() {
-    private lateinit var itemMain: LinearLayout
-    private lateinit var itemTest: LinearLayout
-    private lateinit var backBtn: LinearLayout
-    private lateinit var saveBtn: LinearLayout
+    private lateinit var itemMain: FrameLayout
+    private lateinit var itemTest: FrameLayout
+    private lateinit var backBtn: TextView
+    private lateinit var saveBtn: TextView
     private lateinit var itemMainChosen: ImageView
     private lateinit var itemTestChosen: ImageView
     private var chosenNet: String = "main"

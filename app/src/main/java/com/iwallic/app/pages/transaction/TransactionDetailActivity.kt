@@ -27,7 +27,7 @@ import java.util.*
 class TransactionDetailActivity : BaseActivity() {
     private lateinit var txid: String
     private lateinit var loadPB: ProgressBar
-    private lateinit var backLL: LinearLayout
+    private lateinit var backTV: TextView
     private var fromData: ArrayList<TransactionDetailRes> = arrayListOf()
     private var toData: ArrayList<TransactionDetailRes> = arrayListOf()
     private val gson = Gson()
@@ -43,13 +43,13 @@ class TransactionDetailActivity : BaseActivity() {
 
     private fun initDOM() {
         loadPB = findViewById(R.id.transaction_detail_load)
-        backLL = findViewById(R.id.transaction_detail_back)
+        backTV = findViewById(R.id.transaction_detail_back)
         txid = this.intent.getStringExtra("txid")
         findViewById<TextView>(R.id.transaction_detail_txid).text = txid
     }
 
     private fun initClick() {
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
     }

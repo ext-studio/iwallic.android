@@ -24,7 +24,7 @@ class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // ImageUtils.setUrl(holder.itemView.findViewById<ImageView>(R.id.asset_list_logo), data[position].logo)
         holder.itemView.findViewById<TextView>(R.id.asset_list_name).text = data[position].symbol
-        holder.itemView.findViewById<TextView>(R.id.asset_list_balance).text = data[position].balance
+        holder.itemView.findViewById<TextView>(R.id.asset_list_balance).text = if (data[position].balance == "0.0") "0" else data[position].balance
         holder.itemView.setOnClickListener {
             _onClick.onNext(position)
         }

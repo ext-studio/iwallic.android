@@ -7,27 +7,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:scaleType="fitXY"
-            android:background="?colorPrimary"/>
-
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
+        android:background="?colorPrimary">
         <TextView
             android:id="@+id/user_browser_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_alignParentTop="true"
             android:textColor="?colorDefault"
-            android:textSize="@dimen/dimenDefault"
+            android:textSize="@dimen/dimenFontL"
             android:layout_marginEnd="@dimen/dimenSpace"
             android:layout_marginStart="@dimen/dimenSpace"
             android:ellipsize="end"
-            android:lines="1"
-            android:layout_marginTop="@dimen/dimenLarge"/>
+            android:lines="1"/>
     </RelativeLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/user_browser_refresh"

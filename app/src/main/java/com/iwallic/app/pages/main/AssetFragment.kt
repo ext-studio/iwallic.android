@@ -1,13 +1,10 @@
-package com.iwallic.app.navigations
+package com.iwallic.app.pages.main
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -45,7 +42,7 @@ class AssetFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
         initListener()
-        context!!.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
+        context?.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
         return view
     }
 
@@ -67,9 +64,6 @@ class AssetFragment : BaseFragment() {
         assetManager = LinearLayoutManager(context!!)
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
-
-        assetSRL.setEnableLoadMore(false)
-        assetSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {
@@ -104,9 +98,13 @@ class AssetFragment : BaseFragment() {
 
     private fun resolveList(list: ArrayList<AssetRes>) {
         mainAssetTV.text = mainAsset.name
-        mainBalanceTV.text = list.find {
+
+        val balance = list.find {
             it.asset_id == mainAsset.asset_id
-        }?.balance
+        }?.balance ?: "0"
+
+        mainBalanceTV.text = if (balance == "0.0") "0" else balance
+
         for (asset in SharedPrefUtils.getAsset(context!!)) {
             if (list.indexOfFirst {
                 it.asset_id == asset.asset_id
@@ -118,9 +116,6 @@ class AssetFragment : BaseFragment() {
     }
 
     companion object BlockListener: BroadcastReceiver() {
-        val TAG: String = AssetFragment::class.java.simpleName
-        fun newInstance() = AssetFragment()
-
         override fun onReceive(p0: Context?, p1: Intent?) {
             AssetState.fetch("", true)
         }

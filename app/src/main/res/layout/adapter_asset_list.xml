@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="?colorFont"
             android:layout_gravity="start|center_vertical"
-            android:textSize="@dimen/dimenDefault"/>
+            android:textSize="@dimen/dimenFont"/>
 
         <TextView
             android:id="@+id/asset_list_balance"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:textColor="?colorFont"
-            android:textSize="@dimen/dimenDefault" />
+            android:textSize="@dimen/dimenFont" />
     </LinearLayout>
     <View
         android:layout_width="match_parent"

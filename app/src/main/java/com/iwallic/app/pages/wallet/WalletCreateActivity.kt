@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import com.iwallic.app.R
-import com.iwallic.app.base.MainActivity
+import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
@@ -16,15 +16,13 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import android.content.*
 import com.iwallic.app.base.BaseActivity
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
 import com.iwallic.neon.wallet.Wallet
 
 
 class WalletCreateActivity : BaseActivity() {
     private lateinit var step1LL: LinearLayout
     private lateinit var step2LL: LinearLayout
-    private lateinit var backLL: LinearLayout
+    private lateinit var backTV: TextView
     private lateinit var pwdET: EditText
     private lateinit var confirmET: EditText
     private lateinit var createPB: ProgressBar
@@ -52,12 +50,8 @@ class WalletCreateActivity : BaseActivity() {
         initClick()
     }
 
-    override fun onBackPressed() {
-        return
-    }
-
     private fun initDOM() {
-        backLL = findViewById(R.id.wallet_create_back)
+        backTV = findViewById(R.id.wallet_create_back)
         pwdET = findViewById(R.id.wallet_create_pwd)
         confirmET = findViewById(R.id.wallet_create_confirm)
         errorTipTV = findViewById(R.id.wallet_create_error)
@@ -74,7 +68,7 @@ class WalletCreateActivity : BaseActivity() {
         enterPB = findViewById(R.id.wallet_create_load_enter)
     }
     private fun initClick() {
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
         createB.setOnClickListener {
@@ -87,7 +81,7 @@ class WalletCreateActivity : BaseActivity() {
             }
             resolveCreate()
         }
-        enterB.setOnClickListener {
+        enterB.setOnClickListener {_ ->
             if (copied || saved) {
                 resolveEnter()
                 return@setOnClickListener

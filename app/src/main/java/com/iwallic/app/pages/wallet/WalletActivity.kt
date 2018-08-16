@@ -14,7 +14,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.WalletHistoryAdapter
 import com.iwallic.app.base.BaseActivity
-import com.iwallic.app.base.MainActivity
+import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils

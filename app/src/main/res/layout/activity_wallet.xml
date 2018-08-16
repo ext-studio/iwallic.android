@@ -11,65 +11,77 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/screen"
+        android:src="@mipmap/screen"
         android:layout_gravity="center"/>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true"
+        app:srlEnableLoadMore="false"
+        app:srlEnableRefresh="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <LinearLayout
+                android:id="@+id/wallet_gate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginStart="@dimen/dimenLarge"
+                android:layout_marginEnd="@dimen/dimenLarge"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/wallet_import_btn"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorDefault"
+                    android:text="@string/wallet_import"/>
 
-    <LinearLayout
-        android:id="@+id/wallet_gate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|center_vertical"
-        android:layout_marginStart="@dimen/dimenLarge"
-        android:layout_marginEnd="@dimen/dimenLarge"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/wallet_import_btn"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:textColor="?colorDefault"
-            android:text="@string/wallet_import"/>
+                <Button
+                    android:id="@+id/wallet_create_btn"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorDefault"
+                    android:layout_marginTop="@dimen/dimenSpace"
+                    android:text="@string/wallet_create"/>
 
-        <Button
-            android:id="@+id/wallet_create_btn"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:textColor="?colorDefault"
-            android:layout_marginTop="@dimen/dimenSpace"
-            android:text="@string/wallet_create"/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/wallet_history_btn"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="?colorPrimary"
+                    android:src="@drawable/icon_history"
+                    android:tint="?colorDefault"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimenSpace"
+                    tools:targetApi="lollipop" />
+            </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/wallet_history_btn"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="?colorPrimary"
-            android:src="@drawable/icon_history"
-            android:tint="?colorDefault"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dimenSpace"
-            tools:targetApi="lollipop" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/wallet_history_list"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/wallet_history_list_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="?colorPrimary"
-            android:src="@drawable/icon_back"
-            android:tint="?colorDefault"
-            android:layout_margin="@dimen/dimenSpace"
-            tools:targetApi="lollipop" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/wallet_history_list_view"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/wallet_history_list"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/wallet_history_list_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="?colorPrimary"
+                    android:src="@drawable/icon_back"
+                    android:tint="?colorDefault"
+                    android:layout_margin="@dimen/dimenSpace"
+                    tools:targetApi="lollipop" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/wallet_history_list_view"
+                    android:layout_width="260dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </FrameLayout>

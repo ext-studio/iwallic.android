@@ -25,7 +25,7 @@ object QRCodeUtils {
                 put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H)
                 put(EncodeHintType.MARGIN, -1)
             })
-        } catch (iae: IllegalArgumentException) {
+        } catch (iae: Throwable) {
             // Unsupported format
             return null
         }
@@ -43,7 +43,7 @@ object QRCodeUtils {
         bitmap.setPixels(pixels, 0, size, 0, 0, w, h)
 
         // The picture is drawn in the center of the QR code to synthesize the QR code image.
-        var logoBmp = (ContextCompat.getDrawable(context, R.drawable.logo) as BitmapDrawable).bitmap
+        val logoBmp = (ContextCompat.getDrawable(context, R.mipmap.ic_launcher) as BitmapDrawable).bitmap
         val targetSize = 80f
         val scaleFactor = targetSize / logoBmp.width
         val logoWidth = logoBmp.width

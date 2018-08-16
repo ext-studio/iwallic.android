@@ -1,10 +1,8 @@
-package com.iwallic.app.navigations
+package com.iwallic.app.pages.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,10 +42,5 @@ class FindFragment : BaseFragment() {
             findSRL.isRefreshing = false
             Toast.makeText(context, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    companion object {
-        val TAG: String = FindFragment::class.java.simpleName
-        fun newInstance() = FindFragment()
     }
 }

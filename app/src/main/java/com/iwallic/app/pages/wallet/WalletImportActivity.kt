@@ -12,7 +12,7 @@ import android.widget.*
 import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
-import com.iwallic.app.base.MainActivity
+import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.utils.WalletUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -20,7 +20,7 @@ import kotlinx.coroutines.experimental.withContext
 
 class WalletImportActivity : BaseActivity() {
 
-    private lateinit var backLL: LinearLayout
+    private lateinit var backTV: TextView
     private lateinit var wifET: EditText
     private lateinit var fileB: Button
     private lateinit var importB: Button
@@ -60,7 +60,7 @@ class WalletImportActivity : BaseActivity() {
         }
     }
     private fun initDOM() {
-        backLL = findViewById(R.id.wallet_import_back)
+        backTV = findViewById(R.id.wallet_import_back)
         wifET = findViewById(R.id.wallet_import_wif)
         fileB = findViewById(R.id.wallet_import_btn_file)
         importB = findViewById(R.id.wallet_import_btn_wif)
@@ -97,7 +97,7 @@ class WalletImportActivity : BaseActivity() {
         })
     }
     private fun initClick() {
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
         importB.setOnClickListener {

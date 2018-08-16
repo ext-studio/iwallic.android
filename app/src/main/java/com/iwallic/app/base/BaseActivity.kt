@@ -10,6 +10,7 @@ import android.os.*
 import android.support.annotation.Nullable
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -17,6 +18,7 @@ import com.iwallic.app.R
 import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 
 @SuppressLint("Registered")
@@ -116,6 +118,35 @@ open class BaseActivity : AppCompatActivity() {
             else -> {
                 setTheme(R.style.ThemeDefault)
             }
+        }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (isShouldHideKeyboard(v, ev)) {
+                hideKeyboard(v!!.windowToken)
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+    private fun isShouldHideKeyboard(v: View?, event: MotionEvent): Boolean {
+        if (v != null && v is EditText) {
+            val l = intArrayOf(0, 0)
+            v.getLocationInWindow(l)
+            val left = l[0]
+            val top = l[1]
+            val bottom = top + v.getHeight()
+            val right = left + v.getWidth()
+            return !(event.x > left && event.x < right
+                    && event.y > top && event.y < bottom)
+        }
+        return false
+    }
+    private fun hideKeyboard(token: IBinder?) {
+        if (token != null) {
+            val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
 }

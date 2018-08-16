@@ -1,22 +1,13 @@
 package com.iwallic.app.adapters
 
-import android.content.Context
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
-import com.iwallic.app.base.MainActivity
 import com.iwallic.app.models.WalletAgentModel
-import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.WalletUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 
 class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Adapter<WalletHistoryAdapter.ViewHolder>() {
     private val data = _list

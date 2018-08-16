@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.models.VersionRes
+import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.services.DownloadService
 import com.iwallic.app.utils.*

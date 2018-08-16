@@ -1,6 +1,7 @@
 package com.iwallic.app.utils
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.iwallic.app.models.AccountModel
 import com.iwallic.app.models.ContractModel
@@ -116,8 +117,8 @@ object WalletUtils {
                     it.onComplete()
                     return@launch
                 }
-                val a = w.accounts.find {
-                    it.address == agent.address
+                val a = w.accounts.find {am ->
+                    am.address == agent.address
                 }
                 if (a == null) {
                     withContext(UI) {
@@ -222,17 +223,26 @@ object WalletUtils {
     }
 
     fun verify(context: Context, pwd: String): Observable<String> {
+        Log.i("【123】", "1")
         return Observable.create {
+            Log.i("【123】", "2")
             launch {
+                Log.i("【123】", "3")
                 val account = account(context)
+                Log.i("【123】", "4")
                 if (account == null) {
+                    Log.i("【123】", "5")
                     withContext(UI) {
+                        Log.i("【123】", "6")
                         it.onNext("")
                     }
                     it.onComplete()
                 } else {
+                    Log.i("【123】", "7")
                     val rs = Wallet.neP2Decode(account.key, pwd)
+                    Log.i("【123】", "8")
                     withContext(UI) {
+                        Log.i("【123】", "9")
                         it.onNext(rs)
                     }
                     it.onComplete()

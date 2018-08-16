@@ -23,7 +23,7 @@ class WalletBackupActivity : BaseActivity() {
     private var verified: Boolean = false
     private var shown: Boolean = true
     private var wif: String = ""
-    private lateinit var backLL: LinearLayout
+    private lateinit var backTV: TextView
     private lateinit var boxRL: RelativeLayout
     private lateinit var clickIV: ImageView
     private lateinit var qrIV: ImageView
@@ -31,6 +31,7 @@ class WalletBackupActivity : BaseActivity() {
     private lateinit var resultLL: LinearLayout
     private lateinit var eyeLL: LinearLayout
     private lateinit var eyeIV: ImageView
+    private lateinit var eyeCloseIV: ImageView
     private lateinit var wifTV: TextView
     private lateinit var copyB: Button
     private lateinit var saveB: Button
@@ -43,13 +44,14 @@ class WalletBackupActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        backLL = findViewById(R.id.wallet_backup_back)
+        backTV = findViewById(R.id.wallet_backup_back)
         boxRL = findViewById(R.id.wallet_backup_box)
         clickIV = findViewById(R.id.wallet_backup_click)
         qrIV = findViewById(R.id.wallet_backup_qrcode)
         gateTV = findViewById(R.id.wallet_backup_gate)
         resultLL = findViewById(R.id.wallet_backup_result)
         eyeLL = findViewById(R.id.wallet_backup_toggle)
+        eyeCloseIV = findViewById(R.id.wallet_backup_eye_close)
         eyeIV = findViewById(R.id.wallet_backup_eye)
         wifTV = findViewById(R.id.wallet_backup_wif)
         copyB = findViewById(R.id.wallet_backup_copy)
@@ -73,12 +75,11 @@ class WalletBackupActivity : BaseActivity() {
             }
             resolveToggle()
         }
-
         copyB.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("WIF", wif)
             clipboard.primaryClip = clip
-            Toast.makeText(baseContext, R.string.error_copied, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.error_copied, Toast.LENGTH_SHORT).show()
         }
         saveB.setOnClickListener {
 //            todo export wallet as json file
@@ -89,23 +90,23 @@ class WalletBackupActivity : BaseActivity() {
 //            intent.setDataAndType(uri, "text/plain")
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
     }
 
     private fun resolveVerify() {
-        DialogUtils.password(this).subscribe {pwd ->
+        DialogUtils.password(this).subscribe{pwd ->
             if (pwd.isEmpty()) {
                 return@subscribe
             }
-            DialogUtils.load(this).subscribe { load ->
-                WalletUtils.verify(baseContext, pwd).subscribe {rs ->
+            DialogUtils.load(this).subscribe{ load ->
+                WalletUtils.verify(this, pwd).subscribe{rs ->
                     wif = rs
                     Log.i("【WalletBackup】", wif)
                     load.dismiss()
                     if (wif.isEmpty()) {
-                        Toast.makeText(baseContext, R.string.error_password, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.error_password, Toast.LENGTH_SHORT).show()
                     } else {
                         verified = true
                         resolveVerified()
@@ -131,11 +132,13 @@ class WalletBackupActivity : BaseActivity() {
     private fun resolveToggle() {
         if (shown) {
             wifTV.text = "******************************"
-            eyeIV.setImageResource(R.drawable.icon_eye_close)
+            eyeIV.visibility = View.GONE
+            eyeCloseIV.visibility = View.VISIBLE
             shown = false
         } else {
             wifTV.text = wif
-            eyeIV.setImageResource(R.drawable.icon_eye)
+            eyeIV.visibility = View.VISIBLE
+            eyeCloseIV.visibility = View.GONE
             shown = true
         }
     }

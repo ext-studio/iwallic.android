@@ -1,40 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="?colorDefault">
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
-
-        <LinearLayout
+        <TextView
             android:id="@+id/transaction_unconfirmed"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|start"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/transaction_unconfirmed"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/transaction_unconfirmed"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFont"
+            android:layout_centerVertical="true"
+            tools:targetApi="m" />
+    </RelativeLayout>
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/transaction_unconfirmed_pager"
         android:layout_width="match_parent"

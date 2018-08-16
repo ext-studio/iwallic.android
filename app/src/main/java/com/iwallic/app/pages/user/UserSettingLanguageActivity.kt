@@ -9,14 +9,16 @@ import com.iwallic.app.R
 import com.iwallic.app.utils.LocaleUtils
 import java.util.*
 import android.content.Intent
-import com.iwallic.app.base.MainActivity
+import android.widget.FrameLayout
+import android.widget.TextView
+import com.iwallic.app.pages.main.MainActivity
 
 
 class UserSettingLanguageActivity : BaseActivity() {
-    private lateinit var itemCN: LinearLayout
-    private lateinit var itemEN: LinearLayout
-    private lateinit var backBtn: LinearLayout
-    private lateinit var saveBtn: LinearLayout
+    private lateinit var itemCN: FrameLayout
+    private lateinit var itemEN: FrameLayout
+    private lateinit var backBtn: TextView
+    private lateinit var saveBtn: TextView
     private lateinit var itemCNChosen: ImageView
     private lateinit var itemENChosen: ImageView
     var chosenLocale: Locale? = null

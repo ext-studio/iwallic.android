@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
@@ -21,7 +22,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
 class TransactionUnconfirmedActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
+    private lateinit var backLL: TextView
     private lateinit var unRV: RecyclerView
     private lateinit var unSRL: SmartRefreshLayout
     // private lateinit var unPB: ProgressBar

@@ -3,47 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.wallet.WalletCreateActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
-        android:background="?colorPrimary">
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:padding="@dimen/dimenSpace">
+        <TextView
             android:id="@+id/wallet_create_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@string/wallet_create"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
+            android:text="@string/wallet_create"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFont"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/wallet_create"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
-
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -59,7 +49,8 @@
                     android:padding="@dimen/dimenSpace"
                     android:text="@string/wallet_create_tip"
                     android:background="?colorPrimary"
-                    android:textColor="?colorDefault"/>
+                    android:textColor="?colorDefault"
+                    android:textSize="@dimen/dimenFontM"/>
 
                 <EditText
                     android:id="@+id/wallet_create_pwd"
@@ -69,10 +60,11 @@
                     android:layout_marginTop="@dimen/dimenSpace"
                     android:inputType="textPassword"
                     android:background="?colorDefault"
-                    android:textSize="@dimen/dimenDefault"
+                    android:textSize="@dimen/dimenFont"
                     android:padding="@dimen/dimenSpace"
                     android:hint="@string/wallet_create_pwd_hint"
                     android:textColor="?colorFont"
+                    android:textColorHint="?colorFont"
                     android:focusedByDefault="true"
                     tools:targetApi="o" />
 
@@ -89,7 +81,8 @@
                     android:hint="@string/wallet_create_confirm_hint"
                     android:inputType="textPassword"
                     android:padding="@dimen/dimenSpace"
-                    android:textSize="@dimen/dimenDefault"
+                    android:textSize="@dimen/dimenFont"
+                    android:textColorHint="?colorFont"
                     android:background="?colorDefault"
                     android:textColor="?colorFont" />
 
@@ -98,8 +91,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/dimenSpace"
+                    android:paddingEnd="@dimen/dimenSpace"
                     android:paddingTop="@dimen/dimenSpace"
-                    android:text="tip"
                     android:textColor="?colorDanger"
                     android:visibility="invisible"/>
 
@@ -234,5 +227,5 @@
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
