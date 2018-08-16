@@ -3,48 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingActivity">
 
-    <FrameLayout
+    <RelativeLayout
+        android:padding="@dimen/dimenSpace"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
+        android:layout_height="wrap_content"
         android:background="?colorPrimary">
 
-        <LinearLayout
+        <TextView
             android:id="@+id/user_about_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_user_about"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:gravity="center"
+            android:text="@string/fragment_user_about"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFont"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
 
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,49 +45,72 @@
 
             <View style="@style/option_item_line_full"/>
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/activity_user_about_version"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_about_version"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_about_version"
-                        style="@style/option_item_text"/>
-
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
                     <TextView
-                        android:id="@+id/activity_user_about_version_name"
-                        style="@style/option_item_imgarrow" />
+                        android:textColor="?colorFont"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/activity_user_about_version_name" />
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/activity_user_about_disclaimer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_about_disclaimer"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_about_disclaimer"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont"
+                        android:drawablePadding="@dimen/dimenSmall"
+                        android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>
-
-            </LinearLayout>
-            <View style="@style/option_item_line_full"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
         </LinearLayout>
-
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

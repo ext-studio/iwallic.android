@@ -6,16 +6,18 @@ import android.os.Bundle
 import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 
 class UserSupportActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
-    private lateinit var walletGuideLL: LinearLayout
-    private lateinit var transactionGuideLL: LinearLayout
-    private lateinit var browser: LinearLayout
+    private lateinit var backTV: TextView
+    private lateinit var walletGuideFL: FrameLayout
+    private lateinit var transactionGuideFL: FrameLayout
+    private lateinit var browser: FrameLayout
     // private lateinit var community: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,19 +29,19 @@ class UserSupportActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        backLL = findViewById(R.id.user_support_back)
-        walletGuideLL = findViewById(R.id.activity_user_support_wallet_guide)
-        transactionGuideLL = findViewById(R.id.activity_user_support_transaction_guide)
+        backTV = findViewById(R.id.user_support_back)
+        walletGuideFL = findViewById(R.id.activity_user_support_wallet_guide)
+        transactionGuideFL = findViewById(R.id.activity_user_support_transaction_guide)
         browser = findViewById(R.id.activity_user_support_blockchain_browser)
         // community = findViewById(R.id.activity_user_support_community)
     }
 
     private fun initClick() {
-        walletGuideLL.setOnClickListener {
+        walletGuideFL.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
 
-        transactionGuideLL.setOnClickListener {
+        transactionGuideFL.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
 
@@ -55,7 +57,7 @@ class UserSupportActivity : BaseActivity() {
 //            startActivity(intent)
 //        }
 
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
     }

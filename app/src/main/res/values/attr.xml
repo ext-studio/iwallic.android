@@ -20,4 +20,7 @@
     <attr name="drawableUserSetting" format="reference" />
     <attr name="drawableUserSignout" format="reference" />
     <attr name="drawableUserBackup" format="reference" />
+    <attr name="drawableClick" format="reference" />
+    <attr name="drawableEye" format="reference" />
+    <attr name="drawableEyeClose" format="reference" />
 </resources>

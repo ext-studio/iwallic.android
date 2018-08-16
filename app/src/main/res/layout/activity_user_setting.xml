@@ -3,47 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
-        android:background="?colorPrimary">
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:padding="@dimen/dimenSpace">
 
-        <LinearLayout
+        <TextView
             android:id="@+id/user_setting_back"
+            android:drawableTint="?colorDefault"
+            android:drawableStart="@drawable/icon_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|start"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_user_setting"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/fragment_user_setting"
+            android:textColor="?colorDefault"
+            android:gravity="center"
+            android:textSize="@dimen/dimenFont"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
 
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,87 +43,110 @@
 
             <View style="@style/option_item_line_full"/>
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/user_setting_lang"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/user_setting_lang"
-                    style="@style/option_item_rl">
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_language"
-                        style="@style/option_item_img"/>
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:drawableTint="?colorFont"
+                        android:drawableStart="@drawable/icon_language"
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_arrowright"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/user_setting_language"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont"
+                        tools:targetApi="m" />
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/user_setting_skin"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/user_setting_skin"
-                    style="@style/option_item_rl">
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_skin"
-                        style="@style/option_item_img"/>
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:drawableTint="?colorFont"
+                        android:drawableStart="@drawable/icon_skin"
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_arrowright"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/user_setting_skin"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont"
+                        tools:targetApi="m" />
                 </LinearLayout>
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/user_setting_net"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/user_setting_net"
-                    style="@style/option_item_rl">
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_net"
-                        style="@style/option_item_img"/>
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:drawableTint="?colorFont"
+                        android:drawableStart="@drawable/icon_net"
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_arrowright"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/user_setting_net"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont"
+                        tools:targetApi="m" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <View style="@style/option_item_line_full"/>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
         </LinearLayout>
-
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

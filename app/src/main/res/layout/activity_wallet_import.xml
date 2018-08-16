@@ -1,58 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".pages.wallet.WalletImportActivity">
-    <FrameLayout
+    tools:context=".pages.wallet.WalletImportActivity"
+    android:background="?colorDefault2">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
-        android:background="?colorPrimary">
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:padding="@dimen/dimenSpace">
+        <TextView
             android:id="@+id/wallet_import_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|start"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:contentDescription="@string/wallet_import"
-                android:src="@drawable/icon_back"/>
+            android:text="@string/wallet_import"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/wallet_import"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
-
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimenSpace"
                 android:text="@string/wallet_import_tip"
                 android:background="?colorPrimary"
-                android:textColor="?colorDefault"/>
-
+                android:textColor="?colorDefault"
+                android:textSize="@dimen/dimenFontM"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,16 +56,18 @@
                     android:ems="10"
                     android:layout_marginTop="@dimen/dimenSpace"
                     android:inputType="textMultiLine"
-                    android:textSize="@dimen/dimenDefault"
+                    android:textSize="@dimen/dimenFont"
                     android:background="?colorDefault"
                     android:padding="@dimen/dimenSpace"
                     android:hint="@string/wallet_import_wif_hint"
+                    android:textColorHint="?colorFont"
                     android:textColor="?colorFont"
                     android:focusedByDefault="true"
                     android:minLines="3"
                     android:gravity="top|start"
                     tools:targetApi="o" />
                 <ImageView
+                    android:contentDescription="@null"
                     android:padding="@dimen/dimenMini"
                     android:id="@+id/wallet_import_scan"
                     android:layout_marginStart="@dimen/dimenSpace"
@@ -95,7 +87,8 @@
                 android:layout_marginTop="@dimen/dimenSpace"
                 android:inputType="textPassword"
                 android:background="?colorDefault"
-                android:textSize="@dimen/dimenDefault"
+                android:textColorHint="?colorFont"
+                android:textSize="@dimen/dimenFont"
                 android:padding="@dimen/dimenSpace"
                 android:hint="@string/wallet_create_pwd_hint"
                 android:textColor="?colorFont"
@@ -114,8 +107,9 @@
                 android:ems="10"
                 android:hint="@string/wallet_create_confirm_hint"
                 android:inputType="textPassword"
+                android:textColorHint="?colorFont"
                 android:padding="@dimen/dimenSpace"
-                android:textSize="@dimen/dimenDefault"
+                android:textSize="@dimen/dimenFont"
                 android:background="?colorDefault"
                 android:textColor="?colorFont" />
 
@@ -164,5 +158,5 @@
                 android:text="@string/wallet_import_btn_file" />
 
         </LinearLayout>
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

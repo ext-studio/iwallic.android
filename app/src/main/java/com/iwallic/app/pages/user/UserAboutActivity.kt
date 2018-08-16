@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -20,9 +21,9 @@ import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpUtils
 
 class UserAboutActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
-    private lateinit var disclamerLL: LinearLayout
-    private lateinit var versionLL: LinearLayout
+    private lateinit var backTV: TextView
+    private lateinit var disclamerFL: FrameLayout
+    private lateinit var versionFL: FrameLayout
     private lateinit var versionTV: TextView
     private val gson = Gson()
 
@@ -35,22 +36,22 @@ class UserAboutActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        backLL = findViewById(R.id.user_about_back)
-        disclamerLL = findViewById(R.id.activity_user_about_disclaimer)
-        versionLL = findViewById(R.id.activity_user_about_version)
+        backTV = findViewById(R.id.user_about_back)
+        disclamerFL = findViewById(R.id.activity_user_about_disclaimer)
+        versionFL = findViewById(R.id.activity_user_about_version)
         versionTV = findViewById(R.id.activity_user_about_version_name)
 
         versionTV.text = BuildConfig.VERSION_NAME
     }
 
     private fun initClick() {
-        disclamerLL.setOnClickListener {
+        disclamerFL.setOnClickListener {
             Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
-        versionLL.setOnClickListener {
+        versionFL.setOnClickListener {
             initVersion()
         }
-        backLL.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
     }

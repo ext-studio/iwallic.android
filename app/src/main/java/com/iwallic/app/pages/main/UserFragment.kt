@@ -1,14 +1,11 @@
-package com.iwallic.app.navigations
+package com.iwallic.app.pages.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseFragment
@@ -79,10 +76,5 @@ class UserFragment : BaseFragment() {
                 activity?.finish()
             }
         }
-    }
-
-    companion object {
-        val TAG: String = UserFragment::class.java.simpleName
-        fun newInstance() = UserFragment()
     }
 }

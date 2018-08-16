@@ -9,49 +9,35 @@
     android:orientation="vertical"
     tools:context=".pages.transaction.TransactionDetailActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
-
-        <LinearLayout
+        <TextView
             android:id="@+id/transaction_detail_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_transaction_detail_title"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/activity_transaction_detail_title"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:paddingVertical="12dp">
+            android:padding="16dp">
 
             <TextView
                 android:layout_weight="3"
@@ -59,13 +45,17 @@
                 android:layout_marginRight="12dp"
                 android:text="@string/activity_transaction_detail_blockheight"
                 android:gravity="center_vertical"
-                android:layout_width="match_parent"/>
+                android:layout_width="match_parent"
+                android:textColor="?colorFont"
+                android:textSize="@dimen/dimenFont"/>
             <TextView
                 android:id="@+id/transaction_detail_txBlockIndex"
+                android:textColor="?colorFont"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:textSize="@dimen/dimenFont"/>
 
         </LinearLayout>
 
@@ -79,21 +69,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:paddingVertical="12dp">
+            android:padding="16dp">
             <TextView
                 android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="12dp"
                 android:text="@string/activity_transaction_detail_txid"
                 android:gravity="center_vertical"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:textColor="?colorFont"
+                android:textSize="@dimen/dimenFont" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/transaction_detail_txid"
                 android:layout_height="wrap_content"
-                android:text="txid"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:textColor="?colorFont"
+                android:textSize="@dimen/dimenFont"/>
 
         </LinearLayout>
 
@@ -107,20 +100,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:paddingVertical="12dp">
+            android:padding="16dp">
             <TextView
                 android:layout_weight="3"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="12dp"
                 android:text="@string/activity_transaction_detail_time"
                 android:gravity="center_vertical"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:textColor="?colorFont"
+                android:textSize="@dimen/dimenFont" />
             <TextView
                 android:id="@+id/transaction_detail_txTime"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:textColor="?colorFont"
+                android:textSize="@dimen/dimenFont"/>
 
         </LinearLayout>
         <View
@@ -143,16 +140,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_transaction_detail_from"
-            android:paddingVertical="12dp"
+            android:padding="@dimen/dimenSpace"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryDarkDefault"/>
+            android:textColor="?colorPrimary"
+            android:textSize="@dimen/dimenFont"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingVertical="8dp"
+            android:padding="@dimen/dimenSpace"
             android:id="@+id/transaction_detail_from_list">
 
         </LinearLayout>
@@ -162,16 +160,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingVertical="12dp"
+            android:padding="@dimen/dimenSpace"
             android:text="@string/activity_transaction_detail_to"
-            android:textColor="@color/colorPrimaryDarkDefault"/>
+            android:textColor="?colorPrimary"
+            android:textSize="@dimen/dimenFont"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingVertical="8dp"
+            android:padding="@dimen/dimenSpace"
             android:id="@+id/transaction_detail_to_list">
         </LinearLayout>
 

@@ -5,30 +5,27 @@
     android:id="@+id/fragment_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault"
+    android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
-    <LinearLayout
+    <View
+        android:id="@+id/app_top_space"
+        android:background="?colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimenStatusBar"/>
+    <RelativeLayout
+        android:background="?colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?colorPrimary">
-        <View
-            android:id="@+id/app_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimenStatusBar"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimenTopBar">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/fragment_user_title"
-                android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenFontL"/>
-        </RelativeLayout>
-    </LinearLayout>
+        android:padding="@dimen/dimenSpace">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/fragment_user_title"
+            android:textColor="?colorDefault"
+            android:textSize="@dimen/dimenFontL"/>
+    </RelativeLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
@@ -46,7 +43,8 @@
             <FrameLayout
                 android:id="@+id/fragment_user_backup"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -78,7 +76,8 @@
             <FrameLayout
                 android:id="@+id/fragment_user_setting"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -110,7 +109,8 @@
             <FrameLayout
                 android:id="@+id/fragment_user_support"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -142,7 +142,8 @@
             <FrameLayout
                 android:id="@+id/fragment_user_about"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
@@ -174,7 +175,8 @@
             <FrameLayout
                 android:id="@+id/fragment_user_signout"
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"

@@ -3,48 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.wallet.WalletBackupActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
-        android:background="?colorPrimary">
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        android:padding="@dimen/dimenSpace">
+        <TextView
             android:id="@+id/wallet_backup_back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
+            android:text="@string/wallet_backup"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/wallet_backup"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
-
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +52,7 @@
                     android:id="@+id/wallet_backup_click"
                     android:contentDescription="@null"
                     android:visibility="visible"
-                    android:src="@drawable/icon_click"
+                    android:src="?drawableClick"
                     android:scaleType="fitXY"
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
@@ -78,7 +69,7 @@
                 android:id="@+id/wallet_backup_gate"
                 android:visibility="visible"
                 android:layout_margin="@dimen/dimenLarge"
-                android:textSize="@dimen/dimenDefault"
+                android:textSize="@dimen/dimenFont"
                 android:textColor="?colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +77,7 @@
 
             <LinearLayout
                 android:id="@+id/wallet_backup_result"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -105,6 +96,7 @@
                         android:text="@string/wallet_backup_toggle"/>
                     <ImageView
                         android:id="@+id/wallet_backup_eye"
+                        android:visibility="visible"
                         android:contentDescription="@null"
                         android:layout_marginStart="@dimen/dimenSpace"
                         android:layout_marginEnd="@dimen/dimenSpace"
@@ -112,7 +104,18 @@
                         android:layout_width="@dimen/dimenLarge"
                         android:layout_height="@dimen/dimenLarge"
                         android:scaleType="fitXY"
-                        android:src="@drawable/icon_eye"/>
+                        android:src="?drawableEye"/>
+                    <ImageView
+                        android:id="@+id/wallet_backup_eye_close"
+                        android:visibility="gone"
+                        android:contentDescription="@null"
+                        android:layout_marginStart="@dimen/dimenSpace"
+                        android:layout_marginEnd="@dimen/dimenSpace"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/dimenLarge"
+                        android:layout_height="@dimen/dimenLarge"
+                        android:scaleType="fitXY"
+                        android:src="?drawableEyeClose"/>
                 </LinearLayout>
 
                 <TextView
@@ -123,7 +126,8 @@
                     android:background="?colorDefault"
                     android:maxWidth="260dp"
                     android:text="**********************************************"
-                    android:layout_margin="@dimen/dimenSpace"/>
+                    android:layout_margin="@dimen/dimenSpace"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -147,5 +151,5 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

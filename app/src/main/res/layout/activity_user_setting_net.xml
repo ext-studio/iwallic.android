@@ -3,131 +3,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingThemeActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
-
-        <LinearLayout
+        <TextView
             android:id="@+id/user_setting_net_back"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
+            android:text="@string/user_setting_net"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_setting_net"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
 
-        <LinearLayout
+        <TextView
             android:id="@+id/user_setting_net_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimenSpace"
-            android:layout_gravity="center_vertical|right"
-            android:padding="@dimen/dimenSmall"
-            android:clickable="true"
-            android:focusable="true">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/user_setting_save"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/user_setting_save"
+            android:textColor="?colorDefault"
+            android:textSize="@dimen/dimenFontL"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
 
-    <LinearLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:srlEnableRefresh="false"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <View style="@style/option_item_line_full"/>
+
+            <FrameLayout
+                android:id="@+id/user_setting_net_main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <View style="@style/option_item_line_full"/>
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
+                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/user_setting_net_main"
-                        style="@style/option_item_rl">
-
-                        <TextView
-                            android:text="@string/user_setting_net_main"
-                            style="@style/option_item_text"
-                            tools:ignore="HardcodedText" />
-
-                        <ImageView
-                            android:contentDescription="@null"
-                            android:id="@+id/user_setting_net_main_chosen"
-                            android:visibility="invisible"
-                            android:src="@drawable/icon_done"
-                            style="@style/option_item_imgarrow"/>
-                    </LinearLayout>
-
-                    <View
-                        style="@style/option_item_line"/>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace"
+                    tools:ignore="UseCompoundDrawables">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_setting_net_main"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:id="@+id/user_setting_net_main_chosen"
+                        android:visibility="gone"
+                        android:src="@drawable/icon_done"
+                        style="@style/option_item_imgarrow"/>
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/user_setting_net_test"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
+                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/user_setting_net_test"
-                        style="@style/option_item_rl">
-
-                        <TextView
-                            android:text="@string/user_setting_net_test"
-                            style="@style/option_item_text"
-                            tools:ignore="HardcodedText" />
-
-                        <ImageView
-                            android:contentDescription="@null"
-                            android:id="@+id/user_setting_net_test_chosen"
-                            android:visibility="invisible"
-                            android:src="@drawable/icon_done"
-                            style="@style/option_item_imgarrow"/>
-                    </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace"
+                    tools:ignore="UseCompoundDrawables">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_setting_net_test"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:id="@+id/user_setting_net_test_chosen"
+                        android:visibility="gone"
+                        android:src="@drawable/icon_done"
+                        style="@style/option_item_imgarrow"/>
                 </LinearLayout>
-
-                <View style="@style/option_item_line_full"/>
-
-            </LinearLayout>
-
-        </ScrollView>
-    </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
+        </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

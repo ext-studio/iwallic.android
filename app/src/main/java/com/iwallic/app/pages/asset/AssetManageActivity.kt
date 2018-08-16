@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
@@ -21,7 +22,7 @@ import io.reactivex.disposables.Disposable
 
 
 class AssetManageActivity : BaseActivity() {
-    private lateinit var backIV: LinearLayout
+    private lateinit var backTV: TextView
     private lateinit var amRV: RecyclerView
     private lateinit var amSRL: SmartRefreshLayout
     private lateinit var amAdapter: AssetManageAdapter
@@ -40,7 +41,7 @@ class AssetManageActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        backIV = findViewById(R.id.asset_manage_back)
+        backTV = findViewById(R.id.asset_manage_back)
         amRV = findViewById(R.id.asset_manage_list)
         amSRL = findViewById(R.id.asset_manage_pager)
         amManager = LinearLayoutManager(this)
@@ -52,7 +53,7 @@ class AssetManageActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        backIV.setOnClickListener {
+        backTV.setOnClickListener {
             finish()
         }
         listListen = AssetManageState.list(WalletUtils.address(this)).subscribe({

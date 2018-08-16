@@ -17,19 +17,17 @@
                 android:id="@+id/adapter_wallet_history_snapshot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenDefault"
-                android:text="ABCDEFGH..."
+                android:textColor="?colorLight"
+                android:textSize="@dimen/dimenFont"
                 android:lines="1"
                 android:ellipsize="end"/>
             <TextView
                 android:id="@+id/adapter_wallet_history_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?colorDefault"
+                android:textColor="?colorLight"
                 android:layout_marginTop="@dimen/dimenMini"
-                android:textSize="@dimen/dimenSpace"
-                android:text="包含1个地址"/>
+                android:textSize="@dimen/dimenFontM"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -42,7 +40,7 @@
         android:layout_width="@dimen/dimenLarge"
         android:layout_height="@dimen/dimenLarge"
         android:src="@drawable/icon_delete"
-        android:tint="?colorDefault"
+        android:tint="?colorLight"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/dimenSpace"
         android:layout_marginEnd="@dimen/dimenSpace"/>

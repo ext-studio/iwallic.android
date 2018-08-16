@@ -5,38 +5,26 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".pages.asset.AssetManageActivity">
-    <FrameLayout
+    tools:context=".pages.asset.AssetManageActivity"
+    android:background="?colorDefault2">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
-
-        <LinearLayout
+        <TextView
             android:id="@+id/asset_manage_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_marginEnd="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|start"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/asset_manage"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/asset_manage"
+            android:textColor="?colorDefault"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/asset_manage_pager"
@@ -55,22 +43,4 @@
             android:layout_height="wrap_content"
             app:srlAccentColor="?colorPrimary"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/asset_manage_load"-->
-        <!--android:visibility="visible"-->
-        <!--android:layout_margin="@dimen/dimenSpace"-->
-        <!--android:foregroundTint="?colorPrimary"-->
-        <!--android:layout_width="@dimen/dimenLarge"-->
-        <!--android:layout_height="@dimen/dimenLarge"-->
-        <!--android:layout_gravity="center"-->
-        <!--tools:targetApi="lollipop" />-->
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/asset_manage_list_refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/asset_manage_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

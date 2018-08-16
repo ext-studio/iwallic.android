@@ -122,7 +122,7 @@
     <string name="activity_transaction_detail_time">时间</string>
     <string name="activity_transaction_detail_from">来自</string>
     <string name="activity_transaction_detail_to">发给</string>
-    <string name="adapter_tx_status_un">带确认</string>
+    <string name="adapter_tx_status_un">待确认</string>
     <string name="adapter_tx_status_no">已失效</string>
 
     <string name="adapter_pager_nomore">已经到达底线</string>

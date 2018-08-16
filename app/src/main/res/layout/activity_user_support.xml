@@ -3,48 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingActivity">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenTopBar"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
-
-        <LinearLayout
+        <TextView
             android:id="@+id/user_support_back"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:layout_gravity="center_vertical|left"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:contentDescription="@null"
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:scaleType="fitXY"
-                android:tint="?colorDefault"
-                android:src="@drawable/icon_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_user_support"
-                android:textColor="?colorDefault"
-                android:layout_gravity="center"
-                android:textSize="@dimen/dimenDefault"/>
-        </LinearLayout>
-    </FrameLayout>
+            android:text="@string/fragment_user_support"
+            android:textColor="?colorDefault"
+            android:layout_gravity="center"
+            android:textSize="@dimen/dimenFontL"
+            tools:targetApi="m" />
+    </RelativeLayout>
 
 
-    <ScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        app:srlEnableRefresh="false"
+        app:srlEnableOverScrollDrag="true"
+        app:srlEnableLoadMore="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,118 +43,144 @@
 
             <View style="@style/option_item_line_full"/>
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/activity_user_support_wallet_guide"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_support_wallet_guide"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_arrowright"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_support_wallet_guide"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/activity_user_support_transaction_guide"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_support_transaction_guide"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_arrowright"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_support_transaction_guide"
-                        style="@style/option_item_text"/>
-
-                    <ImageView
-                        android:contentDescription="@null"
-                        android:src="@drawable/icon_arrowright"
-                        style="@style/option_item_imgarrow"/>
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
 
-            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/dimenSpace"
+                style="@style/option_item_line_full"/>
 
-            <View style="@style/option_item_line_full"/>
-
-            <View style="@style/option_item_line_full"
-                android:layout_marginTop="@dimen/dimenSpace"/>
-
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/activity_user_support_blockchain_browser"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_support_blockchain_browser"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_support_blockchain_browser"
-                        style="@style/option_item_text"/>
-
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
                     <TextView
-                        android:text="@string/activity_user_support_blockchain_browser_link"
-                        style="@style/option_item_imgarrow" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?colorFont3"
+                        android:textSize="@dimen/dimenFont"
+                        android:text="@string/activity_user_support_blockchain_browser_link"/>
                 </LinearLayout>
-
-                <View style="@style/option_item_line"/>
-            </LinearLayout>
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/activity_user_support_community"-->
-                    <!--style="@style/option_item_rl">-->
-
-                    <!--<TextView-->
-                        <!--android:text="@string/activity_user_support_community"-->
-                        <!--style="@style/option_item_text"/>-->
-
-                    <!--<TextView-->
-                        <!--android:text="@string/activity_user_support_community_link"-->
-                        <!--style="@style/option_item_imgarrow" />-->
-                <!--</LinearLayout>-->
-
-                <!--<View style="@style/option_item_line"/>-->
-            <!--</LinearLayout>-->
-
-
-            <LinearLayout
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/activity_user_support_contact"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="60dp"
+                android:background="?colorDefault">
                 <LinearLayout
-                    android:id="@+id/activity_user_support_contact"
-                    style="@style/option_item_rl">
-
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/dimenSpace"
+                    android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:text="@string/activity_user_support_contact"
-                        style="@style/option_item_text"/>
-
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont" />
                     <TextView
-                        android:text="@string/activity_user_support_contact_link"
-                        style="@style/option_item_imgarrow" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorFont3"
+                        android:text="@string/activity_user_support_contact_link"/>
                 </LinearLayout>
-
-            </LinearLayout>
-            <View style="@style/option_item_line_full"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground" />
+                <View
+                    android:layout_gravity="bottom"
+                    style="@style/option_item_line_full"/>
+            </FrameLayout>
         </LinearLayout>
-
-    </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
