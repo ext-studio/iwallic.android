@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
@@ -31,7 +32,7 @@ class TransactionFragment : BaseFragment() {
     // private lateinit var loadPB: ProgressBar
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
-    private lateinit var unconfirmedLL: LinearLayout
+    private lateinit var unconfirmedLL: TextView
 
     private lateinit var listListen: Disposable
     private lateinit var errorListen: Disposable

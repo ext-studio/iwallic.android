@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 
 import com.iwallic.app.R
@@ -24,11 +25,11 @@ import com.iwallic.app.states.TransactionState
 import com.iwallic.app.states.UnconfirmedState
 
 class UserFragment : BaseFragment() {
-    private lateinit var backupLL: LinearLayout
-    private lateinit var settingLL: LinearLayout
-    private lateinit var supportLL: LinearLayout
-    private lateinit var aboutLL: LinearLayout
-    private lateinit var closeLL: LinearLayout
+    private lateinit var backupLL: FrameLayout
+    private lateinit var settingLL: FrameLayout
+    private lateinit var supportLL: FrameLayout
+    private lateinit var aboutLL: FrameLayout
+    private lateinit var closeLL: FrameLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
@@ -48,16 +49,16 @@ class UserFragment : BaseFragment() {
 
     private fun initClick() {
         backupLL.setOnClickListener {
-            activity!!.startActivity(Intent(context, WalletBackupActivity::class.java))
+            context?.startActivity(Intent(context, WalletBackupActivity::class.java))
         }
         settingLL.setOnClickListener {
-            activity!!.startActivity(Intent(context, UserSettingActivity::class.java))
+            context?.startActivity(Intent(context, UserSettingActivity::class.java))
         }
         supportLL.setOnClickListener {
-            activity!!.startActivity(Intent(context, UserSupportActivity::class.java))
+            context?.startActivity(Intent(context, UserSupportActivity::class.java))
         }
         aboutLL.setOnClickListener {
-            activity!!.startActivity(Intent(context, UserAboutActivity::class.java))
+            context?.startActivity(Intent(context, UserAboutActivity::class.java))
         }
         closeLL.setOnClickListener {
             resolveSignOut()
@@ -75,7 +76,7 @@ class UserFragment : BaseFragment() {
                 val intent = Intent(context, WalletActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-                activity!!.finish()
+                activity?.finish()
             }
         }
     }

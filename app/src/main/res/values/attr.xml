@@ -17,4 +17,7 @@
     <attr name="drawableTransactionSuccess" format="reference" />
     <attr name="drawableUserAbout" format="reference" />
     <attr name="drawableUserSupport" format="reference" />
+    <attr name="drawableUserSetting" format="reference" />
+    <attr name="drawableUserSignout" format="reference" />
+    <attr name="drawableUserBackup" format="reference" />
 </resources>

@@ -22,6 +22,9 @@
         <item name="drawableTransactionSuccess">@drawable/tx_transfer_success</item>
         <item name="drawableUserSupport">@drawable/icon_support</item>
         <item name="drawableUserAbout">@drawable/icon_about</item>
+        <item name="drawableUserSetting">@drawable/icon_setting</item>
+        <item name="drawableUserSignout">@drawable/icon_signout</item>
+        <item name="drawableUserBackup">@drawable/icon_backup</item>
     </style>
 
     <style name="ThemeNight" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -45,6 +48,9 @@
         <item name="drawableTransactionSuccess">@drawable/tx_transfer_success_dark</item>
         <item name="drawableUserSupport">@drawable/icon_support_dark</item>
         <item name="drawableUserAbout">@drawable/icon_about_dark</item>
+        <item name="drawableUserSetting">@drawable/icon_setting_dark</item>
+        <item name="drawableUserSignout">@drawable/icon_signout_dark</item>
+        <item name="drawableUserBackup">@drawable/icon_backup_dark</item>
     </style>
 
     <style name="PageFullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">

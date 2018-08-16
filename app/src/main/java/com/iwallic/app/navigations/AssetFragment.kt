@@ -67,9 +67,6 @@ class AssetFragment : BaseFragment() {
         assetManager = LinearLayoutManager(context!!)
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
-
-        assetSRL.setEnableLoadMore(false)
-        assetSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {
