@@ -68,6 +68,7 @@
     <string name="transaction_transfer_tips_amount_error">请填写正确金额</string>
     <string name="transaction_transfer_tips_amount_unenough">余额不足</string>
     <string name="transaction_transfer_btn_submit">提交</string>
+    <string name="transaction_transfer_scan_error">未检测到地址</string>
     <string name="transaction_receive_">收款</string>
     <string name="transaction_receive_address_copy">复制地址</string>
     <string name="transaction_transfer_success">交易已提交，等待区块确认</string>
@@ -100,6 +101,7 @@
     <string name="error_request">请求失败</string>
     <string name="error_parse">数据解析错误</string>
     <string name="error_server">服务器错误</string>
+    <string name="error_scan_wif">未检测到WIF私钥</string>
     <string name="error_claim_claim">没有GAS可以提取，若有未转化的GAS请先转化</string>
     <string name="error_claim_collect">没有GAS可以转化</string>
     <string name="error_claim_claiming">上一次提取操作尚未完成</string>

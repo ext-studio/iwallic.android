@@ -1,5 +1,6 @@
 package com.iwallic.app.pages.transaction
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import com.iwallic.app.utils.DialogUtils
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
@@ -26,6 +28,7 @@ class TransactionTransferActivity : BaseActivity() {
     private lateinit var amountET: EditText
     private lateinit var assetNameTV: TextView
     private lateinit var balanceTV: TextView
+    private lateinit var scanIV: ImageView
     private lateinit var submitB: Button
     private lateinit var submitPB: ProgressBar
     private lateinit var tipTV: TextView
@@ -48,7 +51,24 @@ class TransactionTransferActivity : BaseActivity() {
         initInput()
         initAsset()
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents != null) {
+                Log.i("【transfer】", "scanned【${result.contents}】")
+                if (WalletUtils.check(result.contents, "address")) {
+                    target = result.contents
+                    targetET.setText(result.contents)
+                } else {
+                    Toast.makeText(this, R.string.transaction_transfer_scan_error, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.i("【transfer】", "scan cancelled")
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
     private fun initDOM() {
         address = WalletUtils.address(this)
         backLL = findViewById(R.id.transaction_transfer_back)
@@ -59,6 +79,7 @@ class TransactionTransferActivity : BaseActivity() {
         balanceTV = findViewById(R.id.transaction_transfer_balance)
         submitB = findViewById(R.id.transaction_transfer_btn_submit)
         submitPB = findViewById(R.id.transaction_transfer_load_submit)
+        scanIV = findViewById(R.id.transaction_transfer_scan)
         tipTV = findViewById(R.id.transaction_transfer_error)
         successB = findViewById(R.id.transaction_transfer_success)
         step1LL = findViewById(R.id.transaction_transfer_step_1)
@@ -88,6 +109,11 @@ class TransactionTransferActivity : BaseActivity() {
         }
         successB.setOnClickListener {
             finish()
+        }
+        scanIV.setOnClickListener {
+            val scan = IntentIntegrator(this)
+            scan.setOrientationLocked(true)
+            scan.initiateScan()
         }
     }
 

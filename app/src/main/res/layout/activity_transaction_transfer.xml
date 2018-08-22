@@ -29,6 +29,17 @@
             android:textSize="@dimen/dimenFont"
             android:gravity="center_vertical"
             tools:targetApi="m" />
+        <ImageView
+            android:contentDescription="@null"
+            android:padding="@dimen/dimenMini"
+            android:id="@+id/transaction_transfer_scan"
+            android:layout_width="@dimen/dimenIcon"
+            android:layout_height="@dimen/dimenIcon"
+            android:src="@drawable/icon_scan"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:tint="?colorDefault"
+            android:layout_gravity="center_vertical"/>
     </RelativeLayout>
 
     <ScrollView
