@@ -18,7 +18,7 @@ object CommonUtils {
     const val CHANNEL_DOWNLOAD = "com.iwallic.app.download"
     const val ID_DOWNLOAD = 1
     var net: String = "main"
-    var pyApi: String = "http://192.168.1.106:5000" // http://192.168.1.106:5000 http://101.132.97.9:45005
+    var pyApi: String = "https://iwallic.forchain.info"
     var mainApi: String = "https://api.iwallic.com/api/iwallic"
     var testApi: String = "https://teapi.iwallic.com/api/iwallic"
     var versionName: String = BuildConfig.VERSION_NAME

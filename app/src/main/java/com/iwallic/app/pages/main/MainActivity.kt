@@ -17,6 +17,7 @@ import com.iwallic.app.base.BaseFragmentAdapter
 import com.iwallic.app.components.NoSwipeViewPager
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
+import com.iwallic.app.services.BlockService
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -37,6 +38,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         setContentView(R.layout.activity_main)
 
         initDOM()
@@ -47,6 +49,11 @@ class MainActivity : BaseActivity() {
     // move to back when back button tapped
     override fun onBackPressed() {
         moveTaskToBack(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(Intent(this, BlockService::class.java))
     }
 
     private fun initDOM() {

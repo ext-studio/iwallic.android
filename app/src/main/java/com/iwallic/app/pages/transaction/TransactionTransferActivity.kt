@@ -127,7 +127,7 @@ class TransactionTransferActivity : BaseActivity() {
         asset = intent.getStringExtra("asset") ?: ""
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
-            assetNameTV.text = chosen.name
+            assetNameTV.text = chosen.symbol
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chosen.balance)
             amountET.isEnabled = true
             balance = chosen.balance.toDouble()
@@ -201,13 +201,14 @@ class TransactionTransferActivity : BaseActivity() {
     }
     
     private fun resolveAssetPick() {
+        Log.i("【】", "$list")
         DialogUtils.list(this, R.string.dialog_title_choose, list, fun(confirm: String) {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
                 it.asset_id == confirm
             }
-            assetNameTV.text = chooseAsset?.name
+            assetNameTV.text = chooseAsset?.symbol
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
             balance = chooseAsset?.balance?.toDouble() ?: 0.0
         })

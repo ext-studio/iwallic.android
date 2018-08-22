@@ -24,7 +24,7 @@ class BlockService : Service() {
         super.onCreate()
         Log.i("【BlockService】", "create")
         timer = Timer()
-        timer!!.schedule(10000, peried) {
+        timer!!.schedule(peried, peried) {
             BlockState.fetch()
         }
         blockListen = BlockState.data().subscribe({

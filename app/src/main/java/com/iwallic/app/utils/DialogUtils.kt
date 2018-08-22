@@ -121,7 +121,7 @@ object DialogUtils {
             val listKey = arrayOfNulls<String>(list.size)
             for ((index, i) in list.iterator().withIndex()) {
                 listKey[index] = i.asset_id
-                listValue[index] = i.name
+                listValue[index] = i.symbol
             }
             builder.setItems(listValue) { _, i ->
                 if (callback != null) {
