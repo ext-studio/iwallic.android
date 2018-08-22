@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/fragment_user_setting"
             android:textColor="?colorDefault"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:textSize="@dimen/dimenFont"
             tools:targetApi="m" />
     </RelativeLayout>

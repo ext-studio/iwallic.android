@@ -20,7 +20,7 @@ import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
 class TransactionTransferActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
+    private lateinit var backLL: TextView
     private lateinit var chooseAssetLL: LinearLayout
     private lateinit var targetET: EditText
     private lateinit var amountET: EditText
