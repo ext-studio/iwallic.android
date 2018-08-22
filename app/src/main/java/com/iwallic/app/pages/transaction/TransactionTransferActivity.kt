@@ -129,7 +129,11 @@ class TransactionTransferActivity : BaseActivity() {
         amountET.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    amount = s.toString().toDouble()
+                    amount = try {
+                        s.toString().toDouble()
+                    } catch (_: Throwable) {
+                        0.0
+                    }
                 }
                 resolveErrorTip()
             }
@@ -294,15 +298,15 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun resolveErrorTip() {
         when {
-            !WalletUtils.check(target, "address") -> {
+            target.isNotEmpty() && !WalletUtils.check(target, "address") -> {
                 tipTV.setText(R.string.transaction_transfer_tips_target_error)
                 tipTV.visibility = View.VISIBLE
             }
-            amount <= 0 -> {
+            amount <= 0 && amountET.text.isNotEmpty() -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_error)
                 tipTV.visibility = View.VISIBLE
             }
-            amount > balance -> {
+            amount > 0 && amount > balance -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_unenough)
                 tipTV.visibility = View.VISIBLE
             }
