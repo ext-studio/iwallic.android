@@ -46,7 +46,9 @@ class UserAboutActivity : BaseActivity() {
 
     private fun initClick() {
         disclamerFL.setOnClickListener {
-            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, UserBrowserActivity::class.java)
+            intent.putExtra("url", "https://iwallic.com/assets/disclaimer")
+            startActivity(intent)
         }
         versionFL.setOnClickListener {
             initVersion()

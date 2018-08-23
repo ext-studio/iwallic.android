@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?colorDefault">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dimenSpace"
-        android:background="?colorPrimary">
+        android:background="?colorPrimary"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/user_browser_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/icon_back"
+            android:drawableTint="?colorLight"
+            android:gravity="center_vertical"
+            tools:targetApi="m"/>
         <TextView
             android:id="@+id/user_browser_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="start|center_vertical"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:textColor="?colorDefault"
             android:textSize="@dimen/dimenFontL"
-            android:layout_marginEnd="@dimen/dimenSpace"
-            android:layout_marginStart="@dimen/dimenSpace"
             android:ellipsize="end"
-            android:lines="1"/>
-    </RelativeLayout>
+            android:lines="1" />
+    </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/user_browser_refresh"
         android:layout_width="match_parent"
