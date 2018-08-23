@@ -80,12 +80,10 @@ class WelcomeActivity : BaseActivity() {
 
     private fun resolveNewVersion(config: VersionRes) {
         Log.i("【WelcomeActivity】", "new version")
-        DialogUtils.confirm(
+        DialogUtils.update(
             this,
-            R.string.dialog_title_primary,
-            R.string.dialog_version_new_body,
-            R.string.dialog_version_ok,
-            R.string.dialog_no
+            (config.info["cn"] as String).replace("\\n", "\n"),
+            (config.info["en"] as String).replace("\\n", "\n")
         ).subscribe {
             if (it) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -18,6 +18,7 @@ import com.iwallic.app.components.NoSwipeViewPager
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.BlockService
+import com.iwallic.app.utils.CommonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -44,6 +45,14 @@ class MainActivity : BaseActivity() {
         initDOM()
         initNav()
         initFAB()
+
+        CommonUtils.onConfigured().subscribe({
+            if (it) {
+                startService(Intent(this, BlockService::class.java))
+            }
+        }, {
+            Log.i("【BaseActivity】", "config failed, block service will not on")
+        })
     }
 
     // move to back when back button tapped
