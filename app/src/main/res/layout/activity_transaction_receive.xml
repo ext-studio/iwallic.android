@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shap_receive_bg"
     android:orientation="vertical"
@@ -18,21 +19,17 @@
             android:clickable="true"
             android:focusable="true">
 
-            <ImageView
-                android:layout_width="@dimen/dimenLarge"
-                android:layout_height="@dimen/dimenLarge"
-                android:contentDescription="@string/wallet_import"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_back"
-                android:tint="?colorDefault" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:drawableStart="@drawable/icon_back"
+                android:drawableTint="?colorDefault"
                 android:text="@string/transaction_receive"
                 android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenDefault" />
+                android:textSize="@dimen/dimenFont"
+                android:gravity="center_vertical"
+                tools:targetApi="m" />
         </LinearLayout>
 
         <RelativeLayout
@@ -65,14 +62,21 @@
                     android:background="?colorDefault2"/>
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/dimenSpace"
+                    android:textColor="?colorDark"
+                    android:textSize="@dimen/dimenFontM"
+                    android:text="收款地址"/>
+                <TextView
                     android:id="@+id/transaction_receive_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
-                    android:textColor="?colorFont"
-                    android:layout_gravity="center"
-                    android:text="AddressAddressAddressAddressAddressAddressAddress"
-                    android:layout_marginTop="@dimen/dimenSpace"
+                    android:textSize="@dimen/dimenFontM"
+                    android:textColor="?colorDark"
+                    android:layout_gravity="center_horizontal"
                     android:textAlignment="center" />
             </LinearLayout>
 

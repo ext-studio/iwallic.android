@@ -1,5 +1,6 @@
 package com.iwallic.app.pages.transaction
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import com.iwallic.app.utils.DialogUtils
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
@@ -20,12 +22,13 @@ import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.WalletUtils
 
 class TransactionTransferActivity : BaseActivity() {
-    private lateinit var backLL: LinearLayout
+    private lateinit var backLL: TextView
     private lateinit var chooseAssetLL: LinearLayout
     private lateinit var targetET: EditText
     private lateinit var amountET: EditText
     private lateinit var assetNameTV: TextView
     private lateinit var balanceTV: TextView
+    private lateinit var scanIV: ImageView
     private lateinit var submitB: Button
     private lateinit var submitPB: ProgressBar
     private lateinit var tipTV: TextView
@@ -48,7 +51,24 @@ class TransactionTransferActivity : BaseActivity() {
         initInput()
         initAsset()
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents != null) {
+                Log.i("【transfer】", "scanned【${result.contents}】")
+                if (WalletUtils.check(result.contents, "address")) {
+                    target = result.contents
+                    targetET.setText(result.contents)
+                } else {
+                    Toast.makeText(this, R.string.transaction_transfer_scan_error, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Log.i("【transfer】", "scan cancelled")
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
     private fun initDOM() {
         address = WalletUtils.address(this)
         backLL = findViewById(R.id.transaction_transfer_back)
@@ -59,6 +79,7 @@ class TransactionTransferActivity : BaseActivity() {
         balanceTV = findViewById(R.id.transaction_transfer_balance)
         submitB = findViewById(R.id.transaction_transfer_btn_submit)
         submitPB = findViewById(R.id.transaction_transfer_load_submit)
+        scanIV = findViewById(R.id.transaction_transfer_scan)
         tipTV = findViewById(R.id.transaction_transfer_error)
         successB = findViewById(R.id.transaction_transfer_success)
         step1LL = findViewById(R.id.transaction_transfer_step_1)
@@ -89,6 +110,11 @@ class TransactionTransferActivity : BaseActivity() {
         successB.setOnClickListener {
             finish()
         }
+        scanIV.setOnClickListener {
+            val scan = IntentIntegrator(this)
+            scan.setOrientationLocked(true)
+            scan.initiateScan()
+        }
     }
 
     private fun initInput() {
@@ -103,7 +129,11 @@ class TransactionTransferActivity : BaseActivity() {
         amountET.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString().isNotEmpty()) {
-                    amount = s.toString().toDouble()
+                    amount = try {
+                        s.toString().toDouble()
+                    } catch (_: Throwable) {
+                        0.0
+                    }
                 }
                 resolveErrorTip()
             }
@@ -127,7 +157,7 @@ class TransactionTransferActivity : BaseActivity() {
         asset = intent.getStringExtra("asset") ?: ""
         val chosen = AssetState.get(asset)
         if (asset.isNotEmpty() && chosen != null) {
-            assetNameTV.text = chosen.name
+            assetNameTV.text = chosen.symbol
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chosen.balance)
             amountET.isEnabled = true
             balance = chosen.balance.toDouble()
@@ -201,13 +231,14 @@ class TransactionTransferActivity : BaseActivity() {
     }
     
     private fun resolveAssetPick() {
+        Log.i("【】", "$list")
         DialogUtils.list(this, R.string.dialog_title_choose, list, fun(confirm: String) {
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
                 it.asset_id == confirm
             }
-            assetNameTV.text = chooseAsset?.name
+            assetNameTV.text = chooseAsset?.symbol
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
             balance = chooseAsset?.balance?.toDouble() ?: 0.0
         })
@@ -267,15 +298,15 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun resolveErrorTip() {
         when {
-            !WalletUtils.check(target, "address") -> {
+            target.isNotEmpty() && !WalletUtils.check(target, "address") -> {
                 tipTV.setText(R.string.transaction_transfer_tips_target_error)
                 tipTV.visibility = View.VISIBLE
             }
-            amount <= 0 -> {
+            amount <= 0 && amountET.text.isNotEmpty() -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_error)
                 tipTV.visibility = View.VISIBLE
             }
-            amount > balance -> {
+            amount > 0 && amount > balance -> {
                 tipTV.setText(R.string.transaction_transfer_tips_amount_unenough)
                 tipTV.visibility = View.VISIBLE
             }

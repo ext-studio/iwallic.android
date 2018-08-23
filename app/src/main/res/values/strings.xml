@@ -74,6 +74,7 @@
     <string name="transaction_receive">Receive</string>
     <string name="transaction_receive_address_copy">Copy Address</string>
     <string name="transaction_unconfirmed">Unconfirmed</string>
+    <string name="transaction_transfer_scan_error">No address found</string>
     <string name="dialog_title_primary">Notice</string>
     <string name="dialog_title_warn">Warning</string>
     <string name="dialog_title_choose">Choose</string>

@@ -223,26 +223,17 @@ object WalletUtils {
     }
 
     fun verify(context: Context, pwd: String): Observable<String> {
-        Log.i("【123】", "1")
         return Observable.create {
-            Log.i("【123】", "2")
             launch {
-                Log.i("【123】", "3")
                 val account = account(context)
-                Log.i("【123】", "4")
                 if (account == null) {
-                    Log.i("【123】", "5")
                     withContext(UI) {
-                        Log.i("【123】", "6")
                         it.onNext("")
                     }
                     it.onComplete()
                 } else {
-                    Log.i("【123】", "7")
                     val rs = Wallet.neP2Decode(account.key, pwd)
-                    Log.i("【123】", "8")
                     withContext(UI) {
-                        Log.i("【123】", "9")
                         it.onNext(rs)
                     }
                     it.onComplete()

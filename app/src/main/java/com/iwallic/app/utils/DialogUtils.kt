@@ -13,14 +13,45 @@ import android.text.TextWatcher
 import android.widget.EditText
 import com.iwallic.app.models.AssetRes
 import io.reactivex.Observable
+import java.util.*
 
 object DialogUtils {
-    @SuppressLint("InflateParams")
+    fun update(context: Context, cn: String, en: String): Observable<Boolean> {
+        return Observable.create { observer ->
+            val builder = AlertDialog.Builder(context)
+            val view = View.inflate(context, R.layout.dialog_confirm, null)
+            val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
+            val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
+            val titleTV = view.findViewById<TextView>(R.id.dialog_confirm_title)
+            val bodyTV = view.findViewById<TextView>(R.id.dialog_confirm_body)
+            builder.setView(view)
+            val dialog = builder.create()
+
+            titleTV.setText(R.string.dialog_title_primary)
+            bodyTV.text = if (LocaleUtils.current(context) == Locale.SIMPLIFIED_CHINESE) cn else en
+            okTV.setText(R.string.dialog_version_ok)
+            okTV.setOnClickListener {
+                observer.onNext(true)
+                observer.onComplete()
+                dialog.dismiss()
+            }
+            noTV.setText(R.string.dialog_no)
+            noTV.setOnClickListener {
+                observer.onNext(false)
+                observer.onComplete()
+                dialog.dismiss()
+            }
+            dialog.setOnDismissListener {
+                observer.onNext(false)
+                observer.onComplete()
+            }
+            dialog.show()
+        }
+    }
     fun confirm(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null): Observable<Boolean> {
         return Observable.create {observer ->
             val builder = AlertDialog.Builder(context)
-            val inflater = LayoutInflater.from(context)
-            val view = inflater.inflate(R.layout.dialog_confirm, null)
+            val view = View.inflate(context, R.layout.dialog_confirm, null)
             val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
             val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
             val titleTV = view.findViewById<TextView>(R.id.dialog_confirm_title)
@@ -62,12 +93,10 @@ object DialogUtils {
         }
     }
 
-    @SuppressLint("InflateParams")
     fun password(context: Context): Observable<String> {
         return Observable.create { observer ->
             val builder = AlertDialog.Builder(context)
-            val inflater = LayoutInflater.from(context)
-            val view = inflater.inflate(R.layout.dialog_password, null)
+            val view = View.inflate(context, R.layout.dialog_password, null)
             val inputET = view.findViewById<EditText>(R.id.dialog_password)
             val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
             builder.setView(view)
@@ -94,14 +123,12 @@ object DialogUtils {
         }
     }
 
-    @SuppressLint("InflateParams")
     fun load(context: Context, text: Int = R.string.load_load): Observable<AlertDialog> {
         return Observable.create{observer ->
             val builder = AlertDialog.Builder(context)
-            val inflater = LayoutInflater.from(context)
-            val view = inflater.inflate(R.layout.dialog_load, null)
+            val view = View.inflate(context, R.layout.dialog_load, null)
             builder.setView(view)
-            view.findViewById<TextView>(R.id.load_title).text = inflater.context.resources.getText(text)
+            view.findViewById<TextView>(R.id.load_title).text = context.resources.getText(text)
             val dialog = builder.create()
 
             dialog.show()
@@ -121,7 +148,7 @@ object DialogUtils {
             val listKey = arrayOfNulls<String>(list.size)
             for ((index, i) in list.iterator().withIndex()) {
                 listKey[index] = i.asset_id
-                listValue[index] = i.name
+                listValue[index] = i.symbol
             }
             builder.setItems(listValue) { _, i ->
                 if (callback != null) {

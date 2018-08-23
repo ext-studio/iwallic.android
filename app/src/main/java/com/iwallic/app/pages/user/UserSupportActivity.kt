@@ -38,7 +38,9 @@ class UserSupportActivity : BaseActivity() {
 
     private fun initClick() {
         walletGuideFL.setOnClickListener {
-            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, UserBrowserActivity::class.java)
+            intent.putExtra("url", "https://iwallic.com/assets/questions")
+            startActivity(intent)
         }
 
         transactionGuideFL.setOnClickListener {

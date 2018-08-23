@@ -23,7 +23,6 @@ class WelcomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_welcome)
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         initNet()
         initVersion()
@@ -73,7 +72,7 @@ class WelcomeActivity : BaseActivity() {
         // request for latest config, or use local config
         CommonUtils.setNet(
                 SharedPrefUtils.getNet(this),
-                "http://101.132.97.9:45005", // "http://192.168.1.106:5000", // "http://101.132.97.9:45005",
+                "https://iwallic.forchain.info", // "http://192.168.1.106:5000", // "http://101.132.97.9:45005",
                 "http://101.132.97.9:8001/api/iwallic",
                 "http://101.132.97.9:8002/api/iwallic")
         CommonUtils.notifyNetwork()
@@ -81,12 +80,10 @@ class WelcomeActivity : BaseActivity() {
 
     private fun resolveNewVersion(config: VersionRes) {
         Log.i("【WelcomeActivity】", "new version")
-        DialogUtils.confirm(
+        DialogUtils.update(
             this,
-            R.string.dialog_title_primary,
-            R.string.dialog_version_new_body,
-            R.string.dialog_version_ok,
-            R.string.dialog_no
+            (config.info["cn"] as String).replace("\\n", "\n"),
+            (config.info["en"] as String).replace("\\n", "\n")
         ).subscribe {
             if (it) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

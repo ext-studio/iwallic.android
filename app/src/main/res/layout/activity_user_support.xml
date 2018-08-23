@@ -77,6 +77,7 @@
 
             <FrameLayout
                 android:id="@+id/activity_user_support_transaction_guide"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="?colorDefault">

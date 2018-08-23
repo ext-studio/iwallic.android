@@ -14,6 +14,7 @@ class UserBrowserActivity : BaseActivity() {
     private lateinit var browserWV: WebView
     private lateinit var browserSRL: SwipeRefreshLayout
     private lateinit var browserTV: TextView
+    private lateinit var backTV: TextView
 
     private var url: String = "file:///android_asset/commons/default.html"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +28,12 @@ class UserBrowserActivity : BaseActivity() {
         browserWV = findViewById(R.id.user_browser_webview)
         browserSRL = findViewById(R.id.user_browser_refresh)
         browserTV = findViewById(R.id.user_browser_title)
+        backTV = findViewById(R.id.user_browser_back)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initUrl() {
-        val target = intent.getStringExtra("url")
+        val target = intent.getStringExtra("url") ?: ""
         if (target.isNotEmpty()) {
             url = target
         }
@@ -48,6 +50,9 @@ class UserBrowserActivity : BaseActivity() {
             browserWV.reload()
             browserSRL.isRefreshing = false
             Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
+        }
+        backTV.setOnClickListener {
+            finish()
         }
     }
 }
