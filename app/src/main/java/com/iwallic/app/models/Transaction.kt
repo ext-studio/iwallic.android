@@ -157,6 +157,9 @@ class TransactionModel {
         fun forAsset(utxo: ArrayList<UtxoModel>, from: String, to: String, amount: Double, asset: String): TransactionModel? {
             val fromScript = Wallet.addr2Script(from)
             val toScript = Wallet.addr2Script(to)
+            if (fromScript.length != 40 || toScript.length != 40) {
+                return null
+            }
             val newTX = TransactionModel()
             newTX.outputs.add(OutputModel(asset, toScript, amount))
             var curr = 0.0
@@ -180,7 +183,8 @@ class TransactionModel {
             val newTx = TransactionModel()
             newTx.type = TxTypeInvocation
             newTx.version = TxVersionInvocation
-            newTx.script = SmartContract.forNEP5(token, from, to, amount).serielize() + "f1"
+            val contract = SmartContract.forNEP5(token, from, to, amount) ?: return null
+            newTx.script = contract.serielize() + "f1"
             newTx.attributes.add(AttributeModel(AttrUsageScript, Wallet.addr2Script(from)))
             newTx.attributes.add(AttributeModel(AttrUsageNep5, Hex.reverse(Hex.fromString("from iwallic at ${System.currentTimeMillis()/1000}"))))
             return newTx
