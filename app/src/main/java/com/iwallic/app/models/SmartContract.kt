@@ -1,5 +1,6 @@
 package com.iwallic.app.models
 
+import android.util.Log
 import com.iwallic.neon.wallet.Wallet
 import com.iwallic.neon.hex.Hex
 
@@ -50,11 +51,21 @@ class SmartContract {
         return result
     }
     companion object {
-        fun forNEP5(hash: String, from: String, to: String, value: Double): SmartContract {
+        fun forNEP5(hash: String, from: String, to: String, value: Double): SmartContract? {
             val sc = SmartContract()
             sc.scriptHash = hash
             sc.method = "transfer"
-            sc.args = arrayListOf(Hex.toFixedNum(value, 8), Wallet.addr2Script(to), Wallet.addr2Script(from))
+            val valueStr = Hex.toFixedNum(value, 8)
+            val fromAddr = Wallet.addr2Script(from)
+            val toAddr = Wallet.addr2Script(to)
+            Log.i("【】", "【$valueStr】【$fromAddr】【$toAddr】")
+            if (valueStr.length != 16) {
+                return null
+            }
+            if (fromAddr.length != 40 || toAddr.length != 40) {
+                return null
+            }
+            sc.args = arrayListOf(valueStr, toAddr, fromAddr)
             return sc
         }
     }
