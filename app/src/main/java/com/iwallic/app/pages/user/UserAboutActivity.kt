@@ -83,20 +83,20 @@ class UserAboutActivity : BaseActivity() {
 
     private fun resolveNewVersion(config: VersionRes) {
         Log.i("【WelcomeActivity】", "new version")
-        DialogUtils.confirm(
-                this,
-                R.string.dialog_title_primary,
-                R.string.dialog_version_new_body,
-                R.string.dialog_version_ok,
-                R.string.dialog_no
+        DialogUtils.update(
+            this,
+            (config.info["cn"] as String).replace("\\n", "\n"),
+            (config.info["en"] as String).replace("\\n", "\n")
         ).subscribe {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val intent = Intent(this, DownloadService::class.java)
-                intent.putExtra("url", config.url)
-                startService(intent)
-            } else {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(config.url))
-                startActivity(intent)
+            if (it) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    val intent = Intent(this, DownloadService::class.java)
+                    intent.putExtra("url", config.url)
+                    startService(intent)
+                } else {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(config.url))
+                    startActivity(intent)
+                }
             }
         }
     }
