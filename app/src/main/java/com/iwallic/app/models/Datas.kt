@@ -57,8 +57,8 @@ data class VersionRes (
 
 data class ResponsePyModel (
     val msg: String = "",
-    val data: Any?,
-    val error_code: Int?,
+    val data: Any? = null,
+    val error_code: Int? = 99999,
     val bool_status: Boolean = false
 )
 
@@ -82,9 +82,9 @@ data class RequestGoModel (
 )
 
 data class ResponseGoModel (
-    val code: Int,
-    val msg: String,
-    val result: Any?
+    val code: Int = 99999,
+    val msg: String = "",
+    val result: Any? = null
 )
 
 data class ClaimsRes (

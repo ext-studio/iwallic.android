@@ -1,17 +1,13 @@
 package com.iwallic.app.pages.user
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.pages.common.UserBrowserActivity
 
 class UserSupportActivity : BaseActivity() {
     private lateinit var backTV: TextView

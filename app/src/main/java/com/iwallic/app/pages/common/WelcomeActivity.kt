@@ -1,4 +1,4 @@
-package com.iwallic.app.base
+package com.iwallic.app.pages.common
 
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.pages.wallet.WalletActivity
@@ -22,16 +23,15 @@ class WelcomeActivity : BaseActivity() {
     private val gson = Gson()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!isTaskRoot) {
+            finish()
+            return
+        }
         setContentView(R.layout.activity_base_welcome)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        initNet()
         initVersion()
         initListen()
 
-    }
-
-    override fun onBackPressed() {
-        return
     }
 
     private fun initListen() {
@@ -41,7 +41,7 @@ class WelcomeActivity : BaseActivity() {
     }
 
     private fun initVersion () {
-        HttpUtils.getPy("/client/index/app_version/detail", {
+        HttpUtils.getPy(this, "/client/index/app_version/detail", {
             if (it.isNotEmpty()) {
                 Log.i("【WelcomeActivity】", "【$it】")
                 val config = gson.fromJson(it, VersionRes::class.java)
@@ -64,18 +64,6 @@ class WelcomeActivity : BaseActivity() {
             }
             CommonUtils.notifyVersion()
         })
-    }
-
-
-    private fun initNet() {
-        // 101.132.97.9:45005 192.168.1.106:5000
-        // request for latest config, or use local config
-        CommonUtils.setNet(
-                SharedPrefUtils.getNet(this),
-                "https://iwallic.forchain.info", // "http://192.168.1.106:5000", // "http://101.132.97.9:45005",
-                "http://101.132.97.9:8001/api/iwallic",
-                "http://101.132.97.9:8002/api/iwallic")
-        CommonUtils.notifyNetwork()
     }
 
     private fun resolveNewVersion(config: VersionRes) {

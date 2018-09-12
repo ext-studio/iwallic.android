@@ -1,13 +1,11 @@
 package com.iwallic.app.pages.user
 
 import android.content.Intent
-import android.content.pm.PackageInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.Gson
@@ -15,8 +13,8 @@ import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.models.VersionRes
+import com.iwallic.app.pages.common.UserBrowserActivity
 import com.iwallic.app.services.DownloadService
-import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpUtils
 

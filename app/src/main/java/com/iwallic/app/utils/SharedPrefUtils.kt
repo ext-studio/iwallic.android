@@ -9,6 +9,10 @@ object SharedPrefUtils {
 
     private const val PREF_APP = "com.iwallic.app.prefs"
 
+    fun getString(context: Context?, key: String): String {
+        return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString(key, "") ?: ""
+    }
+
     fun setWallet(context: Context, walletId: Long) {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putLong("chosen_wallet", walletId).apply()
     }
@@ -82,8 +86,8 @@ object SharedPrefUtils {
         }
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", newList.toSet()).apply()
     }
-    fun getNet(context: Context): String {
-        return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("net", "main")
+    fun getNet(context: Context?): String {
+        return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chain_net", "main") ?: "main"
     }
     fun setNet(context: Context, net: String) {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("net", if (net == "main") "main" else "test").apply()

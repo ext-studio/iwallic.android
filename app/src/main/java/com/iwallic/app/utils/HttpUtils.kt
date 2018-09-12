@@ -1,122 +1,114 @@
 package com.iwallic.app.utils
 
+import android.content.Context
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
 import com.iwallic.app.models.RequestGoModel
 import com.iwallic.app.models.ResponseGoModel
 import com.iwallic.app.models.ResponsePyModel
-import io.reactivex.Observable
-import java.net.HttpURLConnection
-import java.net.URL
 
 object HttpUtils {
     private val gson = Gson()
 
-    fun post(method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
-        Fuel.post(CommonUtils.apiGo())
+    fun post(context: Context?, method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
+        Fuel.post(if (SharedPrefUtils.getNet(context) == "test") CommonUtils.testApi else CommonUtils.mainApi)
             .body(gson.toJson(RequestGoModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    val rs = gson.fromJson(d, ResponseGoModel::class.java)
+                    val rs = try {gson.fromJson(d, ResponseGoModel::class.java)} catch (_: Throwable) {null}
+                    Log.i("【PostGo】", "$method -> $rs")
                     when {
                         rs == null -> no(99998)
                         rs.code == 200 -> {
-                            Log.i("【request】", "complete【${method}】")
                             ok(gson.toJson(rs.result))
                         }
                         rs.code == 1000 -> {
-                            ok("")
+                            ok("null")
                         }
                         else -> {
-                            Log.i("【request】", "error【${rs.msg}】")
                             no(rs.code)
                         }
                     }
                 }) { err ->
-                    Log.i("【request】", "error【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }
     }
 
-    fun postPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
+    fun postPy(context: Context?, url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.post("${CommonUtils.pyApi}$url")
             .header(
                 Pair("app_version", CommonUtils.versionName),
-                Pair("network", CommonUtils.net),
+                Pair("network", SharedPrefUtils.getNet(context)),
                 Pair("Content-Type", "application/json")
             )
             .body(gson.toJson(data))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【post】【$url】")
-                    Log.i("【request】", "$data === $d")
-                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    val rs = try {gson.fromJson(d, ResponsePyModel::class.java)} catch (_: Throwable) {null}
                     if (rs == null) {
                         no(99998)
                         return@fold
                     }
+                    Log.i("【Post】", "$url -> $rs")
                     if (rs.bool_status) {
                         ok(gson.toJson(rs.data))
                     } else {
                         no(rs.error_code ?: 99999)
                     }
                 }) { err ->
-                    Log.i("【request】", "error【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }
     }
 
-    fun putPy(url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
+    fun putPy(context: Context?, url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.put("${CommonUtils.pyApi}$url")
-            .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
-            .body(gson.toJson(data))
+            .header(
+                Pair("app_version", CommonUtils.versionName),
+                Pair("network", SharedPrefUtils.getNet(context)),
+                Pair("Content-Type", "application/json")
+            ).body(gson.toJson(data))
             .responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【put】【$url】")
-                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    val rs = try {gson.fromJson(d, ResponsePyModel::class.java)} catch (_: Throwable) {null}
                     if (rs == null) {
                         no(99998)
                         return@fold
                     }
+                    Log.i("【Put】", "$url -> $rs")
                     if (rs.bool_status) {
                         ok(gson.toJson(rs.data))
                     } else {
                         no(rs.error_code ?: 99999)
                     }
                 }) { err ->
-                    Log.i("【request】", "error【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }
     }
 
-    fun getPy(_url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
-        Fuel.get("${CommonUtils.pyApi}$_url")
-            .header(Pair("app_version", CommonUtils.versionName), Pair("network", CommonUtils.net))
-            .responseString { _, _, result ->
+    fun getPy(context: Context?, url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
+        Fuel.get("${CommonUtils.pyApi}$url")
+            .header(
+                Pair("app_version", CommonUtils.versionName),
+                Pair("network", SharedPrefUtils.getNet(context)),
+                Pair("Content-Type", "application/json")
+            ).responseString { _, _, result ->
                 result.fold({ d ->
-                    Log.i("【request】", "complete【get】【$_url】")
-                    val rs = gson.fromJson(d, ResponsePyModel::class.java)
+                    val rs = try {gson.fromJson(d, ResponsePyModel::class.java)} catch (_: Throwable) {null}
                     if (rs == null) {
                         no(99998)
                         return@fold
                     }
-                    when {
-                        rs.bool_status -> ok(gson.toJson(rs.data))
-                        rs.error_code == 200000 -> {
-                            Log.i("【request】", "empty【$_url】【$rs】")
-                            ok("")
-                        }
-                        else -> {
-                            Log.i("【request】", "error【$_url】【${rs}】")
-                            no(rs.error_code ?: 99999)
-                        }
+                    Log.i("【Get】", "$url -> $rs")
+                    if (rs.bool_status) {
+                        ok(gson.toJson(rs.data))
+                    } else {
+                        no(rs.error_code ?: 99999)
                     }
                 }) { err ->
-                    Log.i("【request】", "error【$_url】【${err}】")
                     no(resolveError(err.response.statusCode))
                 }
             }

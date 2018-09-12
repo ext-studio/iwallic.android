@@ -1,4 +1,4 @@
-package com.iwallic.app.pages.user
+package com.iwallic.app.pages.common
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 
-class UserBrowserActivity : BaseActivity() {
+class BrowserActivity : BaseActivity() {
     private lateinit var browserWV: WebView
     private lateinit var browserSRL: SwipeRefreshLayout
     private lateinit var browserTV: TextView
@@ -19,16 +19,16 @@ class UserBrowserActivity : BaseActivity() {
     private var url: String = "file:///android_asset/commons/default.html"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_browser)
+        setContentView(R.layout.activity_browser)
         initDOM()
         initUrl()
     }
 
     private fun initDOM() {
-        browserWV = findViewById(R.id.user_browser_webview)
-        browserSRL = findViewById(R.id.user_browser_refresh)
-        browserTV = findViewById(R.id.user_browser_title)
-        backTV = findViewById(R.id.user_browser_back)
+        browserWV = findViewById(R.id.browser_webview)
+        browserSRL = findViewById(R.id.browser_refresh)
+        browserTV = findViewById(R.id.browser_title)
+        backTV = findViewById(R.id.browser_back)
     }
 
     @SuppressLint("SetJavaScriptEnabled")

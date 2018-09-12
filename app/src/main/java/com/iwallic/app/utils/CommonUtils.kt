@@ -1,10 +1,7 @@
 package com.iwallic.app.utils
 
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.os.IBinder
 import android.util.TypedValue
-import android.view.inputmethod.InputMethodManager
 import com.iwallic.app.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -17,26 +14,18 @@ object CommonUtils {
     const val ACTION_NEWBLOCK = "com.iwallic.app.block"
     const val CHANNEL_DOWNLOAD = "com.iwallic.app.download"
     const val ID_DOWNLOAD = 1
-    var net: String = "main"
-    var pyApi: String = "https://iwallic.forchain.info"
-    var mainApi: String = "https://api.iwallic.com/api/iwallic"
-    var testApi: String = "https://teapi.iwallic.com/api/iwallic"
+    const val pyApi: String = "https://iwallic.forchain.info"
+    const val mainApi: String = "http://101.132.97.9:8001/api/iwallic"
+    const val testApi: String = "http://101.132.97.9:8002/api/iwallic"
     var versionName: String = BuildConfig.VERSION_NAME
     private var configured = PublishSubject.create<Boolean>()
     private var lock: Boolean = false // need verify each time open wallet
     private var _setted = false
     private val _color = TypedValue()
     private val configQueue = arrayListOf<String>()
-    fun apiGo(): String = if (net == "test") testApi else mainApi
     fun getAttrColor(context: Context, attr: Int): Int {
         context.theme.resolveAttribute(attr, _color, true)
         return _color.data
-    }
-    fun setNet(_net: String?, _pyApi: String? = null, _mainApi: String? = null, _testApi: String? = null) {
-        net = _net ?: net
-        pyApi = _pyApi ?: pyApi
-        mainApi = _mainApi ?: mainApi
-        testApi = _testApi ?: testApi
     }
     /**
      * if not configured yet -> waiting
@@ -51,15 +40,7 @@ object CommonUtils {
     }
     fun notifyVersion() {
         configQueue.add("version")
-        if (configQueue.size >= 2) {
-            _setted = true
-            configured.onNext(true)
-            configured.onComplete()
-        }
-    }
-    fun notifyNetwork() {
-        configQueue.add("network")
-        if (configQueue.size >= 2) {
+        if (configQueue.size >= 1) {
             _setted = true
             configured.onNext(true)
             configured.onComplete()
