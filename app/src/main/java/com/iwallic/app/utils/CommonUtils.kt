@@ -26,33 +26,19 @@ object CommonUtils {
     const val notificationProgress = 985
     const val notificationCommon = 984
 
+    const val listenPeried: Long = 60000
+
+    const val broadCastBlock = "iwallic_new_block"
+
     var versionName: String = BuildConfig.VERSION_NAME
-    private var configured = PublishSubject.create<Boolean>()
-    private var lock: Boolean = false // need verify each time open wallet
-    private var _setted = false
     private val _color = TypedValue()
-    private val configQueue = arrayListOf<String>()
+
     fun getAttrColor(context: Context, attr: Int): Int {
         context.theme.resolveAttribute(attr, _color, true)
         return _color.data
     }
-    /**
-     * if not configured yet -> waiting
-     * already configured -> emit true
-     */
-    fun onConfigured(): Observable<Boolean> {
-        return if (_setted) {
-            Observable.just(true)
-        } else {
-            configured
-        }
-    }
-    fun notifyVersion() {
-        configQueue.add("version")
-        if (configQueue.size >= 1) {
-            _setted = true
-            configured.onNext(true)
-            configured.onComplete()
-        }
+
+    fun getStatusBarHeight(context: Context): Double {
+        return Math.ceil(25 * context.resources.displayMetrics.density.toDouble())
     }
 }

@@ -9,8 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 
-class BrowserActivity : BaseActivity() {
+class BrowserActivity : BaseAuthActivity() {
     private lateinit var browserWV: WebView
     private lateinit var browserSRL: SwipeRefreshLayout
     private lateinit var browserTV: TextView

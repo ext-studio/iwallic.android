@@ -18,7 +18,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/ThemeDefault">
+        android:theme="@style/ThemeDefault"
+        android:name=".base.BaseApplication">
         <provider
             android:name=".base.BaseFileProvider"
             android:authorities="${applicationId}.provider"

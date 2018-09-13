@@ -1,5 +1,13 @@
 package com.iwallic.app.models
 
+import com.iwallic.app.base.BaseFragment
+
+data class Pager(
+    val id: Int,
+    val fragment: BaseFragment,
+    val title: String = ""
+)
+
 data class PageDataRes<T>(
     var page: Int = 1,
     var pageSize: Int = 10,

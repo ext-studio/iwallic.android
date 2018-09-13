@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.pages.wallet.WalletActivity
@@ -20,7 +21,7 @@ import com.iwallic.app.utils.*
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
-class WelcomeActivity : BaseActivity() {
+class WelcomeActivity : BaseAuthActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isTaskRoot) {

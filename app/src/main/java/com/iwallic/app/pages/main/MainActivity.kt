@@ -3,6 +3,7 @@ package com.iwallic.app.pages.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
@@ -11,10 +12,13 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.base.BaseFragmentAdapter
 import com.iwallic.app.components.NoSwipeViewPager
+import com.iwallic.app.models.Pager
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.BlockService
@@ -35,6 +39,7 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: BaseFragmentAdapter
 
     private var fabOpened = false
+    private var canExit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,18 +51,27 @@ class MainActivity : BaseActivity() {
         initNav()
         initFAB()
 
-        CommonUtils.onConfigured().subscribe({
-            if (it) {
-                startService(Intent(this, BlockService::class.java))
-            }
-        }, {
-            Log.i("【BaseActivity】", "config failed, block service will not on")
-        })
+        startService(Intent(this, BlockService::class.java))
     }
 
-    // move to back when back button tapped
+    @SuppressLint("MissingSuperCall")
+    override fun onSaveInstanceState(outState: Bundle?) {
+//        super.onSaveInstanceState(outState)
+    }
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+//        super.onSaveInstanceState(outState, outPersistentState)
+    }
     override fun onBackPressed() {
-        moveTaskToBack(true)
+        if (!canExit) {
+            canExit = true
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show()
+            launch (UI) {
+                delay(1500)
+                canExit = false
+            }
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
@@ -76,19 +90,17 @@ class MainActivity : BaseActivity() {
         navBNV.disableShiftMode()
 
         adapter = BaseFragmentAdapter(supportFragmentManager)
-        adapter.setPage(AssetFragment())
-        adapter.setPage(TransactionFragment())
-        adapter.setPage(FindFragment())
-        adapter.setPage(UserFragment())
+        adapter.setPage(Pager(R.id.menu_main_asset, AssetFragment()))
 
         pagerNSVP.adapter = adapter
         pagerNSVP.currentItem = 0
+        pagerNSVP.offscreenPageLimit = 4
         navBNV.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.menu_main_asset -> pagerNSVP.setCurrentItem(0, false)
-                R.id.menu_main_transaction -> pagerNSVP.setCurrentItem(1, false)
-                R.id.menu_main_find -> pagerNSVP.setCurrentItem(2, false)
-                R.id.menu_main_user -> pagerNSVP.setCurrentItem(3, false)
+            val position = adapter.getPosition(it.itemId)
+            if (position < 0) {
+                pagerNSVP.setCurrentItem(adapter.setPage(Pager(it.itemId, resolveNavPage(it.itemId))), false)
+            } else {
+                pagerNSVP.setCurrentItem(position, false)
             }
             true
         }
@@ -125,6 +137,16 @@ class MainActivity : BaseActivity() {
             toggleFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
             toggleFAB.animation.fillAfter = true
             startActivity(Intent(this, TransactionReceiveActivity::class.java))
+        }
+    }
+
+    private fun resolveNavPage(id: Int): BaseFragment {
+        return when(id) {
+            R.id.menu_main_asset -> AssetFragment()
+            R.id.menu_main_transaction -> TransactionFragment()
+            R.id.menu_main_find -> FindFragment()
+            R.id.menu_main_user -> UserFragment()
+            else -> AssetFragment()
         }
     }
 

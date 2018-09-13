@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.CommonUtils
@@ -14,9 +15,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class BlockService : Service() {
-    private val newBlock = Intent(CommonUtils.ACTION_NEWBLOCK)
     private var timer: Timer? = null
-    private val peried: Long = 60000
     private lateinit var blockListen: Disposable
     private lateinit var errorListen: Disposable
 
@@ -24,19 +23,16 @@ class BlockService : Service() {
         super.onCreate()
         Log.i("【BlockService】", "create")
         timer = Timer()
-        timer!!.schedule(peried, peried) {
+        timer!!.schedule(CommonUtils.listenPeried, CommonUtils.listenPeried) {
             BlockState.fetch(baseContext)
         }
         blockListen = BlockState.data().subscribe({
-            Log.i("【BlockService】", "new block arrived【${it.lastBlockIndex}】")
-            UnconfirmedState.fetch(context = this)
-            sendBroadcast(newBlock)
+            BlockBroadCast.send(this, it.lastBlockIndex)
         }, {
             Log.i("【BlockService】", "error【$it】")
         })
         errorListen = BlockState.error().subscribe({
             Log.i("【BlockService】", "error【$it】")
-            sendBroadcast(newBlock)
         }, {
             Log.i("【BlockService】", "error【$it】")
         })

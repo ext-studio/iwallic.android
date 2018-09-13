@@ -1,13 +1,16 @@
 package com.iwallic.app.base
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.*
 import android.support.annotation.Nullable
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MotionEvent
@@ -19,23 +22,21 @@ import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.iwallic.app.pages.wallet.WalletActivity
 
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
-    private lateinit var mInputMethodManager: InputMethodManager
-
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mInputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        val space = findViewById<View>(R.id.app_top_space)
-        if (space != null) {
-            val rectangle = Rect()
-            window.decorView.getWindowVisibleDisplayFrame(rectangle)
-            val statusBarHeight = rectangle.top
-            val contentViewTop = window.findViewById<View>(Window.ID_ANDROID_CONTENT).top
-            val titleBarHeight = contentViewTop - statusBarHeight
-            space.layoutParams = ViewGroup.LayoutParams(0, titleBarHeight)
+        if (SharedPrefUtils.getAddress(this).isEmpty()) {
+            val intent = Intent(this, WalletActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            finish()
+            return
         }
         resolveTheme()
     }
@@ -70,14 +71,18 @@ open class BaseActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
     }
 
-    protected fun hideKeyBoard() {
-        val view = currentFocus
-        if (view != null) {
-            val inputMethodManager = mInputMethodManager
-            val active = inputMethodManager.isActive
-            if (active) {
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-            }
+    protected fun doIfPermitted(permission: String, callback: () -> Unit) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            callback()
+        } else {
+            DialogUtils.permission(this, permission)
+        }
+    }
+
+    protected fun setStatusBarSpace(activity: Activity) {
+        val spaceV = activity.findViewById<LinearLayout>(R.id.app_top_space)
+        if (spaceV != null) {
+            spaceV.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.getStatusBarHeight(activity).toInt())
         }
     }
 
@@ -111,35 +116,6 @@ open class BaseActivity : AppCompatActivity() {
             else -> {
                 setTheme(R.style.ThemeDefault)
             }
-        }
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (isShouldHideKeyboard(v, ev)) {
-                hideKeyboard(v!!.windowToken)
-            }
-        }
-        return super.dispatchTouchEvent(ev)
-    }
-    private fun isShouldHideKeyboard(v: View?, event: MotionEvent): Boolean {
-        if (v != null && v is EditText) {
-            val l = intArrayOf(0, 0)
-            v.getLocationInWindow(l)
-            val left = l[0]
-            val top = l[1]
-            val bottom = top + v.getHeight()
-            val right = left + v.getWidth()
-            return !(event.x > left && event.x < right
-                    && event.y > top && event.y < bottom)
-        }
-        return false
-    }
-    private fun hideKeyboard(token: IBinder?) {
-        if (token != null) {
-            val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
 }
