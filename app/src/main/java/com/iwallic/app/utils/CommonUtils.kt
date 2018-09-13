@@ -17,6 +17,15 @@ object CommonUtils {
     const val pyApi: String = "https://iwallic.forchain.info"
     const val mainApi: String = "http://101.132.97.9:8001/api/iwallic"
     const val testApi: String = "http://101.132.97.9:8002/api/iwallic"
+
+    const val channelIDProgress = "progress_update"
+    const val channelNameProgress = "更新进度"
+    const val channelIDCommon = "common"
+    const val channelNameCommon = "通用通知"
+
+    const val notificationProgress = 985
+    const val notificationCommon = 984
+
     var versionName: String = BuildConfig.VERSION_NAME
     private var configured = PublishSubject.create<Boolean>()
     private var lock: Boolean = false // need verify each time open wallet

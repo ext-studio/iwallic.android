@@ -15,12 +15,12 @@ import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.pages.wallet.WalletActivity
 import com.iwallic.app.services.DownloadService
+import com.iwallic.app.states.VersionState
 import com.iwallic.app.utils.*
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 class WelcomeActivity : BaseActivity() {
-    private val gson = Gson()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isTaskRoot) {
@@ -30,73 +30,59 @@ class WelcomeActivity : BaseActivity() {
         setContentView(R.layout.activity_base_welcome)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         initVersion()
-        initListen()
-
-    }
-
-    private fun initListen() {
-        CommonUtils.onConfigured().subscribe {
-             resolveWallet()
-        }
     }
 
     private fun initVersion () {
-        HttpUtils.getPy(this, "/client/index/app_version/detail", {
-            if (it.isNotEmpty()) {
-                Log.i("【WelcomeActivity】", "【$it】")
-                val config = gson.fromJson(it, VersionRes::class.java)
-                if (config.code > BuildConfig.VERSION_CODE) {
-                    Log.i("【WelcomeActivity】", "version new【${BuildConfig.VERSION_CODE} -> ${config.name}:${config.code}】")
-                    resolveNewVersion(config)
-                    return@getPy
-                } else {
-                    FileUtils.cleanApkFile(this)
+        VersionState.check(this, true).subscribe({
+            if (it != null) {
+                if (it.code > BuildConfig.VERSION_CODE) {
+                    resolveNewVersion(it)
+                    return@subscribe
                 }
-                Log.i("【WelcomeActivity】", "version already latest")
-            } else {
-                Log.i("【WelcomeActivity】", "no version data")
             }
-            CommonUtils.notifyVersion()
+            enter()
         }, {
-            Log.i("【WelcomeActivity】", "version error【$it】")
-            if (!DialogUtils.error(this, it)) {
+            val code = try {it.message?.toInt() ?: 99999}catch (_: Throwable) {99999}
+            if (!DialogUtils.error(this, code)) {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
-            CommonUtils.notifyVersion()
+            enter()
         })
     }
 
     private fun resolveNewVersion(config: VersionRes) {
-        Log.i("【WelcomeActivity】", "new version")
-        DialogUtils.update(
-            this,
-            (config.info["cn"] as String).replace("\\n", "\n"),
-            (config.info["en"] as String).replace("\\n", "\n")
-        ).subscribe {
-            if (it) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    val intent = Intent(this, DownloadService::class.java)
-                    intent.putExtra("url", config.url)
-                    startService(intent)
-                } else {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(config.url))
-                    startActivity(intent)
-                }
-            }
-            CommonUtils.notifyVersion()
+        if (config.code%2 == 0) {
+            VersionState.force( this, config, {
+                DownloadService.start(this, config.url)
+            }, {
+                exit()
+            })
+        } else {
+            VersionState.tip(this, config, {
+                DownloadService.start(this, config.url)
+            }, {
+                enter()
+            })
         }
     }
 
-    private fun resolveWallet() {
+    private fun enter() {
         launch {
             delay(1000)
             if (WalletUtils.wallet(baseContext) == null || WalletUtils.account(baseContext) == null) {
                 startActivity(Intent(baseContext, WalletActivity::class.java))
-                finish()
-                return@launch
+            } else {
+                startActivity(Intent(baseContext, MainActivity::class.java))
             }
-            startActivity(Intent(baseContext, MainActivity::class.java))
             finish()
+        }
+    }
+    private fun exit() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask()
+        } else {
+            finishAffinity()
+            System.exit(0)
         }
     }
 }
