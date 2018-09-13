@@ -66,7 +66,7 @@ class TransactionFragment : BaseFragment() {
     }
 
     private fun initListener() {
-        listListen = TransactionState.list(WalletUtils.address(context!!), "").subscribe({
+        listListen = TransactionState.list(context, WalletUtils.address(context!!), "").subscribe({
             txAdapter.push(it)
             txSRL.finishRefresh(true)
             if (it.page >= it.pages) {
@@ -91,10 +91,10 @@ class TransactionFragment : BaseFragment() {
             Log.i("【TxList】", "error【${it}】")
         })
         txSRL.setOnRefreshListener {
-            TransactionState.fetch()
+            TransactionState.fetch(context)
         }
         txSRL.setOnLoadMoreListener {
-            TransactionState.next()
+            TransactionState.next(context)
         }
 //        txSRL.setOnRefreshListener {
 //            if (TransactionState.fetching) {

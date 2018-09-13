@@ -175,7 +175,7 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        listListen = TransactionState.list(WalletUtils.address(this), asset.asset_id).subscribe({
+        listListen = TransactionState.list(this, WalletUtils.address(this), asset.asset_id).subscribe({
             txAdapter.push(it)
             txSRL.finishRefresh()
             if (it.page >= it.pages) {
@@ -199,7 +199,7 @@ class AssetDetailActivity : BaseActivity() {
             txSRL.finishLoadMore()
             Log.i("【AssetDetail】", "error【${it}】")
         })
-        balanceListen = AssetState.list(WalletUtils.address(this)).subscribe({
+        balanceListen = AssetState.list(this, WalletUtils.address(this)).subscribe({
             resolveBalance()
             resolveFetchClaim()
         }, {
@@ -242,10 +242,10 @@ class AssetDetailActivity : BaseActivity() {
             vibrate()
         }
         txSRL.setOnRefreshListener {
-            TransactionState.fetch()
+            TransactionState.fetch(this)
         }
         txSRL.setOnLoadMoreListener {
-            TransactionState.next()
+            TransactionState.next(this)
         }
     }
 
@@ -253,7 +253,7 @@ class AssetDetailActivity : BaseActivity() {
         if (asset.asset_id != CommonUtils.GAS || noNeed) {
             return
         }
-        HttpUtils.post("getclaim", listOf(WalletUtils.address(this)), {
+        HttpUtils.post(this,"getclaim", listOf(WalletUtils.address(this)), {
             claims = gson.fromJson(it, ClaimsRes::class.java)
             if (claims != null) {
                 claimEnterTV.visibility = View.VISIBLE
@@ -302,7 +302,7 @@ class AssetDetailActivity : BaseActivity() {
                         load.dismiss()
                         resolveError(99599)
                     } else {
-                        HttpUtils.post("getutxoes", listOf(addr, CommonUtils.GAS), {res ->
+                        HttpUtils.post(this, "getutxoes", listOf(addr, CommonUtils.GAS), {res ->
                             val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                             if (data == null) {
                                 load.dismiss()
@@ -322,7 +322,7 @@ class AssetDetailActivity : BaseActivity() {
                             newTx.sign(wif)
                             Log.i("【Claim】", newTx.serialize(true))
 //                            resolveSuccess(newTx.hash(), addr, amount, "collect")
-                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                            HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
                                 load.dismiss()
                                 resolveSuccess(newTx.hash(), addr, amount, "collect")
                             }, {
@@ -359,7 +359,7 @@ class AssetDetailActivity : BaseActivity() {
                             newTx.sign(wif)
                             Log.i("【Claim】", newTx.serialize(true))
 //                            resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
-                            HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                            HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
                                 load.dismiss()
                                 resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
                             }, {
@@ -386,10 +386,11 @@ class AssetDetailActivity : BaseActivity() {
             }
         }
         HttpUtils.postPy(
+            this,
             "/client/transaction/unconfirmed",
             mapOf(Pair("wallet_address", addr), Pair("asset_id", CommonUtils.GAS), Pair("txid", "0x$txid"), Pair("value", "$value")), {
                 Log.i("【Claim】", "submitted 【$txid】")
-                UnconfirmedState.fetch()
+                UnconfirmedState.fetch(this)
             }, {
                 Log.i("【Claim】", "submit failed【$it】")
             }
@@ -407,7 +408,7 @@ class AssetDetailActivity : BaseActivity() {
 
     companion object BlockListener: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            AssetState.fetch("", silent = true)
+            AssetState.fetch(p0, "", silent = true)
         }
     }
 }

@@ -61,7 +61,7 @@ class TransactionUnconfirmedActivity : BaseActivity() {
         unSRL.setEnableOverScrollDrag(true)
     }
     private fun initListen() {
-        listen = UnconfirmedState.list(WalletUtils.address(this)).subscribe({
+        listen = UnconfirmedState.list(this, WalletUtils.address(this)).subscribe({
             unAdapter.push(it)
             if (it.page == 1) {
                 unRV.scrollToPosition(0)
@@ -112,10 +112,10 @@ class TransactionUnconfirmedActivity : BaseActivity() {
             finish()
         }
         unSRL.setOnRefreshListener {
-            UnconfirmedState.fetch()
+            UnconfirmedState.fetch(this)
         }
         unSRL.setOnLoadMoreListener {
-            UnconfirmedState.next()
+            UnconfirmedState.next(this)
         }
     }
 

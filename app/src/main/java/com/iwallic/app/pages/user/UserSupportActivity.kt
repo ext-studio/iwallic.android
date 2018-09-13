@@ -7,7 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
-import com.iwallic.app.pages.common.UserBrowserActivity
+import com.iwallic.app.pages.common.BrowserActivity
 
 class UserSupportActivity : BaseActivity() {
     private lateinit var backTV: TextView
@@ -34,7 +34,7 @@ class UserSupportActivity : BaseActivity() {
 
     private fun initClick() {
         walletGuideFL.setOnClickListener {
-            val intent = Intent(this, UserBrowserActivity::class.java)
+            val intent = Intent(this, BrowserActivity::class.java)
             intent.putExtra("url", "https://iwallic.com/assets/questions")
             startActivity(intent)
         }
@@ -44,7 +44,7 @@ class UserSupportActivity : BaseActivity() {
         }
 
         browser.setOnClickListener {
-            val intent = Intent(this, UserBrowserActivity::class.java)
+            val intent = Intent(this, BrowserActivity::class.java)
             intent.putExtra("url", "https://blolys.com")
             startActivity(intent)
         }

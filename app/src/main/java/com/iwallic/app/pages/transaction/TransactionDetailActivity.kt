@@ -61,7 +61,7 @@ class TransactionDetailActivity : BaseActivity() {
     }
 
     private fun resolveTxInfo() {
-        HttpUtils.post("gettxbytxid", listOf(txid), fun (infoRes) {
+        HttpUtils.post(this, "gettxbytxid", listOf(txid), fun (infoRes) {
             val data = gson.fromJson<TransactionDetailInfo>(infoRes, object : TypeToken<TransactionDetailInfo>() {}.type)
             val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA).format(data.blockTime * 1000)
             findViewById<TextView>(R.id.transaction_detail_txTime).text = time
@@ -72,7 +72,7 @@ class TransactionDetailActivity : BaseActivity() {
     }
 
     private fun resolveNep5Transfer() {  // from and to
-        HttpUtils.post("getnep5transferbytxid", listOf(txid), fun (nep5Res) {
+        HttpUtils.post(this, "getnep5transferbytxid", listOf(txid), fun (nep5Res) {
             Log.i("【nep5交易详情】", "result 【${nep5Res}】")
             if (nep5Res != "") {
                 val data = gson.fromJson<ArrayList<TransactionDetailRes>>(nep5Res, object : TypeToken<ArrayList<TransactionDetailRes>>() {}.type)
@@ -88,7 +88,7 @@ class TransactionDetailActivity : BaseActivity() {
     }
 
     private fun resolveTransfer() {  // address
-        HttpUtils.post("gettransferbytxid", listOf(txid), fun (res) {
+        HttpUtils.post(this, "gettransferbytxid", listOf(txid), fun (res) {
             Log.i("【交易详情】", "result 【${res}】")
             if (res != "") {
                 val fromDataTemp = gson.fromJson<TransactionDetailFromRes>(res, object: TypeToken<TransactionDetailFromRes>() {}.type)

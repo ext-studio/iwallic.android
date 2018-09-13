@@ -64,7 +64,6 @@ class UserSettingNetActivity : BaseActivity() {
                 AssetState.clear()
                 TransactionState.clear()
                 BlockState.clear()
-                CommonUtils.setNet(_net = chosenNet)
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)

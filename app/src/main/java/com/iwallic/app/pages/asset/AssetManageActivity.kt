@@ -56,7 +56,7 @@ class AssetManageActivity : BaseActivity() {
         backTV.setOnClickListener {
             finish()
         }
-        listListen = AssetManageState.list(WalletUtils.address(this)).subscribe({
+        listListen = AssetManageState.list(this, WalletUtils.address(this)).subscribe({
             amAdapter.push(it)
             amSRL.finishRefresh(true)
             if (it.page == it.pages) {
@@ -81,10 +81,10 @@ class AssetManageActivity : BaseActivity() {
             amSRL.finishLoadMore()
         })
         amSRL.setOnRefreshListener {
-            AssetManageState.fetch()
+            AssetManageState.fetch(this)
         }
         amSRL.setOnLoadMoreListener {
-            AssetManageState.next()
+            AssetManageState.next(this)
         }
     }
 

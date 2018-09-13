@@ -13,8 +13,9 @@ import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.models.VersionRes
-import com.iwallic.app.pages.common.UserBrowserActivity
+import com.iwallic.app.pages.common.BrowserActivity
 import com.iwallic.app.services.DownloadService
+import com.iwallic.app.states.VersionState
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpUtils
 
@@ -44,7 +45,7 @@ class UserAboutActivity : BaseActivity() {
 
     private fun initClick() {
         disclamerFL.setOnClickListener {
-            val intent = Intent(this, UserBrowserActivity::class.java)
+            val intent = Intent(this, BrowserActivity::class.java)
             intent.putExtra("url", "https://iwallic.com/assets/disclaimer")
             startActivity(intent)
         }
@@ -57,45 +58,30 @@ class UserAboutActivity : BaseActivity() {
     }
 
     private fun initVersion () {
-        HttpUtils.getPy("/client/index/app_version/detail", {
-            if (it.isNotEmpty()) {
-                Log.i("【WelcomeActivity】", "【$it】")
-                val config = gson.fromJson(it, VersionRes::class.java)
-                if (config.code > BuildConfig.VERSION_CODE) {
-                    Log.i("【WelcomeActivity】", "version new【${BuildConfig.VERSION_CODE} -> ${config.name}:${config.code}】")
-                    resolveNewVersion(config)
-                    return@getPy
+        VersionState.check(this, true).subscribe({
+            if (it != null) {
+                if (it.code > BuildConfig.VERSION_CODE) {
+                    resolveNewVersion(it)
+                    return@subscribe
                 }
-                Toast.makeText(this, R.string.error_version_latest, Toast.LENGTH_SHORT).show()
-                Log.i("【WelcomeActivity】", "version already latest")
-            } else {
-                Log.i("【WelcomeActivity】", "no version data")
             }
         }, {
-            Log.i("【WelcomeActivity】", "version error【$it】")
-            if (!DialogUtils.error(this, it)) {
+            val code = try {it.message?.toInt() ?: 99999}catch (_: Throwable) {99999}
+            if (!DialogUtils.error(this, code)) {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     private fun resolveNewVersion(config: VersionRes) {
-        Log.i("【WelcomeActivity】", "new version")
-        DialogUtils.update(
-            this,
-            (config.info["cn"] as String).replace("\\n", "\n"),
-            (config.info["en"] as String).replace("\\n", "\n")
-        ).subscribe {
-            if (it) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    val intent = Intent(this, DownloadService::class.java)
-                    intent.putExtra("url", config.url)
-                    startService(intent)
-                } else {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(config.url))
-                    startActivity(intent)
-                }
-            }
+        if (config.code%2 == 0) {
+            VersionState.force( this, config, {
+                DownloadService.start(this, config.url)
+            }, {})
+        } else {
+            VersionState.tip(this, config, {
+                DownloadService.start(this, config.url)
+            }, {})
         }
     }
 }

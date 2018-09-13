@@ -1,5 +1,6 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import com.google.gson.Gson
 import com.iwallic.app.models.BlockTimeRes
 import com.iwallic.app.utils.HttpUtils
@@ -18,12 +19,12 @@ object BlockState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun fetch() {
+    fun fetch(context: Context?) {
         if (loading) {
             return
         }
         loading = true
-        HttpUtils.post("getblocktime", emptyList(), fun (res) {
+        HttpUtils.post(context, "getblocktime", emptyList(), fun (res) {
             loading = false
             val blockData = gson.fromJson(res, BlockTimeRes::class.java)
             if (blockData == null) {

@@ -24,9 +24,9 @@ object UnconfirmedState {
     fun has(): Boolean {
         return cached?.items!!.size > 0
     }
-    fun list(addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
+    fun list(context: Context?, addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
         if (cached == null || (addr.isNotEmpty() && addr != address)) {
-            fetch(addr)
+            fetch(context, addr)
             return _list
         }
         return _list.startWith(cached)
@@ -34,12 +34,12 @@ object UnconfirmedState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun next() {
+    fun next(context: Context?) {
         if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(address, cached!!.page+1, cached!!.per_page, {
+        resolveFetch(context, address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
                 cached!!.page = it.page
                 cached!!.total = it.total
@@ -59,7 +59,7 @@ object UnconfirmedState {
             }
         })
     }
-    fun fetch(addr: String = "", context: Context? = null) {
+    fun fetch(context: Context?, addr: String = "") {
         if (fetching) {
             return
         }
@@ -71,7 +71,7 @@ object UnconfirmedState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(address, 1, 15, {pageData ->
+        resolveFetch(context, address, 1, 15, {pageData ->
             cached = pageData
             if (context != null) {
                 resolveClaim(context)
@@ -115,8 +115,8 @@ object UnconfirmedState {
         }
     }
 
-    private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&confirmed=false", {
+    private fun resolveFetch(context: Context?, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy(context,"/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&confirmed=false", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy

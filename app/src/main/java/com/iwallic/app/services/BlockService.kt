@@ -25,7 +25,7 @@ class BlockService : Service() {
         Log.i("【BlockService】", "create")
         timer = Timer()
         timer!!.schedule(peried, peried) {
-            BlockState.fetch()
+            BlockState.fetch(baseContext)
         }
         blockListen = BlockState.data().subscribe({
             Log.i("【BlockService】", "new block arrived【${it.lastBlockIndex}】")

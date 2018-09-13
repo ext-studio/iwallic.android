@@ -186,7 +186,7 @@ class TransactionTransferActivity : BaseActivity() {
         when {
             WalletUtils.check(asset, "asset") -> {
                 Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
-                HttpUtils.post("getutxoes", listOf(from, asset), fun(res) {
+                HttpUtils.post(this, "getutxoes", listOf(from, asset), fun(res) {
                     val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                     if (data == null) {
                         resolveError(99998)
@@ -199,7 +199,7 @@ class TransactionTransferActivity : BaseActivity() {
                     }
                     newTx.sign(wif)
                     Log.i("【Transfer】", newTx.serialize(true))
-                    HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                    HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
                         resolveSuccess(newTx.hash())
                     }, {
                         resolveError(it)
@@ -217,7 +217,7 @@ class TransactionTransferActivity : BaseActivity() {
                 }
                 newTx.sign(wif)
                 Log.i("【Transfer】", newTx.serialize(true))
-                HttpUtils.post("sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
                         resolveSuccess(newTx.hash())
@@ -270,10 +270,11 @@ class TransactionTransferActivity : BaseActivity() {
     private fun resolveSuccess(txid: String) {
         hideKeyBoard()
         HttpUtils.postPy(
+            this,
             "/client/transaction/unconfirmed",
             mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
-                UnconfirmedState.fetch()
+                UnconfirmedState.fetch(this)
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
             }

@@ -1,5 +1,6 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -17,16 +18,16 @@ object AssetState {
     private val _error = PublishSubject.create<Int>()
     var fetching: Boolean = false
     private val gson = Gson()
-    fun list(addr: String = ""): Observable<ArrayList<AssetRes>> {
+    fun list(context: Context?, addr: String = ""): Observable<ArrayList<AssetRes>> {
         if (addr.isNotEmpty() && addr != address) {
-            fetch(addr)
+            fetch(context, addr)
             return _list
         }
         if (cached != null) {
             Log.i("【AssetState】", "from cache")
             return _list.startWith(cached)
         } else {
-            fetch()
+            fetch(context)
         }
         return _list
     }
@@ -36,7 +37,7 @@ object AssetState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun fetch(addr: String = "", silent: Boolean = false) {
+    fun fetch(context: Context?, addr: String = "", silent: Boolean = false) {
         if (fetching) {
             return
         }
@@ -51,7 +52,7 @@ object AssetState {
             _error.onNext(99899)
         }
         fetching = true
-        HttpUtils.getPy("/client/index/assets/display?wallet_address=$address", {
+        HttpUtils.getPy(context, "/client/index/assets/display?wallet_address=$address", {
             fetching = false
             val data = gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)
             if (data == null) {

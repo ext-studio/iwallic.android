@@ -1,5 +1,6 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -19,9 +20,9 @@ object AssetManageState {
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = ""): Observable<PageDataPyModel<AssetRes>> {
+    fun list(context: Context?, addr: String = ""): Observable<PageDataPyModel<AssetRes>> {
         if (cached == null || (addr.isNotEmpty() && addr != address)) {
-            fetch(addr)
+            fetch(context, addr)
             return _list
         }
         return _list.startWith(cached!!)
@@ -29,12 +30,12 @@ object AssetManageState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun next() {
+    fun next(context: Context?) {
         if (cached!!.page >= cached!!.pages) {
             return
         }
         fetching = true
-        resolveFetch(address, cached!!.page+1, cached!!.per_page, {
+        resolveFetch(context, address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
                 cached!!.page = it.page
                 cached!!.total = it.total
@@ -54,7 +55,7 @@ object AssetManageState {
             }
         })
     }
-    fun fetch(addr: String = "", silent: Boolean = false) {
+    fun fetch(context: Context?, addr: String = "", silent: Boolean = false) {
         if (fetching) {
             return
         }
@@ -69,7 +70,7 @@ object AssetManageState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(address, 1, 15, {pageData ->
+        resolveFetch(context, address, 1, 15, {pageData ->
             cached = pageData
             launch (UI) {
                 delay(500)
@@ -87,8 +88,8 @@ object AssetManageState {
         })
     }
 
-    private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<AssetRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/assets/list?page=$page&page_size=$size&wallet_address=$addr", {
+    private fun resolveFetch(context: Context?, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<AssetRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy(context, "/client/assets/list?page=$page&page_size=$size&wallet_address=$addr", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy

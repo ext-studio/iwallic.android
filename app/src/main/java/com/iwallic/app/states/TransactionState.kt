@@ -1,5 +1,6 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -21,9 +22,9 @@ object TransactionState {
     private val _error = PublishSubject.create<Int>()
     private val gson = Gson()
     var fetching: Boolean = false
-    fun list(addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
+    fun list(context: Context?, addr: String = "", asset: String? = null): Observable<PageDataPyModel<TransactionRes>> {
         if (cached == null || (addr.isNotEmpty() && addr != address) || (asset != null && asset != assetId)) {
-            fetch(addr, asset)
+            fetch(context, addr, asset)
             return _list
         }
         return _list.startWith(cached)
@@ -31,12 +32,12 @@ object TransactionState {
     fun error(): Observable<Int> {
         return _error
     }
-    fun next() {
+    fun next(context: Context?) {
         if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
             return
         }
         fetching = true
-        resolveFetch(assetId, address, cached!!.page+1, cached!!.per_page, {
+        resolveFetch(context, assetId, address, cached!!.page+1, cached!!.per_page, {
             if (it.page > 1) {
                 cached!!.page = it.page
                 cached!!.total = it.total
@@ -56,7 +57,7 @@ object TransactionState {
             }
         })
     }
-    fun fetch(addr: String = "", asset: String? = null, silent: Boolean = false) {
+    fun fetch(context: Context?, addr: String = "", asset: String? = null, silent: Boolean = false) {
         if (fetching) {
             return
         }
@@ -75,7 +76,7 @@ object TransactionState {
             _error.onNext(99899)
         }
         fetching = true
-        resolveFetch(assetId, address, 1, 15, {pageData ->
+        resolveFetch(context, assetId, address, 1, 15, {pageData ->
             if (silent) {
                 val start = pageData.items.indexOfFirst {
                     it.txid == cached!!.items[0].txid
@@ -103,8 +104,8 @@ object TransactionState {
         })
     }
 
-    private fun resolveFetch(asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
+    private fun resolveFetch(context: Context?, asset: String, addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy(context, "/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&asset_id=$assetId&confirmed=true", {
             if (it.isEmpty()) {
                 ok(PageDataPyModel())
                 return@getPy

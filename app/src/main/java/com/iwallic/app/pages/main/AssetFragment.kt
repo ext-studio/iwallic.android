@@ -67,7 +67,7 @@ class AssetFragment : BaseFragment() {
     }
 
     private fun initListener() {
-        listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
+        listListen = AssetState.list(context, WalletUtils.address(context!!)).subscribe({
             resolveList(it)
             assetSRL.finishRefresh(true)
         }, {
@@ -84,7 +84,7 @@ class AssetFragment : BaseFragment() {
             Log.i("【AssetList】", "error【${it}】")
         })
         assetSRL.setOnRefreshListener {
-            AssetState.fetch()
+            AssetState.fetch(context)
         }
         manageIV.setOnClickListener {
             activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
@@ -117,7 +117,7 @@ class AssetFragment : BaseFragment() {
 
     companion object BlockListener: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            AssetState.fetch("", true)
+            AssetState.fetch(p0, "", true)
         }
     }
 }
