@@ -22,9 +22,6 @@ open class BaseAuthActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
         val spaceV = findViewById<View>(R.id.app_top_space)
         if (spaceV != null) {
             val rectangle = Rect()

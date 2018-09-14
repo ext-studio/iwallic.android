@@ -8,11 +8,6 @@
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
-    <View
-        android:id="@+id/app_top_space"
-        android:background="?colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenStatusBar"/>
     <RelativeLayout
         android:background="?colorPrimary"
         android:layout_width="match_parent"

@@ -3,13 +3,13 @@ package com.iwallic.app.pages.common
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseAuthActivity
+import com.tencent.smtt.sdk.WebSettings
+import com.tencent.smtt.sdk.WebView
+import com.tencent.smtt.sdk.WebViewClient
 
 class BrowserActivity : BaseAuthActivity() {
     private lateinit var browserWV: WebView
@@ -38,7 +38,6 @@ class BrowserActivity : BaseAuthActivity() {
         if (target.isNotEmpty()) {
             url = target
         }
-        browserWV.settings.javaScriptEnabled = true
         browserWV.webViewClient = object: WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -46,6 +45,23 @@ class BrowserActivity : BaseAuthActivity() {
             }
         }
         browserWV.loadUrl(url)
+        val webSetting = browserWV.settings
+
+        webSetting.allowFileAccess = true
+        webSetting.layoutAlgorithm = WebSettings.LayoutAlgorithm.NARROW_COLUMNS
+        webSetting.setSupportZoom(true)
+        webSetting.builtInZoomControls = true
+        webSetting.useWideViewPort = true
+        webSetting.setSupportMultipleWindows(false)
+        // webSetting.setLoadWithOverviewMode(true)
+        webSetting.setAppCacheEnabled(true)
+        // webSetting.setDatabaseEnabled(true)
+        webSetting.domStorageEnabled = true
+        webSetting.javaScriptEnabled = true
+        webSetting.setGeolocationEnabled(true)
+        webSetting.setAppCacheMaxSize(Long.MAX_VALUE)
+        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
+        webSetting.pluginState = WebSettings.PluginState.ON_DEMAND
 
         browserSRL.setOnRefreshListener {
             browserWV.reload()

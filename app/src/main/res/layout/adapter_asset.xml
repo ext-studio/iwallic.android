@@ -11,13 +11,6 @@
         android:layout_marginStart="@dimen/dimenDefault"
         android:layout_marginEnd="@dimen/dimenDefault"
         android:orientation="horizontal">
-        <!--<ImageView-->
-            <!--android:id="@+id/asset_list_logo"-->
-            <!--android:contentDescription="@null"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:layout_width="@dimen/dimenLarge"-->
-            <!--android:layout_height="@dimen/dimenLarge"-->
-            <!--android:layout_marginEnd="@dimen/dimenDefault"/>-->
         <TextView
             android:id="@+id/asset_list_name"
             android:layout_width="0dp"
@@ -37,11 +30,11 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground" />
+    <View
+        android:layout_width="match_parent"
         android:layout_height="@dimen/dimenLine"
         android:background="?colorLine"
         android:layout_gravity="bottom"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground" />
 </FrameLayout>

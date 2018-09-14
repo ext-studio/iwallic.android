@@ -1,70 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_asset"
+
+<com.scwang.smartrefresh.layout.SmartRefreshLayout android:id="@+id/asset_list_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault2"
-    android:orientation="vertical">
-    <FrameLayout
+    app:srlEnableOverScrollDrag="true"
+    app:srlEnableLoadMore="false"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:id="@+id/asset_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <ImageView
-            android:contentDescription="@null"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="?drawableAssetBg"/>
-
-        <ImageView
-            android:id="@+id/fragment_asset_manage"
-            android:layout_width="@dimen/dimenLarge"
-            android:layout_height="@dimen/dimenLarge"
-            android:layout_gravity="bottom|end"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_asset_manage"
-            android:tint="?colorLight"
-            android:layout_marginEnd="@dimen/dimenSpace"
-            android:layout_marginBottom="@dimen/dimenSpace"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center|center_vertical"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/dimenSpace">
-            <TextView
-                android:id="@+id/fragment_asset_main_asset"
-                android:textColor="?colorLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="32sp"/>
-            <TextView
-                android:id="@+id/fragment_asset_main_balance"
-                android:textColor="?colorLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"/>
-        </LinearLayout>
-    </FrameLayout>
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/asset_list_pager"
+        android:layout_height="wrap_content"
+        app:srlAccentColor="?colorDefault"
+        app:srlPrimaryColor="?colorPrimary"/>
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlEnableOverScrollDrag="true"
-        app:srlEnableLoadMore="false">
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
-            android:id="@+id/asset_list_refresh"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srlAccentColor="?colorPrimary"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/asset_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-</LinearLayout>
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+                <ImageView
+                    android:contentDescription="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="?drawableAssetBg"/>
+
+                <ImageView
+                    android:id="@+id/fragment_asset_manage"
+                    android:layout_width="@dimen/dimenLarge"
+                    android:layout_height="@dimen/dimenLarge"
+                    android:layout_gravity="bottom|end"
+                    android:contentDescription="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_asset_manage"
+                    android:tint="?colorLight"
+                    android:layout_marginEnd="@dimen/dimenSpace"
+                    android:layout_marginBottom="@dimen/dimenSpace"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center|center_vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/fragment_asset_main_asset"
+                        android:textColor="?colorLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="32sp"/>
+                    <TextView
+                        android:id="@+id/fragment_asset_main_balance"
+                        android:textColor="?colorLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"/>
+                </LinearLayout>
+            </FrameLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/asset_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

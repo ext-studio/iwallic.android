@@ -59,6 +59,7 @@ class AssetFragment : BaseFragment() {
 
         address = SharedPrefUtils.getAddress(context)
 
+        assetRV.isNestedScrollingEnabled = false
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
     }

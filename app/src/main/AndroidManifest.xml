@@ -3,14 +3,15 @@
     package="com.iwallic.app">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".base.BaseApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
@@ -18,8 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/ThemeDefault"
-        android:name=".base.BaseApplication">
+        android:theme="@style/ThemeDefault">
         <provider
             android:name=".base.BaseFileProvider"
             android:authorities="${applicationId}.provider"
@@ -37,7 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.main.MainActivity" />
+        <activity android:name=".pages.main.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
         <activity android:name=".pages.user.UserSettingThemeActivity" />
@@ -46,21 +47,23 @@
         <activity android:name=".pages.wallet.WalletImportActivity" />
         <activity android:name=".pages.wallet.WalletBackupActivity" />
         <activity android:name=".pages.wallet.WalletVerifyActivity" />
-        <activity android:name=".pages.transaction.TransactionTransferActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity
+            android:name=".pages.transaction.TransactionTransferActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".pages.transaction.TransactionDetailActivity" />
         <activity android:name=".pages.transaction.TransactionUnconfirmedActivity" />
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />
         <activity android:name=".pages.user.UserSettingNetActivity" />
-        <activity android:name=".pages.common.BrowserActivity" />
+        <activity android:name=".pages.common.BrowserActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity android:name=".pages.user.UserSupportActivity" />
         <activity android:name=".pages.user.UserAboutActivity" />
 
         <service
             android:name=".services.BlockService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <meta-data
             android:name="android.max_aspect"
@@ -69,6 +72,9 @@
         <service
             android:name=".services.DownloadService"
             android:enabled="true" />
+        <service
+            android:name=".services.X5IntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

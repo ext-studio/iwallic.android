@@ -22,48 +22,57 @@ import kotlinx.coroutines.experimental.launch
 import java.util.*
 
 object DialogUtils {
-    fun confirm(context: Context, title: Int? = null, body: Int? = null, ok: Int? = null, no: Int? = null): Observable<Boolean> {
-        return Observable.create {observer ->
-            val builder = AlertDialog.Builder(context)
+    fun confirm(context: Context, body: Int, title: Int? = null, ok: Int? = null, no: Int? = null): Observable<Boolean> {
+        return Observable.create { observer ->
             val view = View.inflate(context, R.layout.dialog_confirm, null)
+            view.findViewById<TextView>(R.id.dialog_confirm_title).setText(title ?: R.string.dialog_title_primary)
+            view.findViewById<TextView>(R.id.dialog_confirm_msg).setText(body)
             val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
             val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
-            val titleTV = view.findViewById<TextView>(R.id.dialog_confirm_title)
-            val bodyTV = view.findViewById<TextView>(R.id.dialog_confirm_msg)
-            builder.setView(view)
-            val dialog = builder.create()
-
-            if (title != null) {
-                titleTV.setText(title)
-            }
-            if (body != null) {
-                bodyTV.setText(body)
-            }
-            if (ok != null) {
-                okTV.setText(ok)
+            okTV.setText(ok ?: R.string.dialog_ok)
+            noTV.setText(no ?: R.string.dialog_no)
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                val dialog = Dialog(context)
+                dialog.setContentView(view)
+                dialog.create()
+                dialog.show()
+                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
                 okTV.setOnClickListener {
+                    dialog.dismiss()
                     observer.onNext(true)
                     observer.onComplete()
-                    dialog.dismiss()
                 }
-            } else {
-                okTV.visibility = View.GONE
-            }
-            if (no != null) {
-                noTV.setText(no)
                 noTV.setOnClickListener {
+                    dialog.dismiss()
                     observer.onNext(false)
                     observer.onComplete()
-                    dialog.dismiss()
+                }
+                dialog.setOnDismissListener {
+                    observer.onNext(false)
+                    observer.onComplete()
                 }
             } else {
-                noTV.visibility = View.GONE
+                val builder = android.support.v7.app.AlertDialog.Builder(context)
+                builder.setCancelable(false)
+                builder.setView(view)
+                val dialog = builder.create()
+                dialog.show()
+                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+                okTV.setOnClickListener {
+                    dialog.dismiss()
+                    observer.onNext(true)
+                    observer.onComplete()
+                }
+                noTV.setOnClickListener {
+                    dialog.dismiss()
+                    observer.onNext(false)
+                    observer.onComplete()
+                }
+                dialog.setOnDismissListener {
+                    observer.onNext(false)
+                    observer.onComplete()
+                }
             }
-            dialog.setOnDismissListener {
-                observer.onNext(false)
-                observer.onComplete()
-            }
-            dialog.show()
         }
     }
 
