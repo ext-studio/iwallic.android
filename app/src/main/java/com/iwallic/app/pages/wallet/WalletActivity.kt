@@ -14,13 +14,14 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.WalletHistoryAdapter
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
 import com.iwallic.app.utils.WalletUtils
 
-class WalletActivity : BaseActivity() {
+class WalletActivity : BaseAuthActivity() {
     private lateinit var createB: Button
     private lateinit var importB: Button
     private lateinit var historyFAB: FloatingActionButton

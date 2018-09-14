@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.github.kittinunf.fuel.Fuel
 import com.google.gson.Gson
+import com.iwallic.app.BuildConfig
 import com.iwallic.app.models.RequestGoModel
 import com.iwallic.app.models.ResponseGoModel
 import com.iwallic.app.models.ResponsePyModel
@@ -39,7 +40,7 @@ object HttpUtils {
     fun postPy(context: Context?, url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.post("${CommonUtils.pyApi}$url")
             .header(
-                Pair("app_version", CommonUtils.versionName),
+                Pair("app_version", BuildConfig.VERSION_NAME),
                 Pair("network", SharedPrefUtils.getNet(context)),
                 Pair("Content-Type", "application/json")
             )
@@ -66,7 +67,7 @@ object HttpUtils {
     fun putPy(context: Context?, url: String, data: Map<String, Any>, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.put("${CommonUtils.pyApi}$url")
             .header(
-                Pair("app_version", CommonUtils.versionName),
+                Pair("app_version", BuildConfig.VERSION_NAME),
                 Pair("network", SharedPrefUtils.getNet(context)),
                 Pair("Content-Type", "application/json")
             ).body(gson.toJson(data))
@@ -92,9 +93,8 @@ object HttpUtils {
     fun getPy(context: Context?, url: String, ok: (String) -> Unit, no: (Int) -> Unit) {
         Fuel.get("${CommonUtils.pyApi}$url")
             .header(
-                Pair("app_version", CommonUtils.versionName),
-                Pair("network", SharedPrefUtils.getNet(context)),
-                Pair("Content-Type", "application/json")
+                Pair("app_version", BuildConfig.VERSION_NAME),
+                Pair("network", SharedPrefUtils.getNet(context))
             ).responseString { _, _, result ->
                 result.fold({ d ->
                     val rs = try {gson.fromJson(d, ResponsePyModel::class.java)} catch (_: Throwable) {null}

@@ -46,7 +46,8 @@
         <activity android:name=".pages.wallet.WalletImportActivity" />
         <activity android:name=".pages.wallet.WalletBackupActivity" />
         <activity android:name=".pages.wallet.WalletVerifyActivity" />
-        <activity android:name=".pages.transaction.TransactionTransferActivity" />
+        <activity android:name=".pages.transaction.TransactionTransferActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".pages.transaction.TransactionDetailActivity" />
         <activity android:name=".pages.transaction.TransactionUnconfirmedActivity" />
         <activity android:name=".pages.asset.AssetDetailActivity" />

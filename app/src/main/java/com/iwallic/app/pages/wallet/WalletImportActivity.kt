@@ -12,13 +12,14 @@ import android.widget.*
 import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.utils.WalletUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
-class WalletImportActivity : BaseActivity() {
+class WalletImportActivity : BaseAuthActivity() {
 
     private lateinit var backTV: TextView
     private lateinit var wifET: EditText

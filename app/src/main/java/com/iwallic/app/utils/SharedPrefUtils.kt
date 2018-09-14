@@ -22,8 +22,8 @@ object SharedPrefUtils {
     fun getWallet(context: Context): Long {
         return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getLong("chosen_wallet", 0)
     }
-    fun getAddress(context: Context): String {
-        return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("chosen_address", "")
+    fun getAddress(context: Context?): String {
+        return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chosen_address", "") ?: ""
     }
     fun setLocale(context: Context, locale: Locale) {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putInt("language", when(locale.toString()) {

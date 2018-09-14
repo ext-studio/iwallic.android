@@ -95,7 +95,6 @@ class TransactionTransferActivity : BaseActivity() {
             resolveAssetPick()
         }
         submitB.setOnClickListener {
-            hideKeyBoard()
             if (amount <= 0 || target.isEmpty() || amount > balance) {
                 return@setOnClickListener
             }
@@ -257,7 +256,6 @@ class TransactionTransferActivity : BaseActivity() {
                     wif = rs
                     load.dismiss()
                     if (wif.isEmpty()) {
-                        hideKeyBoard()
                         resolveError(99599)
                     } else {
                         resolveSend(address, target, amount)
@@ -268,13 +266,12 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSuccess(txid: String) {
-        hideKeyBoard()
         HttpUtils.postPy(
             this,
             "/client/transaction/unconfirmed",
             mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
-                UnconfirmedState.fetch(this)
+                // todo notify new unconfirmed tx
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
             }
@@ -284,7 +281,6 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveError(code: Int) {
-        hideKeyBoard()
         if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)

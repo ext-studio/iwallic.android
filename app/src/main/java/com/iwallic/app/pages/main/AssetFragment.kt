@@ -25,6 +25,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import io.reactivex.disposables.Disposable
 
 class AssetFragment : BaseFragment() {
+    private lateinit var address: String
     private lateinit var assetRV: RecyclerView
     private lateinit var assetSRL: SmartRefreshLayout
     private lateinit var refreshCH: ClassicsHeader
@@ -33,24 +34,17 @@ class AssetFragment : BaseFragment() {
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
     private lateinit var manageIV: ImageView
-    private val mainAsset = AssetRes("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b", "0", "NEO", "NEO")
-
-    private lateinit var listListen: Disposable
-    private lateinit var errorListen: Disposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
         initListener()
-        context?.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
+        initList()
         return view
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        listListen.dispose()
-        errorListen.dispose()
-        context!!.unregisterReceiver(BlockListener)
     }
 
     private fun initDOM(view: View) {
@@ -62,32 +56,19 @@ class AssetFragment : BaseFragment() {
         manageIV = view.findViewById(R.id.fragment_asset_manage)
         assetAdapter = AssetAdapter(arrayListOf())
         assetManager = LinearLayoutManager(context!!)
+
+        address = SharedPrefUtils.getAddress(context)
+
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
     }
 
     private fun initListener() {
-        listListen = AssetState.list(context, WalletUtils.address(context!!)).subscribe({
-            resolveList(it)
-            assetSRL.finishRefresh(true)
-        }, {
-            assetSRL.finishRefresh(false)
-            Log.i("【AssetList】", "error【${it}】")
-        })
-        errorListen = AssetState.error().subscribe({
-            assetSRL.finishRefresh(false)
-            if (!DialogUtils.error(context!!, it)) {
-                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            assetSRL.finishRefresh(false)
-            Log.i("【AssetList】", "error【${it}】")
-        })
         assetSRL.setOnRefreshListener {
-            AssetState.fetch(context)
+            initList(true)
         }
         manageIV.setOnClickListener {
-            activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
+            activity?.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
         assetAdapter.onClick().subscribe {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
@@ -96,11 +77,22 @@ class AssetFragment : BaseFragment() {
         }
     }
 
+    private fun initList(force: Boolean = false) {
+        AssetState.list2(context, address, force).subscribe({
+            resolveList(it)
+        }, {
+            val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
+            if (!DialogUtils.error(context, code)) {
+                Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun resolveList(list: ArrayList<AssetRes>) {
-        mainAssetTV.text = mainAsset.name
+        mainAssetTV.text = "NEO"
 
         val balance = list.find {
-            it.asset_id == mainAsset.asset_id
+            it.asset_id == CommonUtils.NEO
         }?.balance ?: "0"
 
         mainBalanceTV.text = if (balance == "0.0") "0" else balance
@@ -113,11 +105,5 @@ class AssetFragment : BaseFragment() {
             }
         }
         assetAdapter.set(list)
-    }
-
-    companion object BlockListener: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            AssetState.fetch(p0, "", true)
-        }
     }
 }

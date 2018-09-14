@@ -90,7 +90,6 @@ class AssetManageActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AssetState.touch()
         listListen.dispose()
         errorListen.dispose()
     }

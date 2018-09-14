@@ -33,7 +33,6 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var backIV: ImageView
     private lateinit var transferIV: ImageView
     private lateinit var asset: AssetRes
-    // private lateinit var loadPB: ProgressBar
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SmartRefreshLayout
 
@@ -56,6 +55,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var errorListen: Disposable
     private val gson = Gson()
     private var noNeed = false
+    private var assetId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,21 +65,17 @@ class AssetDetailActivity : BaseActivity() {
         initDOM()
         initGAS()
         initListener()
+        initList()
         resolveBalance()
-        registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        listListen.dispose()
-        balanceListen.dispose()
-        errorListen.dispose()
-        unregisterReceiver(BlockListener)
     }
 
     private fun initParams() {
-        val assetId = intent.getStringExtra("asset")
-        if (assetId.isNullOrEmpty()) {
+        assetId = intent.getStringExtra("asset") ?: ""
+        if (assetId.isEmpty()) {
             Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
             finish()
             return
@@ -114,12 +110,14 @@ class AssetDetailActivity : BaseActivity() {
         setStatusBar(findViewById(R.id.app_top_space))
 
         // txSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        txAdapter = TransactionAdapter(PageDataPyModel())
+        txAdapter = TransactionAdapter(arrayListOf())
         txManager = LinearLayoutManager(this)
         txRV.layoutManager = txManager
         txRV.adapter = txAdapter
 
-        txSRL.setEnableOverScrollDrag(true)
+        if (asset.balance.toDouble() <= 0) {
+            transferIV.visibility = View.GONE
+        }
     }
 
     private fun initGAS() {
@@ -175,63 +173,14 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        listListen = TransactionState.list(this, WalletUtils.address(this), asset.asset_id).subscribe({
-            txAdapter.push(it)
-            txSRL.finishRefresh()
-            if (it.page >= it.pages) {
-                txSRL.finishLoadMoreWithNoMoreData()
-            } else {
-                txSRL.finishLoadMore(true)
-            }
-        }, {
-            txSRL.finishRefresh()
-            txSRL.finishLoadMore()
-            Log.i("【AssetDetail】", "error【${it}】")
-        })
-        errorListen = TransactionState.error().subscribe({
-            txSRL.finishRefresh()
-            txSRL.finishLoadMore()
-            if (!DialogUtils.error(this, it)) {
-                Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            txSRL.finishRefresh()
-            txSRL.finishLoadMore()
-            Log.i("【AssetDetail】", "error【${it}】")
-        })
-        balanceListen = AssetState.list(this, WalletUtils.address(this)).subscribe({
-            resolveBalance()
-            resolveFetchClaim()
-        }, {
-            Log.i("【AssetDetail】", "error【${it}】")
-        })
-//        txSRL.setOnRefreshListener {
-//            if (TransactionState.fetching) {
-//                txSRL.isRefreshing = false
-//                return@setOnRefreshListener
-//            }
-//            TransactionState.fetch()
-//        }
         backIV.setOnClickListener {
             finish()
-        }
-        if (asset.balance.toDouble() <= 0) {
-            transferIV.visibility = View.GONE
         }
         transferIV.setOnClickListener {
             val intent = Intent(this, TransactionTransferActivity::class.java)
             intent.putExtra("asset", asset.asset_id)
             startActivity(intent)
         }
-//        txRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                if (!TransactionState.fetching && newState == 1 && txAdapter.checkNext(txManager.findLastVisibleItemPosition())) {
-//                    txAdapter.setPaging()
-//                    TransactionState.next()
-//                }
-//            }
-//        })
         txAdapter.onEnter().subscribe {
             val intent = Intent(this, TransactionDetailActivity::class.java)
             intent.putExtra("txid", txAdapter.getItem(it).txid)
@@ -242,10 +191,40 @@ class AssetDetailActivity : BaseActivity() {
             vibrate()
         }
         txSRL.setOnRefreshListener {
-            TransactionState.fetch(this)
+            initList(true)
         }
         txSRL.setOnLoadMoreListener {
-            TransactionState.next(this)
+            initList(isNext = true)
+        }
+    }
+
+    private fun initList(force: Boolean = false, isNext: Boolean = false) {
+        if (!isNext) {
+            TransactionState.refresh(this, assetId, force).subscribe({
+                txAdapter.set(it)
+                txSRL.finishRefresh(true)
+            }, {
+                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
+                if (!DialogUtils.error(this, code)) {
+                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
+                }
+                txSRL.finishRefresh()
+            })
+        } else {
+            TransactionState.next(this, assetId).subscribe({
+                txAdapter.push(it)
+                if (it.isEmpty()) {
+                    txSRL.finishLoadMoreWithNoMoreData()
+                } else {
+                    txSRL.finishLoadMore(true)
+                }
+            }, {
+                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
+                if (!DialogUtils.error(this, code)) {
+                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
+                }
+                txSRL.finishLoadMore()
+            })
         }
     }
 
@@ -279,19 +258,6 @@ class AssetDetailActivity : BaseActivity() {
         titleTV.text = tryGet?.symbol
         balanceTV.text = tryGet?.balance
     }
-
-//    private fun resolveRefreshed(success: Boolean = false) {
-//        if (loadPB.visibility == View.VISIBLE) {
-//            loadPB.visibility = View.GONE
-//        }
-//        if (!txSRL.isRefreshing) {
-//            return
-//        }
-//        txSRL.isRefreshing = false
-//        if (success) {
-//            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
-//        }
-//    }
 
     private fun resolveCollect() {
         val addr = WalletUtils.address(this)
@@ -390,7 +356,7 @@ class AssetDetailActivity : BaseActivity() {
             "/client/transaction/unconfirmed",
             mapOf(Pair("wallet_address", addr), Pair("asset_id", CommonUtils.GAS), Pair("txid", "0x$txid"), Pair("value", "$value")), {
                 Log.i("【Claim】", "submitted 【$txid】")
-                UnconfirmedState.fetch(this)
+                // todo notify new unconfirmed tx
             }, {
                 Log.i("【Claim】", "submit failed【$it】")
             }
@@ -403,12 +369,6 @@ class AssetDetailActivity : BaseActivity() {
     private fun resolveError(code: Int) {
         if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    companion object BlockListener: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            AssetState.fetch(p0, "", silent = true)
         }
     }
 }

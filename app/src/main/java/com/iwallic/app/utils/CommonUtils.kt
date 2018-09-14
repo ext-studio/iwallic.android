@@ -28,9 +28,10 @@ object CommonUtils {
 
     const val listenPeried: Long = 60000
 
+    const val pageCount = 15
+
     const val broadCastBlock = "iwallic_new_block"
 
-    var versionName: String = BuildConfig.VERSION_NAME
     private val _color = TypedValue()
 
     fun getAttrColor(context: Context, attr: Int): Int {

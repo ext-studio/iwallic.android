@@ -25,85 +25,33 @@ class TransactionUnconfirmedActivity : BaseActivity() {
     private lateinit var backLL: TextView
     private lateinit var unRV: RecyclerView
     private lateinit var unSRL: SmartRefreshLayout
-    // private lateinit var unPB: ProgressBar
 
     private lateinit var unManager: LinearLayoutManager
     private lateinit var unAdapter: TransactionAdapter
 
-    private lateinit var listen: Disposable
-    private lateinit var error: Disposable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_unconfirmed)
         initDOM()
         initListen()
+        initList()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        listen.dispose()
-        error.dispose()
     }
 
     private fun initDOM() {
         backLL = findViewById(R.id.transaction_unconfirmed)
-        // unPB = findViewById(R.id.transaction_unconfirmed_load)
         unSRL = findViewById(R.id.transaction_unconfirmed_pager)
         unRV = findViewById(R.id.transaction_unconfirmed_list)
 
-        // unSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-
         unManager = LinearLayoutManager(this)
-        unAdapter = TransactionAdapter(PageDataPyModel())
+        unAdapter = TransactionAdapter(arrayListOf())
         unRV.layoutManager = unManager
         unRV.adapter = unAdapter
-
-        unSRL.setEnableOverScrollDrag(true)
     }
     private fun initListen() {
-        listen = UnconfirmedState.list(this, WalletUtils.address(this)).subscribe({
-            unAdapter.push(it)
-            if (it.page == 1) {
-                unRV.scrollToPosition(0)
-            }
-            unSRL.finishRefresh(true)
-            if (it.items.size >= it.total) {
-                unSRL.finishLoadMoreWithNoMoreData()
-            } else {
-                unSRL.finishLoadMore(true)
-            }
-        }, {
-            unSRL.finishRefresh(false)
-            unSRL.finishLoadMore(false)
-            Log.i("【Unconfirmed】", "error【$it】")
-        })
-        error = UnconfirmedState.error().subscribe({
-            if (!DialogUtils.error(this, it)) {
-                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-            }
-            unSRL.finishRefresh(false)
-            unSRL.finishLoadMore(false)
-        }, {
-            unSRL.finishRefresh(false)
-            unSRL.finishLoadMore(false)
-            Log.i("【Unconfirmed】", "error【$it】")
-        })
-//        unRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//                if (!UnconfirmedState.fetching && newState == 1 && unAdapter.checkNext(unManager.findLastVisibleItemPosition())) {
-//                    unAdapter.setPaging()
-//                    UnconfirmedState.next()
-//                }
-//            }
-//        })
-//        unSRL.setOnRefreshListener {
-//            if (UnconfirmedState.fetching) {
-//                unSRL.isRefreshing = false
-//                return@setOnRefreshListener
-//            }
-//            UnconfirmedState.fetch()
-//        }
         unAdapter.onCopy().subscribe {
             copy(unAdapter.getItem(it).txid, "txid")
             vibrate()
@@ -112,23 +60,40 @@ class TransactionUnconfirmedActivity : BaseActivity() {
             finish()
         }
         unSRL.setOnRefreshListener {
-            UnconfirmedState.fetch(this)
+            initList(true)
         }
         unSRL.setOnLoadMoreListener {
-            UnconfirmedState.next(this)
+            initList(isNext = true)
         }
     }
 
-//    private fun resolveRefreshed(success: Boolean = false) {
-//        if (unPB.visibility == View.VISIBLE) {
-//            unPB.visibility = View.GONE
-//        }
-//        if (!unSRL.isRefreshing) {
-//            return
-//        }
-//        unSRL.isRefreshing = false
-//        if (success) {
-//            Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()
-//        }
-//    }
+    private fun initList(force: Boolean = false, isNext: Boolean = false) {
+        if (!isNext) {
+            UnconfirmedState.refresh(this, force).subscribe({
+                unAdapter.set(it)
+                unSRL.finishRefresh(true)
+            }, {
+                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
+                if (!DialogUtils.error(this, code)) {
+                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
+                }
+                unSRL.finishRefresh()
+            })
+        } else {
+            UnconfirmedState.next(this).subscribe({
+                unAdapter.push(it)
+                if (it.isEmpty()) {
+                    unSRL.finishLoadMoreWithNoMoreData()
+                } else {
+                    unSRL.finishLoadMore(true)
+                }
+            }, {
+                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
+                if (!DialogUtils.error(this, code)) {
+                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
+                }
+                unSRL.finishLoadMore()
+            })
+        }
+    }
 }

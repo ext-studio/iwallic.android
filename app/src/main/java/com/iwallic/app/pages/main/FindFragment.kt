@@ -27,7 +27,6 @@ class FindFragment : BaseFragment() {
         findWV = view.findViewById(R.id.fragment_find_webview)
         findSRL = view.findViewById(R.id.fragment_find_refresh)
         findSRL.setColorSchemeResources(R.color.colorPrimaryDefault)
-        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     @SuppressLint("SetJavaScriptEnabled")

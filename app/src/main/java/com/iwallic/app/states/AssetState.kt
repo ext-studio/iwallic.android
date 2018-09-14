@@ -13,81 +13,39 @@ import kotlin.collections.ArrayList
 
 object AssetState {
     var cached: ArrayList<AssetRes>? = null
-    private var address: String = ""
-    private val _list = PublishSubject.create<ArrayList<AssetRes>>()
-    private val _error = PublishSubject.create<Int>()
-    var fetching: Boolean = false
     private val gson = Gson()
-    fun list(context: Context?, addr: String = ""): Observable<ArrayList<AssetRes>> {
-        if (addr.isNotEmpty() && addr != address) {
-            fetch(context, addr)
-            return _list
-        }
-        if (cached != null) {
-            Log.i("【AssetState】", "from cache")
-            return _list.startWith(cached)
-        } else {
-            fetch(context)
-        }
-        return _list
+
+    fun get(id: String): AssetRes? {
+        return cached?.find { it.asset_id == id }
     }
-    fun get(id: String): AssetRes? = cached?.find {
-        it.asset_id == id
-    }
-    fun error(): Observable<Int> {
-        return _error
-    }
-    fun fetch(context: Context?, addr: String = "", silent: Boolean = false) {
-        if (fetching) {
-            return
-        }
-        if (addr.isNotEmpty()) {
-            Log.i("【AssetState】", "set address")
-            address = addr
-        }
-        if (address.isEmpty()) {
-            if (silent) {
-                return
+
+    fun list2(context: Context?, address: String, force: Boolean = false): Observable<ArrayList<AssetRes>> {
+        return Observable.create { observer ->
+            if (cached != null && !force) {
+                observer.onNext(cached!!)
+                observer.onComplete()
+                return@create
             }
-            _error.onNext(99899)
-        }
-        fetching = true
-        HttpUtils.getPy(context, "/client/index/assets/display?wallet_address=$address", {
-            fetching = false
-            val data = gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)
-            if (data == null) {
-                if (silent) {
-                    return@getPy
+            HttpUtils.getPy(context, "/client/index/assets/display?wallet_address=$address", {
+                val data = try {gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)} catch (_: Throwable) {null}
+                if (data == null) {
+                    observer.onError(Throwable("99999"))
+                } else {
+                    cached = data
+                    observer.onNext(data)
+                    observer.onComplete()
                 }
-                _error.onNext(99998)
-            } else {
-                cached = data
-                _list.onNext(data)
-            }
-        }, {
-            fetching = false
-            if (silent) {
-                return@getPy
-            }
-            _error.onNext(it)
-        })
+            }, {
+                observer.onError(Throwable("$it"))
+            })
+        }
     }
 
     fun checkClaim(): Boolean {
-        if (cached == null) {
-            return false
-        }
-        return cached!!.indexOfFirst { it.asset_id == CommonUtils.NEO && it.balance != "0" } >= 0
+        return try {cached?.find { it.asset_id == CommonUtils.NEO }?.balance?.toInt() ?: 0} catch (_: Throwable) {0} > 0
     }
 
-    fun touch() {
-        if (cached != null) {
-            _list.onNext(cached!!)
-        }
-    }
     fun clear() {
         cached = null
-        address = ""
-        fetching = false
     }
 }

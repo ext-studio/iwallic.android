@@ -12,10 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="?colorPrimary">
-        <View
-            android:id="@+id/app_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimenStatusBar"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +42,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/transaction_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

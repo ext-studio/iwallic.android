@@ -62,7 +62,6 @@ class UserSettingNetActivity : BaseActivity() {
             } else {
                 SharedPrefUtils.setNet(this, chosenNet)
                 AssetState.clear()
-                TransactionState.clear()
                 BlockState.clear()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

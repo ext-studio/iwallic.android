@@ -16,7 +16,7 @@ import com.iwallic.app.utils.CommonUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+class TransactionAdapter(_data: ArrayList<TransactionRes>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private var data = _data
     private val _onEnter = PublishSubject.create<Int>()
     private val _onCopy = PublishSubject.create<Int>()
@@ -31,17 +31,17 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (data.items.size == 0) {
+        if (data.size == 0) {
             return
         }
         val txidTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_txid)
-        txidTV.text = data.items[position].txid
+        txidTV.text = data[position].txid
         val valueTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_value)
-        valueTV.text = data.items[position].value
+        valueTV.text = data[position].value
         val nameTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_name)
-        nameTV.text = data.items[position].name
+        nameTV.text = data[position].name
         val statusTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_status)
-        if (data.items[position].value.startsWith("-")) {
+        if (data[position].value.startsWith("-")) {
             val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
             txidTV.setTextColor(colorOut)
             nameTV.setTextColor(colorOut)
@@ -54,8 +54,8 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
             valueTV.setTextColor(colorIn)
             holder.itemView.findViewById<ImageView>(R.id.transaction_list_icon).setImageResource(R.drawable.icon_tx_in)
         }
-        if (data.items[position].status != "confirmed") {
-            statusTV.setText(if (data.items[position].status == "unconfirmed") R.string.adapter_tx_status_un else R.string.adapter_tx_status_no)
+        if (data[position].status != "confirmed") {
+            statusTV.setText(if (data[position].status == "unconfirmed") R.string.adapter_tx_status_un else R.string.adapter_tx_status_no)
             statusTV.visibility = View.VISIBLE
         } else {
             statusTV.visibility = View.GONE
@@ -70,10 +70,10 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (data.items.size == 0) 0 else 1
+        return if (data.size == 0) 0 else 1
     }
 
-    override fun getItemCount() = if (data.items.size == 0) 1 else data.items.size
+    override fun getItemCount() = if (data.size == 0) 1 else data.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
@@ -87,23 +87,19 @@ class TransactionAdapter(_data: PageDataPyModel<TransactionRes>): RecyclerView.A
         return _onCopy
     }
 
-    fun push(newData: PageDataPyModel<TransactionRes>) {
-        if (newData.page == 1) {
-            notifyItemRangeRemoved(0,  if (data.items.size == 0) 1 else data.items.size)
-            data = newData
-            notifyItemRangeInserted(0, data.items.size)
-        } else {
-            val p = data.items.size
-            data.page = newData.page
-            data.total = newData.total
-            data.per_page = newData.per_page
-            data.items.addAll(newData.items)
-            notifyItemRangeInserted(p, newData.items.size)
-        }
+    fun set(newData: ArrayList<TransactionRes>) {
+        data = newData
+        notifyDataSetChanged()
+    }
+
+    fun push(newData: ArrayList<TransactionRes>) {
+        val oldSize = data.size
+        data.addAll(newData)
+        notifyItemRangeInserted(oldSize, newData.size)
     }
 
     fun getItem(position: Int): TransactionRes {
-        return data.items[position]
+        return data[position]
     }
 
     class ViewHolder(

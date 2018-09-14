@@ -29,7 +29,7 @@ object DialogUtils {
             val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
             val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
             val titleTV = view.findViewById<TextView>(R.id.dialog_confirm_title)
-            val bodyTV = view.findViewById<TextView>(R.id.dialog_confirm_body)
+            val bodyTV = view.findViewById<TextView>(R.id.dialog_confirm_msg)
             builder.setView(view)
             val dialog = builder.create()
 
@@ -235,7 +235,7 @@ object DialogUtils {
         }
     }
 
-    fun error(context: Context, code: Int): Boolean {
+    fun error(context: Context?, code: Int): Boolean {
         when (code) {
             1013 -> {
                 Toast.makeText(context, R.string.error_rpc, Toast.LENGTH_SHORT).show()

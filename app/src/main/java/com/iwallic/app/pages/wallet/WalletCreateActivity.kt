@@ -16,10 +16,11 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import android.content.*
 import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.neon.wallet.Wallet
 
 
-class WalletCreateActivity : BaseActivity() {
+class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var step1LL: LinearLayout
     private lateinit var step2LL: LinearLayout
     private lateinit var backTV: TextView
@@ -142,8 +143,6 @@ class WalletCreateActivity : BaseActivity() {
     private fun resolveCreate() {
         createPB.visibility = View.VISIBLE
         createB.visibility = View.INVISIBLE
-
-        hideKeyBoard()
 
         launch {
             var done = true

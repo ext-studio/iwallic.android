@@ -41,7 +41,6 @@ class UserFragment : BaseFragment() {
         supportLL = view.findViewById(R.id.fragment_user_support)
         aboutLL = view.findViewById(R.id.fragment_user_about)
         closeLL = view.findViewById(R.id.fragment_user_signout)
-        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -66,14 +65,12 @@ class UserFragment : BaseFragment() {
         DialogUtils.confirm(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no).subscribe {
             if (it) {
                 AssetState.clear()
-                TransactionState.clear()
-                UnconfirmedState.clear()
                 AssetManageState.clear()
                 WalletUtils.close(context!!)
                 val intent = Intent(context, WalletActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-                activity?.finish()
             }
         }
     }

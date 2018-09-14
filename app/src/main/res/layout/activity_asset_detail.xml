@@ -141,7 +141,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/asset_detail_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,23 +156,5 @@
             android:layout_height="wrap_content"
             app:srlAccentColor="?colorPrimary"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/asset_detail_load"-->
-        <!--android:visibility="visible"-->
-        <!--android:layout_margin="@dimen/dimenSpace"-->
-        <!--android:foregroundTint="?colorPrimary"-->
-        <!--android:layout_width="@dimen/dimenLarge"-->
-        <!--android:layout_height="@dimen/dimenLarge"-->
-        <!--android:layout_gravity="center"-->
-        <!--tools:targetApi="lollipop" />-->
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/asset_detail_list_refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/asset_detail_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
 </LinearLayout>
