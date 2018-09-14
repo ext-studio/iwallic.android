@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.WindowManager
 import android.widget.EditText
 import com.iwallic.app.models.AssetRes
 import io.reactivex.Observable
@@ -151,7 +152,7 @@ object DialogUtils {
                     observer.onComplete()
                 }
             } else {
-                val builder = android.support.v7.app.AlertDialog.Builder(context)
+                val builder = AlertDialog.Builder(context)
                 builder.setCancelable(false)
                 builder.setView(view)
                 val dialog = builder.create()
@@ -175,34 +176,42 @@ object DialogUtils {
         }
     }
 
-    fun password(context: Context): Observable<String> {
-        return Observable.create { observer ->
+    fun password(context: Context, ok: (String) -> Unit) {
+        val view = View.inflate(context, R.layout.dialog_password, null)
+        val inputET = view.findViewById<EditText>(R.id.dialog_password)
+        val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
+        var rs = ""
+        inputET.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                rs = p0.toString()
+                confirm.isEnabled = rs.isNotEmpty()
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
+
+        val dialog: Dialog
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            dialog = Dialog(context)
+            dialog.setContentView(view)
+            dialog.create()
+        } else {
             val builder = AlertDialog.Builder(context)
-            val view = View.inflate(context, R.layout.dialog_password, null)
-            val inputET = view.findViewById<EditText>(R.id.dialog_password)
-            val confirm = view.findViewById<TextView>(R.id.dialog_password_confirm)
             builder.setView(view)
-            val dialog = builder.create()
-            var rs = ""
-            inputET.addTextChangedListener(object: TextWatcher {
-                override fun afterTextChanged(p0: Editable?) {
-                    rs = p0.toString()
-                }
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            })
-            confirm.setOnClickListener {
-                observer.onNext(rs)
-                observer.onComplete()
-                dialog.dismiss()
-            }
-            dialog.setOnDismissListener {
-                observer.onNext("")
-                observer.onComplete()
-            }
-            dialog.show()
-            inputET.requestFocus()
+            dialog = builder.create()
         }
+
+        confirm.setOnClickListener {
+            ok(rs)
+            dialog.dismiss()
+        }
+        dialog.show()
+        dialog.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        dialog.window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+
+        inputET?.requestFocus()
     }
 
     fun load(context: Context, text: Int = R.string.load_load): Observable<AlertDialog> {

@@ -245,11 +245,11 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.password(this).subscribe {pwd ->
+        DialogUtils.password(this) {pwd ->
             if (pwd.isEmpty()) {
                 submitPB.visibility = View.GONE
                 submitB.visibility = View.VISIBLE
-                return@subscribe
+                return@password
             }
             DialogUtils.load(this).subscribe { load ->
                 WalletUtils.verify(baseContext, pwd).subscribe {rs ->

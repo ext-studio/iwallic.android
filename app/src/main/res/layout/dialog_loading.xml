@@ -3,14 +3,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?colorDefault"
+    android:background="@drawable/shape_loader"
     android:orientation="horizontal"
     android:gravity="center"
     android:padding="@dimen/dimenSpace">
     <ProgressBar
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:indeterminateTint="?colorFont"
+        android:indeterminateTint="?colorLight"
         android:layout_marginStart="@dimen/dimenSpace"
         android:layout_marginEnd="@dimen/dimenSpace"
         tools:targetApi="lollipop" />
@@ -20,6 +20,6 @@
         android:ellipsize="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?colorFont"
+        android:textColor="?colorLight"
         android:textSize="@dimen/dimenFontL"/>
 </LinearLayout>

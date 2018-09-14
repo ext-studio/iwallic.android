@@ -261,7 +261,7 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun resolveCollect() {
         val addr = WalletUtils.address(this)
-        DialogUtils.password(this).subscribe {pwd ->
+        DialogUtils.password(this) {pwd ->
             DialogUtils.load(this).subscribe {load ->
                 WalletUtils.verify(this, pwd).subscribe({wif ->
                     if (wif.isEmpty()) {
@@ -310,7 +310,7 @@ class AssetDetailActivity : BaseActivity() {
 
     private fun resolveClaim() {
         val addr = WalletUtils.address(this)
-        DialogUtils.password(this).subscribe {pwd ->
+        DialogUtils.password(this) {pwd ->
             DialogUtils.load(this).subscribe {load ->
                 WalletUtils.verify(this, pwd).subscribe({wif ->
                     if (wif.isEmpty()) {

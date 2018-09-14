@@ -96,23 +96,25 @@ class WalletBackupActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.password(this).subscribe{pwd ->
+        DialogUtils.password(this) { pwd ->
             if (pwd.isEmpty()) {
-                return@subscribe
+                return@password
             }
-            DialogUtils.load(this).subscribe{ load ->
-                WalletUtils.verify(this, pwd).subscribe{rs ->
+            val loader = DialogUtils.loader(this, "正在验证")
+                WalletUtils.verify(this, pwd).subscribe({rs ->
+                    loader.dismiss()
                     wif = rs
                     Log.i("【WalletBackup】", wif)
-                    load.dismiss()
                     if (wif.isEmpty()) {
                         Toast.makeText(this, R.string.error_password, Toast.LENGTH_SHORT).show()
                     } else {
                         verified = true
                         resolveVerified()
                     }
-                }
-            }
+                }, {
+                    loader.dismiss()
+                    Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
+                })
         }
     }
 

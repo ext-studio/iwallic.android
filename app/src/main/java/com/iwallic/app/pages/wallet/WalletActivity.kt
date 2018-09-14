@@ -93,9 +93,9 @@ class WalletActivity : BaseAuthActivity() {
 
     private fun resolveOpen(w: WalletAgentModel) {
         Log.i("【Wallet】", "open wallet【${w._ID}】")
-        DialogUtils.password(this).subscribe { pwd ->
+        DialogUtils.password(this) { pwd ->
             if (pwd.isEmpty()) {
-                return@subscribe
+                return@password
             }
             DialogUtils.load(this).subscribe {
                 WalletUtils.switch(baseContext, w, pwd).subscribe {rs ->
