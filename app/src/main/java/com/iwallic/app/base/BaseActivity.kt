@@ -7,31 +7,24 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.os.*
 import android.support.annotation.Nullable
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import com.iwallic.app.R
-import com.iwallic.app.services.BlockService
 import com.iwallic.app.utils.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletGuardActivity
 
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (SharedPrefUtils.getAddress(this).isEmpty()) {
-            val intent = Intent(this, WalletActivity::class.java)
+            val intent = Intent(this, WalletGuardActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

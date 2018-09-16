@@ -14,6 +14,7 @@ import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
+import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -23,12 +24,10 @@ class WalletImportActivity : BaseAuthActivity() {
 
     private lateinit var backTV: TextView
     private lateinit var wifET: EditText
-    private lateinit var fileB: Button
-    private lateinit var importB: Button
+    private lateinit var importFL: FrameLayout
     private lateinit var pwdET: EditText
     private lateinit var confirmET: EditText
     private lateinit var errorTV: TextView
-    private lateinit var importPB: ProgressBar
     private lateinit var scanIV: ImageView
     var wif: String = ""
     var pwd: String = ""
@@ -63,12 +62,10 @@ class WalletImportActivity : BaseAuthActivity() {
     private fun initDOM() {
         backTV = findViewById(R.id.wallet_import_back)
         wifET = findViewById(R.id.wallet_import_wif)
-        fileB = findViewById(R.id.wallet_import_btn_file)
-        importB = findViewById(R.id.wallet_import_btn_wif)
+        importFL = findViewById(R.id.wallet_import_btn_wif)
         pwdET = findViewById(R.id.wallet_import_pwd)
         confirmET = findViewById(R.id.wallet_import_confirm)
         errorTV = findViewById(R.id.wallet_import_error)
-        importPB = findViewById(R.id.wallet_import_load_wif)
         scanIV = findViewById(R.id.wallet_import_scan)
     }
     private fun initInput() {
@@ -101,7 +98,7 @@ class WalletImportActivity : BaseAuthActivity() {
         backTV.setOnClickListener {
             finish()
         }
-        importB.setOnClickListener {
+        importFL.setOnClickListener {
             if (wif.isEmpty() || pwd.isEmpty() || confirm.isEmpty()) {
                 Toast.makeText(this, R.string.error_empty, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -109,9 +106,6 @@ class WalletImportActivity : BaseAuthActivity() {
             if (WalletUtils.check(wif, "wif") && pwd.length > 5 && pwd == confirm) {
                 resolveImport()
             }
-        }
-        fileB.setOnClickListener {
-            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
         scanIV.setOnClickListener {
             val scan = IntentIntegrator(this)
@@ -134,15 +128,7 @@ class WalletImportActivity : BaseAuthActivity() {
         }
     }
     private fun resolveImport() {
-        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-
-        importB.visibility = View.INVISIBLE
-        importPB.visibility = View.VISIBLE
+        val loader = DialogUtils.loader(this, "正在打开")
         launch {
             var done = true
             val w = WalletUtils.import(wif, pwd)
@@ -150,8 +136,7 @@ class WalletImportActivity : BaseAuthActivity() {
                 done = false
             }
             withContext(UI) {
-                importB.visibility = View.VISIBLE
-                importPB.visibility = View.INVISIBLE
+                loader.dismiss()
                 if (done) {
                     val intent = Intent(baseContext, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

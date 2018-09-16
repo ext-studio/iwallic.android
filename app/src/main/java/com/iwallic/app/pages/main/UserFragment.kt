@@ -14,12 +14,10 @@ import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletUtils
-import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
 import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
-import com.iwallic.app.states.TransactionState
-import com.iwallic.app.states.UnconfirmedState
 
 class UserFragment : BaseFragment() {
     private lateinit var backupLL: FrameLayout
@@ -67,10 +65,10 @@ class UserFragment : BaseFragment() {
                 AssetState.clear()
                 AssetManageState.clear()
                 WalletUtils.close(context!!)
-                val intent = Intent(context, WalletActivity::class.java)
+                val intent = Intent(context, WalletGuardActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+                context?.startActivity(intent)
             }
         }
     }

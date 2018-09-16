@@ -48,10 +48,9 @@ class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Ada
         return _onDelete
     }
 
-    fun remove(p: Int) {
-        data.removeAt(p)
-        notifyItemRemoved(p)
-        notifyItemRangeChanged(p, data.size)
+    fun remove(position: Int) {
+        data.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     class ViewHolder (

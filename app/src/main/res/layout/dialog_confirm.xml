@@ -44,7 +44,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="@dimen/dimenSpace"
             android:textSize="@dimen/dimenFont"
             android:textStyle="bold"
             android:textColor="?colorPrimary"/>
@@ -58,7 +57,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="@dimen/dimenSpace"
             android:textSize="@dimen/dimenFont"
             android:textColor="?colorFont"/>
     </LinearLayout>

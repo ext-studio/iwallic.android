@@ -42,7 +42,7 @@
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
         <activity android:name=".pages.user.UserSettingThemeActivity" />
-        <activity android:name=".pages.wallet.WalletActivity" />
+        <activity android:name=".pages.wallet.WalletGuardActivity" />
         <activity android:name=".pages.wallet.WalletCreateActivity" />
         <activity android:name=".pages.wallet.WalletImportActivity" />
         <activity android:name=".pages.wallet.WalletBackupActivity" />

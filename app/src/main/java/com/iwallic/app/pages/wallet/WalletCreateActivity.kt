@@ -26,15 +26,13 @@ class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var backTV: TextView
     private lateinit var pwdET: EditText
     private lateinit var confirmET: EditText
-    private lateinit var createPB: ProgressBar
     private lateinit var errorTipTV: TextView
     private lateinit var wifTV: TextView
     private lateinit var qrCodeIV: ImageView
-    private lateinit var copyB: Button
-    private lateinit var saveB: Button
-    private lateinit var createB: Button
-    private lateinit var enterB: Button
-    private lateinit var enterPB: ProgressBar
+    private lateinit var copyTV: TextView
+    private lateinit var saveTV: TextView
+    private lateinit var createFL: FrameLayout
+    private lateinit var enterFL: FrameLayout
 
     var newWallet: WalletModel? = null
     private var newWif: String = ""
@@ -56,23 +54,21 @@ class WalletCreateActivity : BaseAuthActivity() {
         pwdET = findViewById(R.id.wallet_create_pwd)
         confirmET = findViewById(R.id.wallet_create_confirm)
         errorTipTV = findViewById(R.id.wallet_create_error)
-        createB = findViewById(R.id.wallet_create_btn_create)
-        createPB = findViewById(R.id.wallet_create_load_create)
+        createFL = findViewById(R.id.wallet_create_btn_create)
         step1LL = findViewById(R.id.wallet_create_step_1)
         step2LL = findViewById(R.id.wallet_create_step_2)
 
-        enterB = findViewById(R.id.wallet_create_btn_enter)
+        enterFL = findViewById(R.id.wallet_create_btn_enter)
         qrCodeIV = findViewById(R.id.wallet_create_qrcode)
         wifTV = findViewById(R.id.wallet_create_new_wif)
-        copyB = findViewById(R.id.wallet_create_btn_copy)
-        saveB = findViewById(R.id.wallet_create_btn_save)
-        enterPB = findViewById(R.id.wallet_create_load_enter)
+        copyTV = findViewById(R.id.wallet_create_btn_copy)
+        saveTV = findViewById(R.id.wallet_create_btn_save)
     }
     private fun initClick() {
         backTV.setOnClickListener {
             finish()
         }
-        createB.setOnClickListener {
+        createFL.setOnClickListener {
             if (pwd.isEmpty() || confirmPwd.isEmpty()) {
                 Toast.makeText(this, resources.getText(R.string.error_empty), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -82,7 +78,7 @@ class WalletCreateActivity : BaseAuthActivity() {
             }
             resolveCreate()
         }
-        enterB.setOnClickListener {_ ->
+        enterFL.setOnClickListener {_ ->
             if (copied || saved) {
                 resolveEnter()
                 return@setOnClickListener
@@ -99,10 +95,10 @@ class WalletCreateActivity : BaseAuthActivity() {
                 }
             }
         }
-        saveB.setOnClickListener {
+        saveTV.setOnClickListener {
             Toast.makeText(baseContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
-        copyB.setOnClickListener {
+        copyTV.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("WIF", newWif)
             clipboard.primaryClip = clip
@@ -141,9 +137,7 @@ class WalletCreateActivity : BaseAuthActivity() {
     }
 
     private fun resolveCreate() {
-        createPB.visibility = View.VISIBLE
-        createB.visibility = View.INVISIBLE
-
+        val loader = DialogUtils.loader(this, "正在创建")
         launch {
             var done = true
             try {
@@ -154,6 +148,7 @@ class WalletCreateActivity : BaseAuthActivity() {
                 done = false
             }
             withContext(UI) {
+                loader.dismiss()
                 if (done) {
                     resolveNewWallet()
                 } else {
@@ -169,8 +164,6 @@ class WalletCreateActivity : BaseAuthActivity() {
         }
         val qrCode = QRCodeUtils.generate(newWif, this)
         if (qrCode != null) {
-            createPB.visibility = View.INVISIBLE
-            createB.visibility = View.VISIBLE
             step1LL.visibility = View.GONE
             step2LL.visibility = View.VISIBLE
             qrCodeIV.setImageBitmap(qrCode)
@@ -178,10 +171,12 @@ class WalletCreateActivity : BaseAuthActivity() {
         }
     }
     private fun resolveEnter() {
-        enterPB.visibility = View.VISIBLE
-        enterB.visibility = View.INVISIBLE
+        val loader = DialogUtils.loader(this)
         launch {
             if (WalletUtils.save(baseContext, newWallet!!)) {
+                withContext(UI) {
+                    loader.dismiss()
+                }
                 val intent = Intent(baseContext, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
@@ -189,8 +184,7 @@ class WalletCreateActivity : BaseAuthActivity() {
                 return@launch
             }
             withContext(UI) {
-                enterPB.visibility = View.INVISIBLE
-                enterB.visibility = View.VISIBLE
+                loader.dismiss()
                 Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             }
         }

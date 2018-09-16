@@ -1,20 +1,16 @@
 package com.iwallic.app.pages.common
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
-import com.google.gson.Gson
 import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.main.MainActivity
-import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.services.DownloadService
 import com.iwallic.app.states.VersionState
 import com.iwallic.app.utils.*
@@ -71,7 +67,7 @@ class WelcomeActivity : BaseAuthActivity() {
         launch {
             delay(1000)
             if (WalletUtils.wallet(baseContext) == null || WalletUtils.account(baseContext) == null) {
-                startActivity(Intent(baseContext, WalletActivity::class.java))
+                startActivity(Intent(baseContext, WalletGuardActivity::class.java))
             } else {
                 startActivity(Intent(baseContext, MainActivity::class.java))
             }
