@@ -81,7 +81,9 @@ class AssetFragment : BaseFragment() {
     private fun initList(force: Boolean = false) {
         AssetState.list2(context, address, force).subscribe({
             resolveList(it)
+            assetSRL.finishRefresh(true)
         }, {
+            assetSRL.finishRefresh()
             val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
             if (!DialogUtils.error(context, code)) {
                 Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()

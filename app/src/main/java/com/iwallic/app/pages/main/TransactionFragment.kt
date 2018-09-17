@@ -2,6 +2,9 @@ package com.iwallic.app.pages.main
 
 import android.content.*
 import android.os.Bundle
+import android.support.design.widget.TabLayout
+import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -13,9 +16,13 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.base.BaseFragmentAdapter
 import com.iwallic.app.models.PageDataPyModel
+import com.iwallic.app.models.Pager
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionUnconfirmedActivity
+import com.iwallic.app.pages.transaction.TxConfirmedFragment
+import com.iwallic.app.pages.transaction.TxUnConfirmedFragment
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
@@ -24,17 +31,14 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
 class TransactionFragment : BaseFragment() {
-    private lateinit var txRV: RecyclerView
-    private lateinit var txSRL: SmartRefreshLayout
-    private lateinit var txAdapter: TransactionAdapter
-    private lateinit var txManager: LinearLayoutManager
-    private lateinit var unconfirmedLL: TextView
+
+    private lateinit var tabTL: TabLayout
+    private lateinit var pagerVP: ViewPager
+    private lateinit var adapter: BaseFragmentAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_transaction, container, false)
         initDOM(view)
-        initListener()
-        initList()
         return view
     }
 
@@ -43,65 +47,15 @@ class TransactionFragment : BaseFragment() {
     }
 
     private fun initDOM(view: View) {
-        txRV = view.findViewById(R.id.transaction_list)
-        txSRL = view.findViewById(R.id.transaction_pager)
-        // loadPB = view.findViewById(R.id.fragment_transaction_load)
-        unconfirmedLL = view.findViewById(R.id.transaction_unconfirmed_enter)
+        tabTL = view.findViewById(R.id.tx_tab)
+        pagerVP = view.findViewById(R.id.tx_pager)
+        adapter = BaseFragmentAdapter(childFragmentManager)
 
-        txAdapter = TransactionAdapter(arrayListOf())
-        txManager = LinearLayoutManager(context!!)
-        txRV.layoutManager = txManager
-        txRV.adapter = txAdapter
-    }
+        adapter.setPage(Pager(0, TxConfirmedFragment(), resources.getString(R.string.fragment_transaction_title)))
+        adapter.setPage(Pager(1, TxUnConfirmedFragment(), resources.getString(R.string.fragment_transaction_unconfirmed)))
 
-    private fun initListener() {
-        txSRL.setOnRefreshListener {
-            initList(true)
-        }
-        txSRL.setOnLoadMoreListener {
-            initList(isNext = true)
-        }
-        txAdapter.onEnter().subscribe {
-            val intent = Intent(context, TransactionDetailActivity::class.java)
-            intent.putExtra("txid", txAdapter.getItem(it).txid)
-            context!!.startActivity(intent)
-        }
-        txAdapter.onCopy().subscribe {
-            copy(txAdapter.getItem(it).txid, "txid")
-            vibrate()
-        }
-        unconfirmedLL.setOnClickListener {
-            context!!.startActivity(Intent(context, TransactionUnconfirmedActivity::class.java))
-        }
-    }
-
-    private fun initList(force: Boolean = false, isNext: Boolean = false) {
-        if (!isNext) {
-            TransactionState.refresh(context, "", force).subscribe({
-                txAdapter.set(it)
-                txSRL.finishRefresh(true)
-            }, {
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(context, code)) {
-                    Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
-                }
-                txSRL.finishRefresh()
-            })
-        } else {
-            TransactionState.next(context, "").subscribe({
-                txAdapter.push(it)
-                if (it.isEmpty()) {
-                    txSRL.finishLoadMoreWithNoMoreData()
-                } else {
-                    txSRL.finishLoadMore(true)
-                }
-            }, {
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(context, code)) {
-                    Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
-                }
-                txSRL.finishLoadMore()
-            })
-        }
+        pagerVP.adapter = adapter
+        pagerVP.currentItem = 0
+        tabTL.setupWithViewPager(pagerVP)
     }
 }

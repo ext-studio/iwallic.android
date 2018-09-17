@@ -99,7 +99,7 @@ object DialogUtils {
             dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
 
             launch (UI) {
-                delay(7000)
+                delay(10000)
                 if (dialog.isShowing) {
                     dialog.dismiss()
                 }
@@ -113,7 +113,7 @@ object DialogUtils {
             dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
 
             launch (UI) {
-                delay(7000)
+                delay(10000)
                 if (dialog.isShowing) {
                     dialog.dismiss()
                 }
