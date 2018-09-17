@@ -69,12 +69,12 @@ class AssetFragment : BaseFragment() {
             initList(true)
         }
         manageIV.setOnClickListener {
-            activity?.startActivity(Intent(context!!, AssetManageActivity::class.java))
+            context?.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
         assetAdapter.onClick().subscribe {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
-            context!!.startActivity(intent)
+            context?.startActivity(intent)
         }
     }
 

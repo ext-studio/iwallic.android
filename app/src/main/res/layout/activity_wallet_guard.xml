@@ -59,7 +59,7 @@
                     android:layout_width="230dp"
                     android:layout_height="36dp"
                     android:elevation="@dimen/dimenSpaceM"
-                    android:background="@drawable/shape_round_primary"
+                    android:background="@drawable/shape_round_secondary"
                     tools:targetApi="lollipop">
                     <TextView
                         android:layout_width="wrap_content"

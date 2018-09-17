@@ -36,6 +36,8 @@
     <string name="wallet_history_count">Contains %1$d address</string>
     <string name="wallet_import">Import wallet</string>
     <string name="wallet_create">Create wallet</string>
+    <string name="wallet_create_password">Password</string>
+    <string name="wallet_create_confirm">Confirm</string>
     <string name="wallet_create_tip">You need to set a cipher to keep your private key and transactions in safe. iWallic will never save your cipher, nor to help you find it back. So do keep it in mind.</string>
     <string name="wallet_create_tip_new">Here is your new wallet, you can backup it by save the WIF key or the wallet file(recommanded) now. When paying iWallic will ask for the cipher you just given to verify. Do protect your WIF key or wallet file.</string>
     <string name="wallet_create_confirm_hint">Confirm your password here</string>
@@ -48,6 +50,9 @@
     <string name="wallet_create_new_copy">Copy WIF</string>
     <string name="wallet_create_new_save">Save File</string>
     <string name="wallet_import_tip">Import your WIF key at this page, then set a password to protect it. Or directly choose your wallet file(iWallic support NEP-6 file).</string>
+    <string name="wallet_import_wif">WIF key</string>
+    <string name="wallet_import_password">Password</string>
+    <string name="wallet_import_confirm">Confirm</string>
     <string name="wallet_import_wif_hint">Enter your WIF key</string>
     <string name="wallet_import_btn_wif">Import</string>
     <string name="wallet_import_btn_file">Import wallet file</string>

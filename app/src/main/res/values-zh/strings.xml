@@ -37,6 +37,8 @@
     <string name="wallet_history_count">包含 %1$d 个地址</string>
     <string name="wallet_import">导入钱包</string>
     <string name="wallet_create">创建钱包</string>
+    <string name="wallet_create_password">输入密码</string>
+    <string name="wallet_create_confirm">确认密码</string>
     <string name="wallet_create_tip">你必须设置一个密码来保证你私钥的安全。iWallic不会收集你的密码，也无法帮助你找回密码。所以请牢记你的密码。</string>
     <string name="wallet_create_tip_new">属于你的新钱包如下，请保存好 WIF 私钥或钱包文件。当进行转账时会验证你之前输入的密码，务必保护好这些数据！</string>
     <string name="wallet_create_confirm_hint">输入密码</string>
@@ -48,6 +50,9 @@
     <string name="wallet_create_new_title">你的 WIF:</string>
     <string name="wallet_create_new_copy">复制私钥</string>
     <string name="wallet_create_new_save">导出文件</string>
+    <string name="wallet_import_wif">WIF 私钥</string>
+    <string name="wallet_import_password">输入密码</string>
+    <string name="wallet_import_confirm">确认密码</string>
     <string name="wallet_import_tip">你可以在本页导入你的WIF私钥并设置一个密码来保护它。或者你也可以选择打开你的钱包文件(NEP-6)。</string>
     <string name="wallet_import_wif_hint">输入WIF私钥</string>
     <string name="wallet_import_btn_wif">导入</string>
