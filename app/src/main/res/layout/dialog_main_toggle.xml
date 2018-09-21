@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:gravity="center"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?colorDefault">
+    android:background="@color/colorDefaultDefault">
     <FrameLayout
         android:id="@+id/dialog_main_send"
         android:layout_width="0dp"

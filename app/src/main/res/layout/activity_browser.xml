@@ -17,7 +17,7 @@
             android:layout_height="48dp"
             android:padding="@dimen/dimenSpace"
             android:drawableStart="@drawable/icon_close"
-            android:drawableTint="?colorLight"
+            android:drawableTint="?colorDefault"
             android:gravity="center_vertical"
             tools:targetApi="m"/>
         <TextView

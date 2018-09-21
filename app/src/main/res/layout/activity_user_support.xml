@@ -13,14 +13,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
         <TextView
             android:id="@+id/user_support_back"
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
+            android:gravity="center"
             android:text="@string/fragment_user_support"
             android:textColor="?colorDefault"
             android:layout_gravity="center"

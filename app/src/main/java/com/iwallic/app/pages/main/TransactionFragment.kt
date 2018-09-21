@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.base.BaseFragmentAdapter
 import com.iwallic.app.models.PageDataPyModel

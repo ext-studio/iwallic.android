@@ -14,15 +14,13 @@
             android:id="@+id/transaction_receive_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|start"
-            android:layout_marginStart="@dimen/dimenSmall"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_gravity="center_vertical|start">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_height="48dp"
+                android:paddingStart="@dimen/dimenSpace"
+                android:paddingEnd="@dimen/dimenSpace"
                 android:drawableStart="@drawable/icon_back"
                 android:drawableTint="?colorDefault"
                 android:text="@string/transaction_receive"

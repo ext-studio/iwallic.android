@@ -7,15 +7,20 @@
     android:layout_height="match_parent"
     android:background="?colorDefault2"
     android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/app_top_space"
+        style="@style/app_status_bar"
+        android:orientation="horizontal"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingStart="@dimen/dimenSpaceM"
-        android:paddingEnd="@dimen/dimenSpaceM"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/dimenSpace"
+        android:paddingEnd="@dimen/dimenSpace"
         android:background="?colorPrimary">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
             android:layout_centerInParent="true"
             android:text="@string/fragment_transaction_title"
             android:textColor="?colorDefault"

@@ -13,16 +13,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"
-        android:padding="@dimen/dimenSpace">
+        android:background="?colorPrimary">
         <TextView
             android:id="@+id/user_setting_skin_back"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
+            android:gravity="center"
             android:text="@string/user_setting_skin"
             android:textColor="?colorDefault"
             android:layout_gravity="center"
@@ -32,9 +33,11 @@
         <TextView
             android:id="@+id/user_setting_skin_save"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
+            android:gravity="center"
             android:text="@string/user_setting_save"
             android:textColor="?colorDefault"
             android:layout_gravity="center"

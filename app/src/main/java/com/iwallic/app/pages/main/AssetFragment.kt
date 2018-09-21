@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
+import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
@@ -30,7 +31,7 @@ class AssetFragment : BaseFragment() {
     private lateinit var assetSRL: SmartRefreshLayout
     private lateinit var refreshCH: ClassicsHeader
     private lateinit var assetAdapter: AssetAdapter
-    private lateinit var assetManager: RecyclerView.LayoutManager
+    private lateinit var assetManager: LinearLayoutManager
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
     private lateinit var manageIV: ImageView

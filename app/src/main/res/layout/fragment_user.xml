@@ -8,14 +8,20 @@
     android:background="?colorDefault2"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/app_top_space"
+        style="@style/app_status_bar"
+        android:orientation="horizontal"/>
     <RelativeLayout
         android:background="?colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace">
+        android:paddingStart="@dimen/dimenSpace"
+        android:paddingEnd="@dimen/dimenSpace">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
             android:layout_centerInParent="true"
             android:text="@string/fragment_user_title"
             android:textColor="?colorDefault"

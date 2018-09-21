@@ -13,7 +13,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
         <TextView
             android:id="@+id/user_setting_net_back"
@@ -22,7 +21,10 @@
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
+            android:gravity="center"
             android:text="@string/user_setting_net"
             android:textColor="?colorDefault"
             android:layout_gravity="center"
@@ -36,6 +38,8 @@
             android:layout_height="wrap_content"
             android:text="@string/user_setting_save"
             android:textColor="?colorDefault"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
             android:textSize="@dimen/dimenFontL"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"

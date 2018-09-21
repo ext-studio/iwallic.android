@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 import com.iwallic.app.R
+import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity

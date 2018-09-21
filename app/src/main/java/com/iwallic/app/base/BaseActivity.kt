@@ -11,7 +11,9 @@ import android.content.pm.PackageManager
 import android.os.*
 import android.support.annotation.Nullable
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.iwallic.app.R
@@ -74,13 +76,6 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun setStatusBarSpace(activity: Activity) {
-        val spaceV = activity.findViewById<LinearLayout>(R.id.app_top_space)
-        if (spaceV != null) {
-            spaceV.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.getStatusBarHeight(activity).toInt())
-        }
-    }
-
     protected fun copy(text: String, label: String = "iwallic") {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(label, text)
@@ -103,14 +98,29 @@ open class BaseActivity : AppCompatActivity() {
     private fun resolveTheme() {
         when (SharedPrefUtils.getSkin(this)) {
             "default" -> {
+                setStatusBarLight()
                 setTheme(R.style.ThemeDefault)
             }
             "night" -> {
+                setStatusBarDark()
                 setTheme(R.style.ThemeNight)
             }
             else -> {
+                setStatusBarLight()
                 setTheme(R.style.ThemeDefault)
             }
+        }
+    }
+
+    protected fun setStatusBarLight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = 0
+        }
+    }
+
+    protected fun setStatusBarDark() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
 }

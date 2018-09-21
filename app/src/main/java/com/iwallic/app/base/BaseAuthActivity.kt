@@ -40,18 +40,6 @@ open class BaseAuthActivity: AppCompatActivity() {
         overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
     }
 
-    protected fun setStatusBarLight() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.decorView.systemUiVisibility = 0
-        }
-    }
-
-    protected fun setStatusBarDark() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-    }
-
     protected fun copy(text: String, label: String = "iwallic") {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(label, text)
@@ -103,14 +91,29 @@ open class BaseAuthActivity: AppCompatActivity() {
     private fun resolveTheme() {
         when (SharedPrefUtils.getSkin(this)) {
             "default" -> {
+                setStatusBarLight()
                 setTheme(R.style.ThemeDefault)
             }
             "night" -> {
+                setStatusBarDark()
                 setTheme(R.style.ThemeNight)
             }
             else -> {
+                setStatusBarLight()
                 setTheme(R.style.ThemeDefault)
             }
+        }
+    }
+
+    protected fun setStatusBarLight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = 0
+        }
+    }
+
+    protected fun setStatusBarDark() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
 }

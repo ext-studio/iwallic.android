@@ -58,9 +58,12 @@ class AssetDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_detail)
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         initParams()
         initDOM()
         initGAS()
+        resolveFetchClaim()
         initListener()
         initList()
         resolveBalance()
@@ -233,7 +236,7 @@ class AssetDetailActivity : BaseActivity() {
             return
         }
         HttpUtils.post(this,"getclaim", listOf(WalletUtils.address(this)), {
-            claims = gson.fromJson(it, ClaimsRes::class.java)
+            claims = try {gson.fromJson(it, ClaimsRes::class.java)} catch(_: Throwable) {null}
             if (claims != null) {
                 claimEnterTV.visibility = View.VISIBLE
                 claimUnCollectTV.text = resources.getString(R.string.asset_detail_claim_un_collect, claims!!.unCollectClaim)

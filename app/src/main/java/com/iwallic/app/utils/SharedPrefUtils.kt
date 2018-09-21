@@ -79,9 +79,9 @@ object SharedPrefUtils {
     }
     fun rmAsset(context: Context, assetIds: ArrayList<String>) {
         val tryGet = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("observer_asset", setOf())
-        val newList = tryGet.filter {
+        val newList = tryGet.filter { new ->
             assetIds.all {
-                !it.contains(it)
+                !new.contains(it)
             }
         }
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("observer_asset", newList.toSet()).apply()
@@ -90,27 +90,27 @@ object SharedPrefUtils {
         return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chain_net", "main") ?: "main"
     }
     fun setNet(context: Context, net: String) {
-        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("net", if (net == "main") "main" else "test").apply()
+        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("chain_net", if (net == "main") "main" else "test").apply()
     }
     fun getClaim(context: Context): String {
-        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("claim", setOf()).toList()
+        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("claim", ",0").split(",")
         val txid = rs.getOrNull(0) ?: ""
         val time = rs.getOrNull(1)?.toLong() ?: 0.toLong()
         val expired = System.currentTimeMillis() / 1000 + 3600
         return if (time < expired) "" else txid
     }
     fun setClaim(context: Context, txid: String) {
-        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("claim", setOf(txid, (System.currentTimeMillis()/1000).toString())).apply()
+        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("claim", "$txid,${System.currentTimeMillis()/1000}").apply()
     }
     fun getCollect(context: Context): String {
-        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getStringSet("collect", setOf()).toList()
+        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("collect", ",0").split(",")
         val txid = rs.getOrNull(0) ?: ""
         val time = rs.getOrNull(1)?.toLong() ?: 0.toLong()
         val expired = System.currentTimeMillis() / 1000 + 3600
         return if (time < expired) "" else txid
     }
     fun setCollect(context: Context, txid: String) {
-        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putStringSet("collect", setOf(txid, (System.currentTimeMillis()/1000).toString())).apply()
+        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("collect", "$txid,${System.currentTimeMillis()/1000}").apply()
     }
 
     private fun resolveLocale(default: Locale): Locale {

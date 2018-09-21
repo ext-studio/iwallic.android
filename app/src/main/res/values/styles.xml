@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="ThemeDefault" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkDefault</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDefault</item>
         <item name="colorPrimary">@color/colorPrimaryDefault</item>
         <item name="colorDanger">@color/colorDangerDefault</item>
         <item name="colorDark">@color/colorDarkDefault</item>
@@ -31,7 +31,7 @@
     </style>
 
     <style name="ThemeNight" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkNight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryNight</item>
         <item name="colorPrimary">@color/colorPrimaryNight</item>
         <item name="colorDanger">@color/colorDangerNight</item>
         <item name="colorDark">@color/colorDarkNight</item>
@@ -138,5 +138,11 @@
         <item name="android:backgroundDimAmount">0.3</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="app_status_bar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:layout_height">@dimen/dimenStatusBar</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 </resources>
