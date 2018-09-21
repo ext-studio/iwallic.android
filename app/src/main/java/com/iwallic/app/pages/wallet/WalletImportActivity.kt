@@ -1,21 +1,18 @@
 package com.iwallic.app.pages.wallet
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -46,7 +43,7 @@ class WalletImportActivity : BaseAuthActivity() {
         if (result != null) {
             if (result.contents != null) {
                 Log.i("【WalletImport】", "scanned【${result.contents}】")
-                if (WalletUtils.check(result.contents, "wif")) {
+                if (NeonUtils.check(result.contents, "wif")) {
                     wif = result.contents
                     wifET.setText(result.contents)
                 } else {
@@ -103,7 +100,7 @@ class WalletImportActivity : BaseAuthActivity() {
                 Toast.makeText(this, R.string.error_empty, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (WalletUtils.check(wif, "wif") && pwd.length > 5 && pwd == confirm) {
+            if (NeonUtils.check(wif, "wif") && pwd.length > 5 && pwd == confirm) {
                 resolveImport()
             }
         }
@@ -114,7 +111,7 @@ class WalletImportActivity : BaseAuthActivity() {
         }
     }
     private fun resolveError() {
-        if (!WalletUtils.check(wif, "wif")) {
+        if (!NeonUtils.check(wif, "wif")) {
             errorTV.setText(R.string.wallet_import_error_wif)
             errorTV.visibility = View.VISIBLE
         } else if (pwd.isNotEmpty() && pwd.length < 6) {
@@ -128,11 +125,11 @@ class WalletImportActivity : BaseAuthActivity() {
         }
     }
     private fun resolveImport() {
-        val loader = DialogUtils.loader(this, "正在打开")
+        val loader = DialogUtils.loader(this, R.string.wallet_import_importing)
         launch {
             var done = true
-            val w = WalletUtils.import(wif, pwd)
-            if (w == null || !WalletUtils.save(baseContext, w)) {
+            val w = NeonUtils.import(wif, pwd)
+            if (w == null || !NeonUtils.save(baseContext, w)) {
                 done = false
             }
             withContext(UI) {

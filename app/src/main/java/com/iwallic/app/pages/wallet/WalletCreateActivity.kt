@@ -10,15 +10,13 @@ import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import android.content.*
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.neon.wallet.Wallet
-
 
 class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var step1LL: LinearLayout
@@ -141,12 +139,12 @@ class WalletCreateActivity : BaseAuthActivity() {
     }
 
     private fun resolveCreate() {
-        val loader = DialogUtils.loader(this, "正在创建")
+        val loader = DialogUtils.loader(this, R.string.wallet_create_creating)
         launch {
             var done = true
             try {
                 val privateKey = Wallet.generate()
-                newWallet = WalletUtils.create(pwd, privateKey)
+                newWallet = NeonUtils.create(pwd, privateKey)
                 newWif = Wallet.priv2Wif(privateKey)
             } catch (e: Exception) {
                 done = false
@@ -178,7 +176,7 @@ class WalletCreateActivity : BaseAuthActivity() {
     private fun resolveEnter() {
         val loader = DialogUtils.loader(this)
         launch {
-            if (WalletUtils.save(baseContext, newWallet!!)) {
+            if (NeonUtils.save(baseContext, newWallet!!)) {
                 withContext(UI) {
                     loader.dismiss()
                 }

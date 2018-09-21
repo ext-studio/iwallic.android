@@ -20,7 +20,6 @@ import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
-
 class AssetManageActivity : BaseActivity() {
     private lateinit var backTV: TextView
     private lateinit var amRV: RecyclerView

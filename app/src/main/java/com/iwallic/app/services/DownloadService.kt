@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import android.support.v4.content.FileProvider
 import android.util.Log
+import com.iwallic.app.R
 import com.iwallic.app.utils.NotificationUtils
 import kotlinx.coroutines.experimental.launch
 import java.io.*
@@ -62,20 +63,20 @@ class DownloadService : Service() {
         launch {
             try {
                 canceled = false
-                NotificationUtils.progress(service, "正在更新", 0)
+                NotificationUtils.progress(service, "", 0)
                 timerTask = Timer().schedule(1000, 1000) {
-                    NotificationUtils.progress(service, "正在更新", percent)
+                    NotificationUtils.progress(service, R.string.version_updating, percent)
                 }
                 val file = resolveDownload(url)
                 if (file == null) {
-                    NotificationUtils.common(applicationContext, "更新失败", "下载安装包出错")
+                    NotificationUtils.common(applicationContext, R.string.version_error, R.string.version_error_download)
                 } else {
-                    NotificationUtils.progress(service, "正在完成", 100)
+                    NotificationUtils.progress(service, R.string.version_finishing, 100)
                     resolveInstall(file)
                 }
             } catch (e: Throwable) {
                 Log.i("【DownloadService】", "error【$e】")
-                NotificationUtils.common(applicationContext, "更新失败", "发生未知错误")
+                NotificationUtils.common(applicationContext, R.string.version_error, R.string.version_error_unknown)
                 stopSelf()
             }
             timerTask?.cancel()
@@ -93,7 +94,7 @@ class DownloadService : Service() {
                 val runtime = Runtime.getRuntime()
                 runtime.exec(command)
             } catch (e: IOException) {
-                NotificationUtils.common(applicationContext, "更新失败", "权限错误")
+                NotificationUtils.common(applicationContext, R.string.version_error, R.string.version_error_permission)
             }
         }
         val file = File(parent, "TheToken_${System.currentTimeMillis()}.apk")
@@ -150,7 +151,7 @@ class DownloadService : Service() {
                 installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive")
                 startActivity(installIntent)
             } catch (e: IOException) {
-                NotificationUtils.common(applicationContext, "更新失败", "权限错误")
+                NotificationUtils.common(applicationContext, R.string.version_error, R.string.version_error_permission)
             }
         }
     }

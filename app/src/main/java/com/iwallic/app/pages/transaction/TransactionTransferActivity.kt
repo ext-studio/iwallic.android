@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
-import com.iwallic.app.utils.DialogUtils
 import android.widget.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -18,9 +17,7 @@ import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.UnconfirmedState
-import com.iwallic.app.utils.HttpUtils
-import com.iwallic.app.utils.SharedPrefUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.*
 
 class TransactionTransferActivity : BaseActivity() {
     private lateinit var backLL: TextView
@@ -56,7 +53,7 @@ class TransactionTransferActivity : BaseActivity() {
         if (result != null) {
             if (result.contents != null) {
                 Log.i("【transfer】", "scanned【${result.contents}】")
-                if (WalletUtils.check(result.contents, "address")) {
+                if (NeonUtils.check(result.contents, "address")) {
                     target = result.contents
                     targetET.setText(result.contents)
                 } else {
@@ -70,7 +67,7 @@ class TransactionTransferActivity : BaseActivity() {
         }
     }
     private fun initDOM() {
-        address = WalletUtils.address(this)
+        address = NeonUtils.address(this)
         backLL = findViewById(R.id.transaction_transfer_back)
         chooseAssetLL = findViewById(R.id.transaction_transfer_choose_asset)
         targetET = findViewById(R.id.transaction_transfer_target)
@@ -174,42 +171,36 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
-        val loader = DialogUtils.loader(this, "转账中")
+        val loader = DialogUtils.loader(this, R.string.transaction_transfer_sending)
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
             asset = asset.substring(2, asset.length)
         }
         when {
-            WalletUtils.check(asset, "asset") -> {
+            NeonUtils.check(asset, "asset") -> {
                 Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
-                HttpUtils.post(this, "getutxoes", listOf(from, asset), fun(res) {
-                    val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
-                    if (data == null) {
-                        loader.dismiss()
-                        resolveError(99998)
-                        return
-                    }
-                    val newTx = TransactionModel.forAsset(data, from, to, amount, asset)
+                NeonUtils.fetchBalance(this, from, asset, { balance ->
+                    val newTx = TransactionModel.forAsset(balance, from, to, amount, asset)
                     if (newTx == null) {
                         loader.dismiss()
                         resolveError(99699)
-                        return
+                    } else {
+                        newTx.sign(wif)
+                        HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                            loader.dismiss()
+                            resolveSuccess(newTx.hash())
+                        }, {
+                            loader.dismiss()
+                            resolveError(it)
+                        })
                     }
-                    newTx.sign(wif)
-                    HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
-                        loader.dismiss()
-                        resolveSuccess(newTx.hash())
-                    }, {
-                        loader.dismiss()
-                        resolveError(it)
-                    })
-                }, fun(err) {
+                }, {
                     loader.dismiss()
-                    resolveError(err)
+                    resolveError(it)
                 })
             }
-            WalletUtils.check(asset, "script") -> {
+            NeonUtils.check(asset, "script") -> {
                 Log.i("【transfer】", "token tx【$asset】*【$amount】to【$target】")
                 val newTx = TransactionModel.forToken(asset, from, to, amount)
                 if (newTx == null) {
@@ -252,16 +243,19 @@ class TransactionTransferActivity : BaseActivity() {
             if (pwd.isEmpty()) {
                 return@password
             }
-            val loader = DialogUtils.loader(this, "验证中")
-                WalletUtils.verify(baseContext, pwd).subscribe {rs ->
-                    wif = rs
-                    loader.dismiss()
-                    if (wif.isEmpty()) {
-                        resolveError(99599)
-                    } else {
-                        resolveSend(address, target, amount)
-                    }
+            val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
+            NeonUtils.verify(baseContext, pwd, {
+                wif = it
+                loader.dismiss()
+                if (wif.isEmpty()) {
+                    resolveError(99599)
+                } else {
+                    resolveSend(address, target, amount)
                 }
+            }, {
+                loader.dismiss()
+                resolveError(99999)
+            })
         }
     }
 
@@ -270,13 +264,14 @@ class TransactionTransferActivity : BaseActivity() {
             HttpUtils.postPy(
                 this,
                 "/client/transaction/unconfirmed",
-                mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
+                mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")
+            ), {
                 Log.i("【Transfer】", "submitted 【$txid】")
-                // todo notify new unconfirmed tx
+//                TxBroadCast.send(this, txid)
+                UnconfirmedState.clear(this)
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
-            }
-            )
+            })
         }
         step1LL.visibility = View.GONE
         step2LL.visibility = View.VISIBLE
@@ -296,7 +291,7 @@ class TransactionTransferActivity : BaseActivity() {
 
     private fun resolveErrorTip() {
         when {
-            target.isNotEmpty() && !WalletUtils.check(target, "address") -> {
+            target.isNotEmpty() && !NeonUtils.check(target, "address") -> {
                 tipTV.setText(R.string.transaction_transfer_tips_target_error)
                 tipTV.visibility = View.VISIBLE
             }

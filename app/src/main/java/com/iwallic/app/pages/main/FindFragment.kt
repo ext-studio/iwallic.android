@@ -1,5 +1,6 @@
 package com.iwallic.app.pages.main
 
+import android.annotation.SuppressLint
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,23 +39,25 @@ class FindFragment : BaseFragment() {
         heightTV = view.findViewById(R.id.find_height)
         timeTV = view.findViewById(R.id.find_time)
     }
+    @SuppressLint("SimpleDateFormat")
     private fun initBlock() {
         BlockState.current(context, { data, isNew ->
-            heightTV.text = "同步区块高度：${data.lastBlockIndex}"
-            timeTV.text = "区块生成时间：${SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(data.time*1000))}"
+            heightTV.text = resources.getString(R.string.find_height, data.lastBlockIndex)
+            timeTV.text = resources.getString(R.string.find_time, SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(data.time*1000)))
         }, {
             if (!DialogUtils.error(context, it)) {
                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
             }
         })
     }
+    @SuppressLint("SimpleDateFormat")
     private fun initBroadCast() {
         broadCast = BlockBroadCast()
         broadCast?.setNewBlockListener { _, intent ->
             val height = intent?.getLongExtra("height", 0) ?: 0
             val time = intent?.getLongExtra("time", 0) ?: 0
-            heightTV.text = "同步区块高度：${if (height > 0) height else "-"}"
-            timeTV.text = "区块生成时间：${if (time > 0) SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(time*1000)) else "-"}"
+            heightTV.text = resources.getString(R.string.find_height, if (height > 0) height else null)
+            timeTV.text = resources.getString(R.string.find_time, if (time > 0) SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(time*1000)) else null)
         }
         context?.registerReceiver(broadCast, IntentFilter(CommonUtils.broadCastBlock))
     }

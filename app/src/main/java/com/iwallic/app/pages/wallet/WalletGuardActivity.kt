@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -19,7 +18,7 @@ import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 
 class WalletGuardActivity : BaseAuthActivity() {
     private lateinit var createFL: FrameLayout
@@ -99,8 +98,8 @@ class WalletGuardActivity : BaseAuthActivity() {
             if (pwd.isEmpty()) {
                 return@password
             }
-            val loader = DialogUtils.loader(this, "验证中")
-                WalletUtils.switch(this, w, pwd).subscribe ({rs ->
+            val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
+                NeonUtils.switch(this, w, pwd).subscribe ({ rs ->
                     loader.dismiss()
                     if (rs == 0) {
                         val intent = Intent(this, MainActivity::class.java)
@@ -131,7 +130,7 @@ class WalletGuardActivity : BaseAuthActivity() {
             if (!it) {
                 return@subscribe
             }
-            WalletUtils.remove(baseContext, w)
+            NeonUtils.remove(baseContext, w)
             adapter.remove(p)
             if (adapter.itemCount == 0) {
                 historyLL.visibility = View.GONE

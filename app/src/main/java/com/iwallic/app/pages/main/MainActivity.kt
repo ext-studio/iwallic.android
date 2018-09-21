@@ -61,7 +61,7 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         if (!canExit) {
             canExit = true
-            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.main_exit, Toast.LENGTH_SHORT).show()
             launch (UI) {
                 delay(1500)
                 canExit = false

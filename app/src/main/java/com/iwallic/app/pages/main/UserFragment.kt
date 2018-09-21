@@ -8,16 +8,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 
 import com.iwallic.app.R
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
 import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
-import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
 
 class UserFragment : BaseFragment() {
@@ -64,7 +62,7 @@ class UserFragment : BaseFragment() {
         DialogUtils.confirm(context!!, R.string.dialog_content_signout, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no).subscribe {
             if (it) {
                 AssetState.cached = null
-                WalletUtils.close(context!!)
+                NeonUtils.close(context!!)
                 val intent = Intent(context, WalletGuardActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

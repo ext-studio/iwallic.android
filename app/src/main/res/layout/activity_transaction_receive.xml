@@ -66,7 +66,7 @@
                     android:layout_margin="@dimen/dimenSpace"
                     android:textColor="?colorDark"
                     android:textSize="@dimen/dimenFontM"
-                    android:text="收款地址"/>
+                    android:text="@string/transaction_receive_address"/>
                 <TextView
                     android:id="@+id/transaction_receive_address"
                     android:layout_width="wrap_content"

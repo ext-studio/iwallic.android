@@ -1,11 +1,8 @@
 package com.iwallic.app.pages.asset
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -20,14 +17,12 @@ import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.models.*
 import com.iwallic.app.pages.common.BrowserActivity
-import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
-import io.reactivex.disposables.Disposable
 
 class AssetDetailActivity : BaseActivity() {
     private lateinit var titleTV: TextView
@@ -209,9 +204,6 @@ class AssetDetailActivity : BaseActivity() {
             startActivity(intent)
         }
         txAdapter.onEnter().subscribe {
-//            val intent = Intent(this, TransactionDetailActivity::class.java)
-//            intent.putExtra("txid", txAdapter.getItem(it).txid)
-//            startActivity(intent)
             val intent = Intent(this, BrowserActivity::class.java)
             intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
             startActivity(intent)
@@ -252,7 +244,7 @@ class AssetDetailActivity : BaseActivity() {
         if (asset.asset_id != CommonUtils.GAS || noNeed) {
             return
         }
-        HttpUtils.post(this,"getclaim", listOf(WalletUtils.address(this)), {
+        HttpUtils.post(this,"getclaim", listOf(NeonUtils.address(this)), {
             claims = try {gson.fromJson(it, ClaimsRes::class.java)} catch(_: Throwable) {null}
             if (claims != null) {
                 claimEnterTV.visibility = View.VISIBLE
@@ -280,85 +272,73 @@ class AssetDetailActivity : BaseActivity() {
     }
 
     private fun resolveCollect() {
-        val addr = WalletUtils.address(this)
+        val addr = NeonUtils.address(this)
         DialogUtils.password(this) {pwd ->
-            DialogUtils.load(this).subscribe {load ->
-                WalletUtils.verify(this, pwd).subscribe({wif ->
-                    if (wif.isEmpty()) {
-                        load.dismiss()
-                        resolveError(99599)
-                    } else {
-                        HttpUtils.post(this, "getutxoes", listOf(addr, CommonUtils.GAS), {res ->
-                            val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
-                            if (data == null) {
-                                load.dismiss()
-                                resolveError(99998)
-                                return@post
-                            }
-                            var amount = 0.0
-                            data.forEach {
-                                amount += it.value
-                            }
-                            val newTx = TransactionModel.forAsset(data, addr, addr, amount, CommonUtils.GAS)
-                            if (newTx == null) {
-                                load.dismiss()
-                                resolveError(99699)
-                                return@post
-                            }
+            val loader = DialogUtils.loader(this, R.string.asset_detail_collecting)
+            NeonUtils.verify(this, pwd, { wif ->
+                if (wif.isEmpty()) {
+                    loader.dismiss()
+                    resolveError(99599)
+                } else {
+                    NeonUtils.fetchBalance(this, addr, CommonUtils.GAS, { balance ->
+                        var amount = 0.0
+                        balance.forEach {
+                            amount += it.value
+                        }
+                        val newTx = TransactionModel.forAsset(balance, addr, addr, amount, CommonUtils.GAS)
+                        if (newTx == null) {
+                            loader.dismiss()
+                            resolveError(99699)
+                        } else {
                             newTx.sign(wif)
-                            Log.i("【Claim】", newTx.serialize(true))
-//                            resolveSuccess(newTx.hash(), addr, amount, "collect")
                             HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
-                                load.dismiss()
+                                loader.dismiss()
                                 resolveSuccess(newTx.hash(), addr, amount, "collect")
                             }, {
-                                load.dismiss()
+                                loader.dismiss()
                                 resolveError(it)
                             })
-                        }, {
-                            load.dismiss()
-                            resolveError(it)
-                        })
-                    }
-                }, {
-                    load.dismiss()
-                    resolveError(99999)
-                })
-            }
+                        }
+                    }, {
+                        loader.dismiss()
+                        resolveError(it)
+                    })
+                }
+            }, {
+                loader.dismiss()
+                resolveError(it)
+            })
         }
     }
 
     private fun resolveClaim() {
-        val addr = WalletUtils.address(this)
-        DialogUtils.password(this) {pwd ->
-            DialogUtils.load(this).subscribe {load ->
-                WalletUtils.verify(this, pwd).subscribe({wif ->
-                    if (wif.isEmpty()) {
-                        load.dismiss()
-                        resolveError(99599)
+        val addr = NeonUtils.address(this)
+        DialogUtils.password(this) { pwd ->
+            val loader = DialogUtils.loader(this, R.string.asset_detail_claiming)
+            NeonUtils.verify(this, pwd, { wif ->
+                if (wif.isEmpty()) {
+                    loader.dismiss()
+                    resolveError(99599)
+                } else {
+                    val newTx = TransactionModel.forClaim(claims!!.claims, claims!!.unSpentClaim.toDouble(), addr)
+                    if (newTx == null) {
+                        loader.dismiss()
+                        resolveError(99699)
                     } else {
-                        val newTx = TransactionModel.forClaim(claims!!.claims, claims!!.unSpentClaim.toDouble(), addr)
-                        if (newTx == null) {
-                            load.dismiss()
-                            resolveError(99699)
-                        } else {
-                            newTx.sign(wif)
-                            Log.i("【Claim】", newTx.serialize(true))
-//                            resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
-                            HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
-                                load.dismiss()
-                                resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
-                            }, {
-                                load.dismiss()
-                                resolveError(it)
-                            })
-                        }
+                        newTx.sign(wif)
+                        HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                            loader.dismiss()
+                            resolveSuccess(newTx.hash(), addr, claims!!.unSpentClaim.toDouble(), "claim")
+                        }, {
+                            loader.dismiss()
+                            resolveError(it)
+                        })
                     }
-                }, {
-                    load.dismiss()
-                    resolveError(99999)
-                })
-            }
+                }
+            }, {
+                loader.dismiss()
+                resolveError(it)
+            })
         }
     }
 
@@ -374,9 +354,10 @@ class AssetDetailActivity : BaseActivity() {
         HttpUtils.postPy(
             this,
             "/client/transaction/unconfirmed",
-            mapOf(Pair("wallet_address", addr), Pair("asset_id", CommonUtils.GAS), Pair("txid", "0x$txid"), Pair("value", "$value")), {
-                Log.i("【Claim】", "submitted 【$txid】")
-                // todo notify new unconfirmed tx
+            mapOf(Pair("wallet_address", addr), Pair("asset_id", CommonUtils.GAS), Pair("txid", "0x$txid"), Pair("value", "$value")
+        ), {
+                Log.i("【Claim】", "submitted【$txid】")
+                UnconfirmedState.clear(this)
             }, {
                 Log.i("【Claim】", "submit failed【$it】")
             }

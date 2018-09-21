@@ -29,6 +29,17 @@ object NotificationUtils {
         val notification = progressBuilder?.build()
         service.startForeground(CommonUtils.notificationProgress, notification)
     }
+    fun progress(service: Service, titleRes: Int, progress: Int) {
+        if (progressBuilder == null) {
+            progressBuilder = resolveProgressBuilder(service)
+        }
+        progressBuilder?.setWhen(System.currentTimeMillis())
+        progressBuilder?.setContentTitle(service.resources.getString(titleRes))
+        progressBuilder?.setContentText("$progress%")
+        progressBuilder?.setProgress(100, progress, progress == 0 || progress == 100)
+        val notification = progressBuilder?.build()
+        service.startForeground(CommonUtils.notificationProgress, notification)
+    }
     fun common(context: Context, title: String, content: String) {
         if (commonBuilder == null) {
             commonBuilder = resolveCommonBuilder(context)
@@ -41,9 +52,19 @@ object NotificationUtils {
         val notification = commonBuilder?.build()
         NotificationManagerCompat.from(context).notify(CommonUtils.notificationCommon, notification!!)
     }
+    fun common(context: Context, titleRes: Int, contentRes: Int) {
+        if (commonBuilder == null) {
+            commonBuilder = resolveCommonBuilder(context)
+        }
+        commonBuilder?.setWhen(System.currentTimeMillis())
+        commonBuilder?.setContentTitle(context.resources.getString(titleRes))
+        commonBuilder?.setContentText(context.resources.getString(contentRes))
+        val notification = commonBuilder?.build()
+        NotificationManagerCompat.from(context).notify(CommonUtils.notificationCommon, notification!!)
+    }
     private fun resolveProgressBuilder(context: Context): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(context, resolveChannel(context, CommonUtils.channelIDProgress, CommonUtils.channelNameProgress, "令牌(TheToken)更新进度提示"))
+            NotificationCompat.Builder(context, resolveChannel(context, CommonUtils.channelIDProgress, CommonUtils.channelNameProgress, context.resources.getString(R.string.app_notification_progress)))
         } else {
             @Suppress("DEPRECATION")
             NotificationCompat.Builder(context)
@@ -58,7 +79,7 @@ object NotificationUtils {
     }
     private fun resolveCommonBuilder(context: Context): NotificationCompat.Builder {
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationCompat.Builder(context, resolveChannel(context, CommonUtils.channelIDCommon, CommonUtils.channelNameCommon, "令牌(TheToken)一般性通知"))
+            NotificationCompat.Builder(context, resolveChannel(context, CommonUtils.channelIDCommon, CommonUtils.channelNameCommon, context.resources.getString(R.string.app_notification_common)))
         } else {
             @Suppress("DEPRECATION")
             NotificationCompat.Builder(context)

@@ -66,7 +66,7 @@ class WelcomeActivity : BaseAuthActivity() {
     private fun enter() {
         launch {
             delay(1000)
-            if (WalletUtils.wallet(baseContext) == null || WalletUtils.account(baseContext) == null) {
+            if (NeonUtils.wallet(baseContext) == null || NeonUtils.account(baseContext) == null) {
                 startActivity(Intent(baseContext, WalletGuardActivity::class.java))
             } else {
                 startActivity(Intent(baseContext, MainActivity::class.java))

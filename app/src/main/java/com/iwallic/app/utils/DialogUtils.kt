@@ -95,28 +95,46 @@ object DialogUtils {
             dialog.setCancelable(false)
             dialog.setContentView(view)
             dialog.create()
-            dialog.show()
-            dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
-
-            launch (UI) {
-                delay(10000)
-                if (dialog.isShowing) {
-                    dialog.dismiss()
-                }
-            }
         } else {
             val builder = android.support.v7.app.AlertDialog.Builder(context)
             builder.setCancelable(false)
             builder.setView(view)
             dialog = builder.create()
-            dialog.show()
-            dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
 
-            launch (UI) {
-                delay(10000)
-                if (dialog.isShowing) {
-                    dialog.dismiss()
-                }
+        launch (UI) {
+            delay(10000)
+            if (dialog.isShowing) {
+                dialog.dismiss()
+            }
+        }
+        return dialog
+    }
+
+    fun loader(context: Context, msgRes: Int): Dialog {
+        val dialog: Dialog
+        val view = View.inflate(context, R.layout.dialog_loading, null)
+        view.findViewById<TextView>(R.id.dialog_loading_text).setText(msgRes)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            dialog = Dialog(context)
+            dialog.setCancelable(false)
+            dialog.setContentView(view)
+            dialog.create()
+        } else {
+            val builder = android.support.v7.app.AlertDialog.Builder(context)
+            builder.setCancelable(false)
+            builder.setView(view)
+            dialog = builder.create()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+
+        launch (UI) {
+            delay(10000)
+            if (dialog.isShowing) {
+                dialog.dismiss()
             }
         }
         return dialog

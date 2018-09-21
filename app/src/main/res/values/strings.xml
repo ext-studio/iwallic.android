@@ -6,6 +6,7 @@
     <string name="fragment_transaction_unconfirmed">Unconfirmed</string>
     <string name="navigation_find_title">Find</string>
     <string name="navigation_user_title">User</string>
+    <string name="main_exit">Press again to exit</string>
     <string name="fragment_asset_title">Assets</string>
     <string name="fragment_transaction_title">Transactions</string>
     <string name="fragment_find_title">Find</string>
@@ -25,6 +26,8 @@
     <string name="asset_detail_claim_un_collect">Can collect: %1$s</string>
     <string name="asset_detail_claim_success">Claim is submitted, please wait for confirm</string>
     <string name="asset_detail_collect_success">Collection is submitted, please wait for confirm</string>
+    <string name="asset_detail_collecting">Collecting</string>
+    <string name="asset_detail_claiming">Claiming</string>
     <string name="user_setting_language">Language</string>
     <string name="user_setting_skin">Theme</string>
     <string name="user_setting_skin_default">Default</string>
@@ -49,6 +52,8 @@
     <string name="wallet_create_new_title">Your WIF:</string>
     <string name="wallet_create_new_copy">Copy WIF</string>
     <string name="wallet_create_new_save">Save File</string>
+    <string name="wallet_create_creating">Creating</string>
+    <string name="wallet_import_importing">Opening</string>
     <string name="wallet_import_tip">Import your WIF key at this page, then set a password to protect it. Or directly choose your wallet file(iWallic support NEP-6 file).</string>
     <string name="wallet_import_wif">WIF key</string>
     <string name="wallet_import_password">Password</string>
@@ -62,6 +67,8 @@
     <string name="wallet_backup_save">Export file</string>
     <string name="wallet_backup_gate">Verify first to show your WIF key.</string>
     <string name="wallet_backup_toggle">Your WIF</string>
+    <string name="find_height">Local block height: %1$d</string>
+    <string name="find_time">Generated at: %1$s</string>
     <string name="transaction_transfer">Transfer</string>
     <string name="transaction_transfer_chooseAsset">Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
@@ -76,6 +83,8 @@
     <string name="transaction_transfer_error_create">Generation failed</string>
     <string name="transaction_transfer_error_send">Transaction failed</string>
     <string name="transaction_transfer_error_rpc">Block net error</string>
+    <string name="transaction_transfer_sending">Transferring</string>
+    <string name="transaction_transfer_verifying">Verifying</string>
     <string name="transaction_receive">Receive</string>
     <string name="transaction_receive_address_copy">Copy Address</string>
     <string name="transaction_unconfirmed">Unconfirmed</string>
@@ -139,4 +148,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="adapter_pager_nomore">No more data here</string>
+
+    <string name="version_updating">Updating</string>
+    <string name="version_finishing">Completing</string>
+    <string name="version_error">Failed</string>
+    <string name="version_error_download">Download failed</string>
+    <string name="version_error_unknown">Unknown error</string>
+    <string name="version_error_permission">Permission error</string>
+    <string name="app_notification_progress">Progress notify</string>
+    <string name="app_notification_common">Common notify</string>
+    <string name="transaction_receive_address">Your address</string>
+    <string name="main_toggle_transfer">Transfer</string>
+    <string name="main_toggle_receive">Receive</string>
 </resources>

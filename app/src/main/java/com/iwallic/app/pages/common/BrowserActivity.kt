@@ -57,6 +57,7 @@ class BrowserActivity : BaseAuthActivity() {
         webSetting.setAppCacheEnabled(true)
         // webSetting.setDatabaseEnabled(true)
         webSetting.domStorageEnabled = true
+        @Suppress("DEPRECATION")
         webSetting.javaScriptEnabled = true
         webSetting.setGeolocationEnabled(true)
         webSetting.setAppCacheMaxSize(Long.MAX_VALUE)

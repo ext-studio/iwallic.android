@@ -7,6 +7,7 @@
     <string name="fragment_transaction_unconfirmed">未确认交易</string>
     <string name="navigation_find_title">发现</string>
     <string name="navigation_user_title">我的</string>
+    <string name="main_exit">再按一次退出</string>
     <string name="fragment_asset_title">我的资产</string>
     <string name="fragment_transaction_title">交易记录</string>
     <string name="fragment_find_title">活动中心</string>
@@ -26,6 +27,8 @@
     <string name="asset_detail_claim_un_collect">可转化: %1$s</string>
     <string name="asset_detail_claim_success">提取操作已提交，请等待区块确认</string>
     <string name="asset_detail_collect_success">转化操作已提交，请等待区块确认，然后可以进行提取操作</string>
+    <string name="asset_detail_collecting">正在转化</string>
+    <string name="asset_detail_claiming">正在提取</string>
     <string name="user_setting_language">显示语言</string>
     <string name="user_setting_skin">应用皮肤</string>
     <string name="user_setting_skin_default">默认</string>
@@ -50,6 +53,8 @@
     <string name="wallet_create_new_title">你的 WIF:</string>
     <string name="wallet_create_new_copy">复制私钥</string>
     <string name="wallet_create_new_save">导出文件</string>
+    <string name="wallet_create_creating">正在创建</string>
+    <string name="wallet_import_importing">正在打开</string>
     <string name="wallet_import_wif">WIF 私钥</string>
     <string name="wallet_import_password">输入密码</string>
     <string name="wallet_import_confirm">确认密码</string>
@@ -63,6 +68,8 @@
     <string name="wallet_backup_save">导出文件</string>
     <string name="wallet_backup_gate">私钥已隐藏，点击验证</string>
     <string name="wallet_backup_toggle">你的私钥</string>
+    <string name="find_height">同步区块高度：%1$d</string>
+    <string name="find_time">区块生成时间：%1$s</string>
     <string name="transaction_transfer">转账</string>
     <string name="transaction_transfer_chooseAsset">选择资产</string>
     <string name="transaction_transfer_target_hint">收款地址</string>
@@ -74,6 +81,8 @@
     <string name="transaction_transfer_tips_amount_unenough">余额不足</string>
     <string name="transaction_transfer_btn_submit">提交</string>
     <string name="transaction_transfer_scan_error">未检测到地址</string>
+    <string name="transaction_transfer_sending">转帐中</string>
+    <string name="transaction_transfer_verifying">验证中</string>
     <string name="transaction_receive_">收款</string>
     <string name="transaction_receive_address_copy">复制地址</string>
     <string name="transaction_transfer_success">交易已提交，等待区块确认</string>
@@ -133,4 +142,16 @@
     <string name="adapter_tx_status_no">已失效</string>
 
     <string name="adapter_pager_nomore">已经到达底线</string>
+
+    <string name="version_updating">正在更新</string>
+    <string name="version_finishing">正在完成</string>
+    <string name="version_error">更新失败</string>
+    <string name="version_error_download">下载安装包出错</string>
+    <string name="version_error_unknown">发生未知错误</string>
+    <string name="version_error_permission">权限错误</string>
+    <string name="app_notification_progress">更新进度提示</string>
+    <string name="app_notification_common">一般性通知</string>
+    <string name="transaction_receive_address">收款地址</string>
+    <string name="main_toggle_transfer">转账</string>
+    <string name="main_toggle_receive">收款</string>
 </resources>

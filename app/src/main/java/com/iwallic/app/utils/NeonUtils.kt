@@ -3,17 +3,15 @@ package com.iwallic.app.utils
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
-import com.iwallic.app.models.AccountModel
-import com.iwallic.app.models.ContractModel
-import com.iwallic.app.models.WalletAgentModel
-import com.iwallic.app.models.WalletModel
+import com.google.gson.reflect.TypeToken
+import com.iwallic.app.models.*
 import com.iwallic.neon.wallet.Wallet
 import io.reactivex.Observable
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
-object WalletUtils {
+object NeonUtils {
     private var cachedAddress: String? = null
     private var cached: WalletModel? = null
     private var gson = Gson()
@@ -222,23 +220,36 @@ object WalletUtils {
         return true
     }
 
-    fun verify(context: Context, pwd: String): Observable<String> {
-        return Observable.create {
+    fun verify(context: Context, pwd: String, ok: (String) -> Unit, no: (Int) -> Unit) {
+        try {
             launch {
                 val account = account(context)
                 if (account == null) {
                     withContext(UI) {
-                        it.onNext("")
+                        no(99999)
                     }
-                    it.onComplete()
                 } else {
                     val rs = Wallet.neP2Decode(account.key, pwd)
                     withContext(UI) {
-                        it.onNext(rs)
+                        ok(rs)
                     }
-                    it.onComplete()
                 }
             }
+        } catch (_: Throwable) {
+            no(99999)
         }
+    }
+
+    fun fetchBalance(context: Context, address: String, assetId: String, ok: (ArrayList<UtxoModel>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.post(context, "getutxoes", listOf(address, assetId), { res ->
+            val data = try {gson.fromJson<ArrayList<UtxoModel>>(res, object : TypeToken<ArrayList<UtxoModel>>() {}.type)} catch (_: Throwable) {null}
+            if (data == null) {
+                no(99998)
+            } else {
+                ok(data)
+            }
+        }, {
+            no(it)
+        })
     }
 }

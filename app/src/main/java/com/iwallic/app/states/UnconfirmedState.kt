@@ -63,6 +63,10 @@ object UnconfirmedState {
         }
     }
 
+    fun clear(context: Context?) {
+        ACache.get(context).remove("tx_unconfirmed")
+    }
+
     private fun local(aCache: ACache, page: Int): ArrayList<TransactionRes>? {
         val strRs = aCache.getAsString("tx_unconfirmed") ?: return null
         val rs = try {gson.fromJson<PageDataPyModel<TransactionRes>>(strRs, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)} catch (_: Throwable) {null}
