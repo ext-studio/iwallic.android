@@ -63,7 +63,7 @@
     <string name="wallet_backup_gate">Verify first to show your WIF key.</string>
     <string name="wallet_backup_toggle">Your WIF</string>
     <string name="transaction_transfer">Transfer</string>
-    <string name="transaction_transfer_chooseAsset">Choose Asset</string>
+    <string name="transaction_transfer_chooseAsset">Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
     <string name="transaction_transfer_amount_hint">Amount</string>
     <string name="transaction_transfer_balance_hint">Balance: %1$s</string>

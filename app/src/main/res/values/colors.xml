@@ -7,7 +7,7 @@
     <color name="colorSecondaryDefault">#32DB64</color>
     <color name="colorDangerDefault">#F53D3D</color>
     <color name="colorDefaultDefault">#FFFFFF</color>
-    <color name="colorDefault2Default">#F9F9F9</color>
+    <color name="colorDefault2Default">#f3f3f3</color>
     <color name="colorLineDefault">#EEEDEE</color>
     <color name="colorLine2Default">#88ADF4</color>
     <color name="colorFontDefault">#C81C1B2E</color>

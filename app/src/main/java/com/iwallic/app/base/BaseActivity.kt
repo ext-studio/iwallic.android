@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.*
 import android.support.annotation.Nullable
@@ -23,6 +24,7 @@ import com.iwallic.app.pages.wallet.WalletGuardActivity
 open class BaseActivity : AppCompatActivity() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (SharedPrefUtils.getAddress(this).isEmpty()) {
             val intent = Intent(this, WalletGuardActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

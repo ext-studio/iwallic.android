@@ -34,6 +34,8 @@ class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var createFL: FrameLayout
     private lateinit var enterFL: FrameLayout
 
+    private lateinit var tipTV: TextView
+
     var newWallet: WalletModel? = null
     private var newWif: String = ""
     private var pwd: String = ""
@@ -63,6 +65,8 @@ class WalletCreateActivity : BaseAuthActivity() {
         wifTV = findViewById(R.id.wallet_create_new_wif)
         copyTV = findViewById(R.id.wallet_create_btn_copy)
         saveTV = findViewById(R.id.wallet_create_btn_save)
+
+        tipTV = findViewById(R.id.wallet_create_tip)
     }
     private fun initClick() {
         backTV.setOnClickListener {
@@ -85,8 +89,8 @@ class WalletCreateActivity : BaseAuthActivity() {
             }
             DialogUtils.confirm(
                 this,
-                R.string.dialog_title_primary,
                 R.string.wallet_create_dialog_enter,
+                R.string.dialog_title_primary,
                 R.string.dialog_ok_enter,
                 R.string.dialog_no
             ).subscribe {
@@ -164,6 +168,7 @@ class WalletCreateActivity : BaseAuthActivity() {
         }
         val qrCode = QRCodeUtils.generate(newWif, this)
         if (qrCode != null) {
+            tipTV.setText(R.string.wallet_create_tip_new)
             step1LL.visibility = View.GONE
             step2LL.visibility = View.VISIBLE
             qrCodeIV.setImageBitmap(qrCode)

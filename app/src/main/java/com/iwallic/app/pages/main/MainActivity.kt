@@ -7,11 +7,13 @@ import android.os.PersistableBundle
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.FloatingActionButton
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
-import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
@@ -22,23 +24,17 @@ import com.iwallic.app.models.Pager
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.BlockService
-import com.iwallic.app.utils.CommonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
-import java.util.*
 
 class MainActivity : BaseActivity() {
 
     private lateinit var navBNV: BottomNavigationView
-    private lateinit var toggleFAB: FloatingActionButton
-    private lateinit var sendFAB: FloatingActionButton
-    private lateinit var receiveFAB: FloatingActionButton
+    private lateinit var toggleIV: ImageView
     private lateinit var pagerNSVP: NoSwipeViewPager
     private lateinit var adapter: BaseFragmentAdapter
 
-    private var fabOpened = false
     private var canExit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,9 +75,7 @@ class MainActivity : BaseActivity() {
 
     private fun initDOM() {
         pagerNSVP = findViewById(R.id.main_pager)
-        toggleFAB = findViewById(R.id.main_toggle)
-        sendFAB = findViewById(R.id.main_send)
-        receiveFAB = findViewById(R.id.main_receive)
+        toggleIV = findViewById(R.id.main_toggle)
         navBNV = findViewById(R.id.main_navigation)
     }
     private fun initNav() {
@@ -104,37 +98,25 @@ class MainActivity : BaseActivity() {
         }
     }
     private fun initFAB() {
-        toggleFAB.bringToFront()
-        toggleFAB.setOnClickListener {
-            if (fabOpened) {
-                resolveFABClose()
-            } else {
-                resolveFABOpen()
-                launch {
-                    delay(3000)
-                    withContext(UI) {
-                        if (fabOpened) {
-                            resolveFABClose()
-                        }
-                    }
-                }
+        toggleIV.setOnClickListener { _ ->
+            val dialog = BottomSheetDialog(this)
+
+            val view = View.inflate(this, R.layout.dialog_main_toggle, null)
+            val transfer = view.findViewById<FrameLayout>(R.id.dialog_main_send)
+            val receive = view.findViewById<FrameLayout>(R.id.dialog_main_receive)
+            view.setOnClickListener {
+                dialog.dismiss()
             }
-        }
-        sendFAB.setOnClickListener {
-            sendFAB.visibility = View.INVISIBLE
-            receiveFAB.visibility = View.INVISIBLE
-
-            toggleFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-            toggleFAB.animation.fillAfter = true
-            startActivity(Intent(this, TransactionTransferActivity::class.java))
-        }
-        receiveFAB.setOnClickListener {
-            sendFAB.visibility = View.INVISIBLE
-            receiveFAB.visibility = View.INVISIBLE
-
-            toggleFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-            toggleFAB.animation.fillAfter = true
-            startActivity(Intent(this, TransactionReceiveActivity::class.java))
+            transfer.setOnClickListener {
+                startActivity(Intent(this, TransactionTransferActivity::class.java))
+                dialog.dismiss()
+            }
+            receive.setOnClickListener {
+                startActivity(Intent(this, TransactionReceiveActivity::class.java))
+                dialog.dismiss()
+            }
+            dialog.setContentView(view)
+            dialog.show()
         }
     }
 
@@ -146,24 +128,6 @@ class MainActivity : BaseActivity() {
             R.id.menu_main_user -> UserFragment()
             else -> AssetFragment()
         }
-    }
-
-    private fun resolveFABOpen() {
-        sendFAB.visibility = View.VISIBLE
-        receiveFAB.visibility = View.VISIBLE
-
-        toggleFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_45deg)
-        toggleFAB.animation.fillAfter = true
-        fabOpened = true
-    }
-
-    private fun resolveFABClose() {
-        sendFAB.visibility = View.INVISIBLE
-        receiveFAB.visibility = View.INVISIBLE
-
-        toggleFAB.animation = AnimationUtils.loadAnimation(this, R.anim.rotate_0deg)
-        toggleFAB.animation.fillAfter = true
-        fabOpened = false
     }
 
     @SuppressLint("RestrictedApi")

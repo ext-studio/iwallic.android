@@ -6,13 +6,12 @@
     app:srlEnableOverScrollDrag="true"
     app:srlEnableLoadMore="false"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?colorDefault2">
     <com.scwang.smartrefresh.layout.header.ClassicsHeader
         android:id="@+id/asset_list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srlAccentColor="?colorDefault"
-        app:srlPrimaryColor="?colorPrimary"/>
+        android:layout_height="wrap_content"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

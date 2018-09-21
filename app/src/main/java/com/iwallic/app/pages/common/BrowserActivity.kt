@@ -50,7 +50,7 @@ class BrowserActivity : BaseAuthActivity() {
         webSetting.allowFileAccess = true
         webSetting.layoutAlgorithm = WebSettings.LayoutAlgorithm.NARROW_COLUMNS
         webSetting.setSupportZoom(true)
-        webSetting.builtInZoomControls = true
+//        webSetting.builtInZoomControls = true
         webSetting.useWideViewPort = true
         webSetting.setSupportMultipleWindows(false)
         // webSetting.setLoadWithOverviewMode(true)
@@ -64,6 +64,7 @@ class BrowserActivity : BaseAuthActivity() {
         webSetting.pluginState = WebSettings.PluginState.ON_DEMAND
 
         browserSRL.setOnRefreshListener {
+            browserWV.clearCache(true)
             browserWV.reload()
             browserSRL.isRefreshing = false
             Toast.makeText(this, R.string.toast_refreshed, Toast.LENGTH_SHORT).show()

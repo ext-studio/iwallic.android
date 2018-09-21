@@ -123,8 +123,8 @@ class WalletGuardActivity : BaseAuthActivity() {
         Log.i("【Wallet】", "del wallet at【$p】")
         DialogUtils.confirm(
             this,
-            R.string.dialog_title_warn,
             R.string.dialog_content_addrdel,
+            R.string.dialog_title_warn,
             R.string.dialog_ok,
             R.string.dialog_no
         ).subscribe {

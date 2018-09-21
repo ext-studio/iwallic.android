@@ -19,6 +19,7 @@ import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.HttpUtils
+import com.iwallic.app.utils.SharedPrefUtils
 import com.iwallic.app.utils.WalletUtils
 
 class TransactionTransferActivity : BaseActivity() {
@@ -29,8 +30,7 @@ class TransactionTransferActivity : BaseActivity() {
     private lateinit var assetNameTV: TextView
     private lateinit var balanceTV: TextView
     private lateinit var scanIV: ImageView
-    private lateinit var submitB: Button
-    private lateinit var submitPB: ProgressBar
+    private lateinit var submitFL: FrameLayout
     private lateinit var tipTV: TextView
     private lateinit var successB: Button
     private lateinit var step1LL: LinearLayout
@@ -77,8 +77,7 @@ class TransactionTransferActivity : BaseActivity() {
         amountET = findViewById(R.id.transaction_transfer_amount)
         assetNameTV = findViewById(R.id.asset_choose_name)
         balanceTV = findViewById(R.id.transaction_transfer_balance)
-        submitB = findViewById(R.id.transaction_transfer_btn_submit)
-        submitPB = findViewById(R.id.transaction_transfer_load_submit)
+        submitFL = findViewById(R.id.transaction_transfer_btn_submit)
         scanIV = findViewById(R.id.transaction_transfer_scan)
         tipTV = findViewById(R.id.transaction_transfer_error)
         successB = findViewById(R.id.transaction_transfer_success)
@@ -94,7 +93,7 @@ class TransactionTransferActivity : BaseActivity() {
         chooseAssetLL.setOnClickListener {
             resolveAssetPick()
         }
-        submitB.setOnClickListener {
+        submitFL.setOnClickListener {
             if (amount <= 0 || target.isEmpty() || amount > balance) {
                 return@setOnClickListener
             }
@@ -102,8 +101,6 @@ class TransactionTransferActivity : BaseActivity() {
                 Toast.makeText(this, R.string.transaction_transfer_tips_noChooseAsset_error, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            submitPB.visibility = View.VISIBLE
-            submitB.visibility = View.GONE
             resolveVerify()
         }
         successB.setOnClickListener {
@@ -167,8 +164,8 @@ class TransactionTransferActivity : BaseActivity() {
         } else {
             DialogUtils.confirm(
                 this,
-                R.string.dialog_title_primary,
                 R.string.dialog_content_nobalance,
+                R.string.dialog_title_primary,
                 R.string.dialog_ok
             ).subscribe {
                 finish()
@@ -177,6 +174,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(from: String, to: String, amount: Double) {
+        val loader = DialogUtils.loader(this, "转账中")
         if (asset.length == 64) {
             asset = "0x$asset"
         }else if (asset.length == 42) {
@@ -188,22 +186,26 @@ class TransactionTransferActivity : BaseActivity() {
                 HttpUtils.post(this, "getutxoes", listOf(from, asset), fun(res) {
                     val data = gson.fromJson<ArrayList<UtxoModel>>(res, object: TypeToken<ArrayList<UtxoModel>>() {}.type)
                     if (data == null) {
+                        loader.dismiss()
                         resolveError(99998)
                         return
                     }
                     val newTx = TransactionModel.forAsset(data, from, to, amount, asset)
                     if (newTx == null) {
+                        loader.dismiss()
                         resolveError(99699)
                         return
                     }
                     newTx.sign(wif)
-                    Log.i("【Transfer】", newTx.serialize(true))
                     HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
+                        loader.dismiss()
                         resolveSuccess(newTx.hash())
                     }, {
+                        loader.dismiss()
                         resolveError(it)
                     })
                 }, fun(err) {
+                    loader.dismiss()
                     resolveError(err)
                 })
             }
@@ -211,12 +213,13 @@ class TransactionTransferActivity : BaseActivity() {
                 Log.i("【transfer】", "token tx【$asset】*【$amount】to【$target】")
                 val newTx = TransactionModel.forToken(asset, from, to, amount)
                 if (newTx == null) {
+                    loader.dismiss()
                     resolveError(99699)
                     return
                 }
                 newTx.sign(wif)
-                Log.i("【Transfer】", newTx.serialize(true))
                 HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
+                    loader.dismiss()
                     val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
                     if (rs == true) {
                         resolveSuccess(newTx.hash())
@@ -224,6 +227,7 @@ class TransactionTransferActivity : BaseActivity() {
                         resolveError(99698)
                     }
                 }, fun(err) {
+                    loader.dismiss()
                     resolveError(err)
                 })
             }
@@ -231,8 +235,7 @@ class TransactionTransferActivity : BaseActivity() {
     }
     
     private fun resolveAssetPick() {
-        Log.i("【】", "$list")
-        DialogUtils.list(this, R.string.dialog_title_choose, list, fun(confirm: String) {
+        DialogUtils.list(this, R.string.dialog_title_choose, list) { confirm: String ->
             asset = confirm
             amountET.isEnabled = true
             val chooseAsset = list?.find {
@@ -241,41 +244,40 @@ class TransactionTransferActivity : BaseActivity() {
             assetNameTV.text = chooseAsset?.symbol
             balanceTV.text = resources.getString(R.string.transaction_transfer_balance_hint, chooseAsset?.balance ?: "0")
             balance = chooseAsset?.balance?.toDouble() ?: 0.0
-        })
+        }
     }
 
     private fun resolveVerify() {
         DialogUtils.password(this) {pwd ->
             if (pwd.isEmpty()) {
-                submitPB.visibility = View.GONE
-                submitB.visibility = View.VISIBLE
                 return@password
             }
-            DialogUtils.load(this).subscribe { load ->
+            val loader = DialogUtils.loader(this, "验证中")
                 WalletUtils.verify(baseContext, pwd).subscribe {rs ->
                     wif = rs
-                    load.dismiss()
+                    loader.dismiss()
                     if (wif.isEmpty()) {
                         resolveError(99599)
                     } else {
                         resolveSend(address, target, amount)
                     }
                 }
-            }
         }
     }
 
     private fun resolveSuccess(txid: String) {
-        HttpUtils.postPy(
-            this,
-            "/client/transaction/unconfirmed",
-            mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
+        if (SharedPrefUtils.getNet(this) == "main") {
+            HttpUtils.postPy(
+                this,
+                "/client/transaction/unconfirmed",
+                mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")), {
                 Log.i("【Transfer】", "submitted 【$txid】")
                 // todo notify new unconfirmed tx
             }, {
                 Log.i("【Transfer】", "submit failed【$it】")
             }
-        )
+            )
+        }
         step1LL.visibility = View.GONE
         step2LL.visibility = View.VISIBLE
     }
@@ -290,8 +292,6 @@ class TransactionTransferActivity : BaseActivity() {
                 else -> "$code"
             }, Toast.LENGTH_SHORT).show()
         }
-        submitPB.visibility = View.GONE
-        submitB.visibility = View.VISIBLE
     }
 
     private fun resolveErrorTip() {

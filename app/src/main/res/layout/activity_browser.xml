@@ -9,14 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/browser_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/icon_back"
+            android:layout_height="48dp"
+            android:padding="@dimen/dimenSpace"
+            android:drawableStart="@drawable/icon_close"
             android:drawableTint="?colorLight"
             android:gravity="center_vertical"
             tools:targetApi="m"/>
@@ -27,6 +27,7 @@
             android:gravity="start|center_vertical"
             android:layout_height="wrap_content"
             android:textColor="?colorDefault"
+            android:layout_marginEnd="@dimen/dimenSpace"
             android:textSize="@dimen/dimenFontL"
             android:ellipsize="end"
             android:lines="1" />

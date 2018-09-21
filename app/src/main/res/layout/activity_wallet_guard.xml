@@ -34,7 +34,7 @@
                 android:orientation="vertical">
                 <FrameLayout
                     android:id="@+id/wallet_import_btn"
-                    android:layout_margin="@dimen/dimenSpaceM"
+                    android:layout_margin="@dimen/dimenSpace"
                     android:layout_width="230dp"
                     android:layout_height="36dp"
                     android:elevation="@dimen/dimenSpaceM"
@@ -55,7 +55,7 @@
 
                 <FrameLayout
                     android:id="@+id/wallet_create_btn"
-                    android:layout_margin="@dimen/dimenSpaceM"
+                    android:layout_margin="@dimen/dimenSpace"
                     android:layout_width="230dp"
                     android:layout_height="36dp"
                     android:elevation="@dimen/dimenSpaceM"

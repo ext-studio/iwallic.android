@@ -19,50 +19,6 @@
         android:layout_above="@+id/main_navigation"
         android:background="?colorLine"/>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:visibility="invisible"
-        android:id="@+id/main_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/icon_send"
-        android:layout_above="@id/main_toggle"
-        android:layout_toStartOf="@id/main_toggle"
-        android:tint="?colorDefault"
-        app:backgroundTint="?colorPrimary"
-        android:clickable="true"
-        android:focusable="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:visibility="invisible"
-        android:id="@+id/main_receive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/icon_qrcode"
-        android:layout_above="@id/main_toggle"
-        android:layout_toEndOf="@id/main_toggle"
-        android:tint="?colorDefault"
-        app:backgroundTint="?colorPrimary"
-        android:clickable="true"
-        android:focusable="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/main_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="end|center"
-        android:src="@drawable/icon_add"
-        app:layout_anchorGravity="bottom|right|end"
-        android:layout_above="@id/main_navigation"
-        android:tint="?colorDefault"
-        app:backgroundTint="?colorPrimary"
-        android:clickable="true"
-        android:focusable="true"/>
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
@@ -72,5 +28,17 @@
         app:itemTextColor="@drawable/selector_base_main_navigation"
         app:elevation="@dimen/dimenMini"
         app:menu="@menu/menu_main"
-        android:background="?colorDefault"/>
+        android:background="?colorDefault">
+        <ImageView
+            android:id="@+id/main_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_add"
+            android:tint="?colorDefault"
+            android:scaleType="fitXY"
+            android:background="@drawable/shape_round_primary"
+            android:contentDescription="@null"
+            android:padding="@dimen/dimenMini"/>
+    </android.support.design.widget.BottomNavigationView>
 </RelativeLayout>

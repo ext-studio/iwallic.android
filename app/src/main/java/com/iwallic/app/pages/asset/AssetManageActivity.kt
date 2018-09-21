@@ -48,8 +48,6 @@ class AssetManageActivity : BaseActivity() {
         amAdapter = AssetManageAdapter(PageDataPyModel(), SharedPrefUtils.getAsset(this))
         amRV.layoutManager = amManager
         amRV.adapter = amAdapter
-
-        amSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {

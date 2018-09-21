@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.base.BaseLazyFragment
+import com.iwallic.app.pages.common.BrowserActivity
 import com.iwallic.app.states.TransactionState
 import com.iwallic.app.utils.DialogUtils
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -55,9 +56,12 @@ class TxConfirmedFragment : BaseLazyFragment() {
             initList(isNext = true)
         }
         txAdapter.onEnter().subscribe {
-            val intent = Intent(context, TransactionDetailActivity::class.java)
-            intent.putExtra("txid", txAdapter.getItem(it).txid)
-            context!!.startActivity(intent)
+//            val intent = Intent(context, TransactionDetailActivity::class.java)
+//            intent.putExtra("txid", txAdapter.getItem(it).txid)
+//            context!!.startActivity(intent)
+            val intent = Intent(context, BrowserActivity::class.java)
+            intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
+            context?.startActivity(intent)
         }
         txAdapter.onCopy().subscribe {
             copy(txAdapter.getItem(it).txid, "txid")

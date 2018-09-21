@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.iwallic.app.R
+import com.iwallic.app.utils.LocaleUtils
+import com.iwallic.app.utils.SharedPrefUtils
 
 @SuppressLint("Registered")
 open class BaseAuthActivity: AppCompatActivity() {
@@ -21,16 +23,11 @@ open class BaseAuthActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        resolveTheme()
+    }
 
-        val spaceV = findViewById<View>(R.id.app_top_space)
-        if (spaceV != null) {
-            val rectangle = Rect()
-            window.decorView.getWindowVisibleDisplayFrame(rectangle)
-            val statusBarHeight = rectangle.top
-            val contentViewTop = window.findViewById<View>(Window.ID_ANDROID_CONTENT).top
-            val titleBarHeight = contentViewTop - statusBarHeight
-            spaceV.layoutParams = ViewGroup.LayoutParams(0, titleBarHeight)
-        }
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocaleUtils.onAttach(base))
     }
 
     override fun finish() {
@@ -100,6 +97,20 @@ open class BaseAuthActivity: AppCompatActivity() {
         if (token != null) {
             val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+    }
+
+    private fun resolveTheme() {
+        when (SharedPrefUtils.getSkin(this)) {
+            "default" -> {
+                setTheme(R.style.ThemeDefault)
+            }
+            "night" -> {
+                setTheme(R.style.ThemeNight)
+            }
+            else -> {
+                setTheme(R.style.ThemeDefault)
+            }
         }
     }
 }

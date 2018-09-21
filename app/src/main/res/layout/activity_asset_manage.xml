@@ -29,7 +29,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/asset_manage_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/asset_manage_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

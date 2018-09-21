@@ -37,8 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pages.main.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".pages.main.MainActivity" />
         <activity android:name=".pages.user.UserSettingActivity" />
         <activity android:name=".pages.user.UserSettingLanguageActivity" />
         <activity android:name=".pages.user.UserSettingThemeActivity" />

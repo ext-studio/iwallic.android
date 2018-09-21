@@ -18,6 +18,7 @@ import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
 import com.iwallic.app.models.*
+import com.iwallic.app.pages.common.BrowserActivity
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.states.AssetState
@@ -50,9 +51,6 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
 
-    private lateinit var balanceListen: Disposable
-    private lateinit var listListen: Disposable
-    private lateinit var errorListen: Disposable
     private val gson = Gson()
     private var noNeed = false
     private var assetId = ""
@@ -140,10 +138,10 @@ class AssetDetailActivity : BaseActivity() {
             val lastClaim = SharedPrefUtils.getClaim(this)
             when {
                 lastClaim.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.dialog_title_primary, R.string.error_claim_claiming, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
                 }
                 lastCollect.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.dialog_title_primary, R.string.error_claim_collecting, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
                 }
                 else -> {
                     resolveClaim()
@@ -159,10 +157,10 @@ class AssetDetailActivity : BaseActivity() {
             val lastClaim = SharedPrefUtils.getClaim(this)
             when {
                 lastClaim.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.dialog_title_primary, R.string.error_claim_claiming, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
                 }
                 lastCollect.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.dialog_title_primary, R.string.error_claim_collecting, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
                 }
                 else -> {
                     resolveCollect()
@@ -181,8 +179,11 @@ class AssetDetailActivity : BaseActivity() {
             startActivity(intent)
         }
         txAdapter.onEnter().subscribe {
-            val intent = Intent(this, TransactionDetailActivity::class.java)
-            intent.putExtra("txid", txAdapter.getItem(it).txid)
+//            val intent = Intent(this, TransactionDetailActivity::class.java)
+//            intent.putExtra("txid", txAdapter.getItem(it).txid)
+//            startActivity(intent)
+            val intent = Intent(this, BrowserActivity::class.java)
+            intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
             startActivity(intent)
         }
         txAdapter.onCopy().subscribe {
