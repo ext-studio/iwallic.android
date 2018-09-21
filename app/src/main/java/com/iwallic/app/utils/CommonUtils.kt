@@ -5,6 +5,7 @@ import android.util.TypedValue
 import com.iwallic.app.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import java.util.ArrayList
 
 object CommonUtils {
     const val NEO = "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b"
@@ -31,6 +32,7 @@ object CommonUtils {
     const val pageCount = 15
 
     const val broadCastBlock = "iwallic_new_block"
+    const val broadCastTx = "iwallic_new_tx"
 
     private val _color = TypedValue()
 
@@ -41,5 +43,16 @@ object CommonUtils {
 
     fun getStatusBarHeight(context: Context): Double {
         return Math.ceil(25 * context.resources.displayMetrics.density.toDouble())
+    }
+
+    fun <T>safeSlice(list: ArrayList<T>, start: Int, take: Int): ArrayList<T> {
+        if (list.size == 0 || start >= list.size) {
+            return arrayListOf()
+        }
+        return if (list.size - start - 1 < take) {
+            ArrayList(list.subList(start, list.size))
+        } else {
+            ArrayList(list.subList(start, start + take))
+        }
     }
 }

@@ -19,7 +19,7 @@ object AssetState {
         return cached?.find { it.asset_id == id }
     }
 
-    fun list2(context: Context?, address: String, force: Boolean = false): Observable<ArrayList<AssetRes>> {
+    fun list(context: Context?, address: String, force: Boolean = false): Observable<ArrayList<AssetRes>> {
         return Observable.create { observer ->
             if (cached != null && !force) {
                 observer.onNext(cached!!)
@@ -43,9 +43,5 @@ object AssetState {
 
     fun checkClaim(): Boolean {
         return try {cached?.find { it.asset_id == CommonUtils.NEO }?.balance?.toInt() ?: 0} catch (_: Throwable) {0} > 0
-    }
-
-    fun clear() {
-        cached = null
     }
 }

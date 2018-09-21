@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.TransactionAdapter
+import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.models.*
 import com.iwallic.app.pages.common.BrowserActivity
 import com.iwallic.app.pages.transaction.TransactionDetailActivity
@@ -47,6 +48,7 @@ class AssetDetailActivity : BaseActivity() {
     private lateinit var claimClaimB: Button
 
     private var claims: ClaimsRes? = null
+    private var broadCast: BlockBroadCast? = null
 
     private lateinit var txAdapter: TransactionAdapter
     private lateinit var txManager: LinearLayoutManager
@@ -65,12 +67,23 @@ class AssetDetailActivity : BaseActivity() {
         initGAS()
         resolveFetchClaim()
         initListener()
-        initList()
         resolveBalance()
+        initBroadCast()
+        val loader = DialogUtils.loader(this)
+        TransactionState.init(this, assetId, {
+            loader.dismiss()
+            txAdapter.set(it)
+        }, {
+            loader.dismiss()
+            if (!DialogUtils.error(this, it)) {
+                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(broadCast)
     }
 
     private fun initParams() {
@@ -118,6 +131,20 @@ class AssetDetailActivity : BaseActivity() {
         if (asset.balance.toDouble() <= 0) {
             transferIV.visibility = View.GONE
         }
+    }
+
+    private fun initBroadCast() {
+        broadCast = BlockBroadCast()
+        broadCast?.setNewBlockListener { _, _ ->
+            TransactionState.refresh(this, assetId, {
+                txAdapter.set(it)
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+        registerReceiver(broadCast, IntentFilter(CommonUtils.broadCastBlock))
     }
 
     private fun initGAS() {
@@ -193,40 +220,30 @@ class AssetDetailActivity : BaseActivity() {
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
         }
-        txSRL.setOnRefreshListener {
-            initList(true)
-        }
-        txSRL.setOnLoadMoreListener {
-            initList(isNext = true)
-        }
-    }
-
-    private fun initList(force: Boolean = false, isNext: Boolean = false) {
-        if (!isNext) {
-            TransactionState.refresh(this, assetId, force).subscribe({
-                txAdapter.set(it)
+        txSRL.setOnRefreshListener { _ ->
+            TransactionState.refresh(this, assetId, {
                 txSRL.finishRefresh(true)
+                txAdapter.set(it)
             }, {
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(this, code)) {
-                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
-                }
                 txSRL.finishRefresh()
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
             })
-        } else {
-            TransactionState.next(this, assetId).subscribe({
+        }
+        txSRL.setOnLoadMoreListener { _ ->
+            TransactionState.older(this, assetId, {
                 txAdapter.push(it)
-                if (it.isEmpty()) {
-                    txSRL.finishLoadMoreWithNoMoreData()
-                } else {
+                if (it.size > 0) {
                     txSRL.finishLoadMore(true)
+                } else {
+                    txSRL.finishLoadMoreWithNoMoreData()
                 }
             }, {
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(this, code)) {
-                    Toast.makeText(this, "$code", Toast.LENGTH_SHORT).show()
-                }
                 txSRL.finishLoadMore()
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
             })
         }
     }

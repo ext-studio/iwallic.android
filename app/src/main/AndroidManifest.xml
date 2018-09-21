@@ -50,7 +50,6 @@
             android:name=".pages.transaction.TransactionTransferActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".pages.transaction.TransactionDetailActivity" />
-        <activity android:name=".pages.transaction.TransactionUnconfirmedActivity" />
         <activity android:name=".pages.asset.AssetDetailActivity" />
         <activity android:name=".pages.asset.AssetManageActivity" />
         <activity android:name=".pages.transaction.TransactionReceiveActivity" />

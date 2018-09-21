@@ -7,19 +7,20 @@ import android.content.Intent
 import com.iwallic.app.utils.CommonUtils.broadCastBlock
 
 class BlockBroadCast: BroadcastReceiver() {
-    private var updateListener: ((Context?, Intent?) -> Unit)? = null
+    private var newBlockListener: ((Context?, Intent?) -> Unit)? = null
     override fun onReceive(context: Context?, intent: Intent?) {
-        updateListener?.invoke(context, intent)
+        newBlockListener?.invoke(context, intent)
     }
 
-    fun setOnUpdatedListener(listener: (Context?, Intent?) -> Unit) {
-        updateListener = listener
+    fun setNewBlockListener(listener: (Context?, Intent?) -> Unit) {
+        newBlockListener = listener
     }
 
     companion object {
-        fun send(context: Context, height: Long) {
+        fun send(context: Context, height: Long, time: Long) {
             val intent = Intent(broadCastBlock)
             intent.putExtra("height", height)
+            intent.putExtra("time", time)
             context.sendBroadcast(intent)
         }
     }

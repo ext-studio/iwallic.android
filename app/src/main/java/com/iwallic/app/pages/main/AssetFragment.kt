@@ -16,9 +16,11 @@ import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
+import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -36,16 +38,20 @@ class AssetFragment : BaseFragment() {
     private lateinit var mainBalanceTV: TextView
     private lateinit var manageIV: ImageView
 
+    private var broadCast: BlockBroadCast? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
         initListener()
         initList()
+        initBroadCast()
         return view
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        context?.unregisterReceiver(broadCast)
     }
 
     private fun initDOM(view: View) {
@@ -65,6 +71,14 @@ class AssetFragment : BaseFragment() {
         assetRV.adapter = assetAdapter
     }
 
+    private fun initBroadCast() {
+        broadCast = BlockBroadCast()
+        broadCast?.setNewBlockListener { _, _ ->
+            initList(true)
+        }
+        context?.registerReceiver(broadCast, IntentFilter(CommonUtils.broadCastBlock))
+    }
+
     private fun initListener() {
         assetSRL.setOnRefreshListener {
             initList(true)
@@ -80,7 +94,7 @@ class AssetFragment : BaseFragment() {
     }
 
     private fun initList(force: Boolean = false) {
-        AssetState.list2(context, address, force).subscribe({
+        AssetState.list(context, address, force).subscribe({
             resolveList(it)
             assetSRL.finishRefresh(true)
         }, {
@@ -101,7 +115,7 @@ class AssetFragment : BaseFragment() {
 
         mainBalanceTV.text = if (balance == "0.0") "0" else balance
 
-        for (asset in SharedPrefUtils.getAsset(context!!)) {
+        for (asset in AssetManageState.watch(context)) {
             if (list.indexOfFirst {
                 it.asset_id == asset.asset_id
             } < 0) {

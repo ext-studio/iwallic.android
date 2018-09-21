@@ -28,16 +28,18 @@ class AssetManageActivity : BaseActivity() {
     private lateinit var amAdapter: AssetManageAdapter
     private lateinit var amManager: LinearLayoutManager
 
-    private lateinit var address: String
-    private lateinit var listListen: Disposable
-    private lateinit var errorListen: Disposable
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_manage)
         initDOM()
         initListener()
-        address = WalletUtils.address(this)
+        AssetManageState.init(this, {
+            amAdapter.set(it)
+        }, {
+            if (!DialogUtils.error(this, it)) {
+                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun initDOM() {
@@ -45,7 +47,7 @@ class AssetManageActivity : BaseActivity() {
         amRV = findViewById(R.id.asset_manage_list)
         amSRL = findViewById(R.id.asset_manage_pager)
         amManager = LinearLayoutManager(this)
-        amAdapter = AssetManageAdapter(PageDataPyModel(), SharedPrefUtils.getAsset(this))
+        amAdapter = AssetManageAdapter(arrayListOf(), AssetManageState.watch(this))
         amRV.layoutManager = amManager
         amRV.adapter = amAdapter
     }
@@ -54,41 +56,43 @@ class AssetManageActivity : BaseActivity() {
         backTV.setOnClickListener {
             finish()
         }
-        listListen = AssetManageState.list(this, WalletUtils.address(this)).subscribe({
-            amAdapter.push(it)
-            amSRL.finishRefresh(true)
-            if (it.page == it.pages) {
-                amSRL.finishLoadMoreWithNoMoreData()
-            } else {
-                amSRL.finishLoadMore(true)
-            }
-        }, {
-            Log.i("【AssetManage】", "error【$it】")
-            amSRL.finishRefresh(false)
-            amSRL.finishLoadMore(false)
-        })
-        errorListen = AssetManageState.error().subscribe({
-            if (!DialogUtils.error(this, it)) {
-                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-            }
-            amSRL.finishRefresh()
-            amSRL.finishLoadMore()
-        }, {
-            Log.i("【AssetManage】", "error【$it】")
-            amSRL.finishRefresh()
-            amSRL.finishLoadMore()
-        })
-        amSRL.setOnRefreshListener {
-            AssetManageState.fetch(this)
+        amSRL.setOnRefreshListener { _ ->
+            AssetManageState.refresh(this, {
+                amAdapter.set(it)
+                amSRL.finishRefresh(true)
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+                amSRL.finishRefresh()
+            })
         }
-        amSRL.setOnLoadMoreListener {
-            AssetManageState.next(this)
+        amSRL.setOnLoadMoreListener { _ ->
+            AssetManageState.older(this, {
+                amAdapter.push(it)
+                if (it.size > 0) {
+                    amSRL.finishLoadMore(true)
+                } else {
+                    amSRL.finishLoadMoreWithNoMoreData()
+                }
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+                amSRL.finishLoadMore()
+            })
+        }
+        amAdapter.setOnToggle { position: Int, state ->
+            if (state) {
+                AssetManageState.addWatch(this, amAdapter.getAsset(position))
+            } else {
+                AssetManageState.rmWatch(this, amAdapter.getAsset(position))
+            }
+            // todo send watch change broadcast
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        listListen.dispose()
-        errorListen.dispose()
     }
 }

@@ -44,8 +44,8 @@ data class TransactionDetailToRes(
 )
 
 data class BlockTimeRes (
-    val lastBlockIndex: Long,
-    val time: Long
+    val lastBlockIndex: Long = 0,
+    val time: Long = 0
 )
 
 data class AssetRes (

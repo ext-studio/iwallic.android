@@ -1,9 +1,7 @@
 package com.iwallic.app.pages.transaction
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -20,7 +18,6 @@ import com.iwallic.app.utils.DialogUtils
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 
 class TxUnConfirmedFragment : BaseLazyFragment() {
-    var loader: Dialog? = null
     private lateinit var txRV: RecyclerView
     private lateinit var txSRL: SmartRefreshLayout
     private lateinit var txAdapter: TransactionAdapter
@@ -34,7 +31,16 @@ class TxUnConfirmedFragment : BaseLazyFragment() {
     }
 
     override fun onResolve() {
-        initList()
+        val loader = DialogUtils.loader(context!!)
+        UnconfirmedState.init(context, {
+            txAdapter.set(it)
+            loader.dismiss()
+        }, {
+            loader.dismiss()
+            if (!DialogUtils.error(context, it)) {
+                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun initDOM(view: View) {
@@ -48,17 +54,33 @@ class TxUnConfirmedFragment : BaseLazyFragment() {
     }
 
     private fun initListener() {
-        txSRL.setOnRefreshListener {
-            loader = DialogUtils.loader(context!!)
-            initList(true)
+        txSRL.setOnRefreshListener { _ ->
+            UnconfirmedState.refresh(context, {
+                txSRL.finishRefresh(true)
+                txAdapter.set(it)
+            }, {
+                txSRL.finishRefresh()
+                if (!DialogUtils.error(context, it)) {
+                    Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
-        txSRL.setOnLoadMoreListener {
-            initList(isNext = true)
+        txSRL.setOnLoadMoreListener { _ ->
+            UnconfirmedState.older(context, {
+                txAdapter.push(it)
+                if (it.size > 0) {
+                    txSRL.finishLoadMore(true)
+                } else {
+                    txSRL.finishLoadMoreWithNoMoreData()
+                }
+            }, {
+                txSRL.finishLoadMore()
+                if (!DialogUtils.error(context, it)) {
+                    Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
         txAdapter.onEnter().subscribe {
-//            val intent = Intent(context, TransactionDetailActivity::class.java)
-//            intent.putExtra("txid", txAdapter.getItem(it).txid)
-//            context!!.startActivity(intent)
             val intent = Intent(context, BrowserActivity::class.java)
             intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
             context?.startActivity(intent)
@@ -66,40 +88,6 @@ class TxUnConfirmedFragment : BaseLazyFragment() {
         txAdapter.onCopy().subscribe {
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
-        }
-    }
-
-    private fun initList(force: Boolean = false, isNext: Boolean = false) {
-        if (!isNext) {
-            UnconfirmedState.refresh(context, force).subscribe({
-                loader?.dismiss()
-                txAdapter.set(it)
-                txSRL.finishRefresh(true)
-            }, {
-                loader?.dismiss()
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(context, code)) {
-                    Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
-                }
-                txSRL.finishRefresh()
-            })
-        } else {
-            UnconfirmedState.next(context).subscribe({
-                loader?.dismiss()
-                txAdapter.push(it)
-                if (it.isEmpty()) {
-                    txSRL.finishLoadMoreWithNoMoreData()
-                } else {
-                    txSRL.finishLoadMore(true)
-                }
-            }, {
-                loader?.dismiss()
-                val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-                if (!DialogUtils.error(context, code)) {
-                    Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
-                }
-                txSRL.finishLoadMore()
-            })
         }
     }
 }

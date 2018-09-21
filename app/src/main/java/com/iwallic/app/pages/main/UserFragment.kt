@@ -63,8 +63,7 @@ class UserFragment : BaseFragment() {
     private fun resolveSignOut() {
         DialogUtils.confirm(context!!, R.string.dialog_content_signout, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no).subscribe {
             if (it) {
-                AssetState.clear()
-                AssetManageState.clear()
+                AssetState.cached = null
                 WalletUtils.close(context!!)
                 val intent = Intent(context, WalletGuardActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)

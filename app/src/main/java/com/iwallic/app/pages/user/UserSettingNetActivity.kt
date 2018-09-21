@@ -13,6 +13,7 @@ import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.TransactionState
+import com.iwallic.app.utils.ACache
 import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.SharedPrefUtils
 
@@ -61,10 +62,11 @@ class UserSettingNetActivity : BaseActivity() {
                 return@setOnClickListener
             } else {
                 SharedPrefUtils.setNet(this, chosenNet)
-                AssetState.clear()
-                BlockState.clear()
+                AssetState.cached = null
+                ACache.get(this).clear()
                 val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
         }
