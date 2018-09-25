@@ -41,7 +41,7 @@ class FindFragment : BaseFragment() {
     }
     @SuppressLint("SimpleDateFormat")
     private fun initBlock() {
-        BlockState.current(context, { data, isNew ->
+        BlockState.current(context, { data, _ ->
             heightTV.text = resources.getString(R.string.find_height, data.lastBlockIndex)
             timeTV.text = resources.getString(R.string.find_time, SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Date(data.time*1000)))
         }, {

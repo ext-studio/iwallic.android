@@ -155,4 +155,11 @@
     <string name="main_toggle_transfer">Transfer</string>
     <string name="main_toggle_receive">Receive</string>
     <string name="user_setting_language_system">System</string>
+
+    <string name="version_title">Update exists</string>
+    <string name="version_ok">Update</string>
+    <string name="version_no">Skip</string>
+    <string name="version_title_force">Important update</string>
+    <string name="version_no_force">Not now</string>
+    <string name="welcome_updating">Updating in background</string>
 </resources>

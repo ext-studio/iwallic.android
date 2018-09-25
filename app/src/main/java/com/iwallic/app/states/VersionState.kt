@@ -2,11 +2,14 @@ package com.iwallic.app.states
 
 import android.content.Context
 import com.google.gson.Gson
+import com.iwallic.app.R
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.utils.ACache
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.HttpUtils
+import com.iwallic.app.utils.LocaleUtils
 import io.reactivex.Observable
+import java.util.*
 
 object VersionState {
     private val gson = Gson()
@@ -47,7 +50,12 @@ object VersionState {
             } else {
                 no()
             }
-        }, (info.info["cn"] as String).replace("\\n", "\n"), "发现新版本", "现在更新", "暂时忽略")
+        }, when (Locale.getDefault()) {
+            Locale.CHINA, Locale.CHINESE, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE -> {
+                (info.info["cn"] as String).replace("\\n", "\n")
+            }
+            else -> (info.info["en"] as String).replace("\\n", "\n")
+        }, R.string.version_title, R.string.version_ok, R.string.version_no)
     }
 
     fun force(context: Context?, info: VersionRes, ok: () -> Unit, no: () -> Unit) {
@@ -57,6 +65,11 @@ object VersionState {
             } else {
                 no()
             }
-        }, (info.info["cn"] as String).replace("\\n", "\n"), "发现重要更新", "现在更新", "离开(不推荐)")
+        }, when (Locale.getDefault()) {
+            Locale.CHINA, Locale.CHINESE, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE -> {
+                (info.info["cn"] as String).replace("\\n", "\n")
+            }
+            else -> (info.info["en"] as String).replace("\\n", "\n")
+        }, R.string.version_title_force, R.string.version_ok, R.string.version_no_force)
     }
 }

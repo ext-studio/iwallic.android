@@ -175,6 +175,52 @@ object DialogUtils {
             }
     }
 
+    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: String, title: Int, okStr: Int, noStr: Int) {
+        val view = View.inflate(context, R.layout.dialog_confirm, null)
+        view.findViewById<TextView>(R.id.dialog_confirm_title).setText(title)
+        view.findViewById<TextView>(R.id.dialog_confirm_msg).text = body
+        val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
+        val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
+        okTV.setText(okStr)
+        noTV.setText(noStr)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            val dialog = Dialog(context)
+            dialog.setContentView(view)
+            dialog.create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+            okTV.setOnClickListener {
+                dialog.dismiss()
+                callback?.invoke(true)
+            }
+            noTV.setOnClickListener {
+                dialog.dismiss()
+                callback?.invoke(false)
+            }
+            dialog.setOnDismissListener {
+                callback?.invoke(false)
+            }
+        } else {
+            val builder = AlertDialog.Builder(context)
+            builder.setCancelable(false)
+            builder.setView(view)
+            val dialog = builder.create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+            okTV.setOnClickListener {
+                dialog.dismiss()
+                callback?.invoke(true)
+            }
+            noTV.setOnClickListener {
+                dialog.dismiss()
+                callback?.invoke(false)
+            }
+            dialog.setOnDismissListener {
+                callback?.invoke(false)
+            }
+        }
+    }
+
     fun password(context: Context, ok: (String) -> Unit) {
         val view = View.inflate(context, R.layout.dialog_password, null)
         val inputET = view.findViewById<EditText>(R.id.dialog_password)

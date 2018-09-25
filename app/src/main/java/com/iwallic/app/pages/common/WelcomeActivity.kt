@@ -34,6 +34,7 @@ class WelcomeActivity : BaseAuthActivity() {
             if (it != null) {
                 if (it.code > BuildConfig.VERSION_CODE) {
                     resolveNewVersion(it)
+                    return@check
                 }
             }
             enter()
@@ -49,12 +50,15 @@ class WelcomeActivity : BaseAuthActivity() {
         if (config.code%2 == 0) {
             VersionState.force( this, config, {
                 DownloadService.start(this, config.url)
+                Toast.makeText(this, R.string.welcome_updating, Toast.LENGTH_SHORT).show()
             }, {
                 exit()
             })
         } else {
             VersionState.tip(this, config, {
                 DownloadService.start(this, config.url)
+                Toast.makeText(this, R.string.welcome_updating, Toast.LENGTH_SHORT).show()
+                enter()
             }, {
                 enter()
             })

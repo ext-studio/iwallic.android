@@ -156,4 +156,11 @@
     <string name="error_scan_address">未檢測到地址</string>
     <string name="transaction_transfer_tips_noChooseAsset_error">請選擇資產</string>
     <string name="transaction_receive">收款地址</string>
+
+    <string name="version_title">發現更新</string>
+    <string name="version_ok">更新</string>
+    <string name="version_no">跳過</string>
+    <string name="version_title_force">發現重要更新</string>
+    <string name="version_no_force">跳過(不推薦)</string>
+    <string name="welcome_updating">正在後臺進行更新</string>
 </resources>

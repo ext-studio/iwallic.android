@@ -62,6 +62,7 @@ class BrowserActivity : BaseAuthActivity() {
         webSetting.setGeolocationEnabled(true)
         webSetting.setAppCacheMaxSize(Long.MAX_VALUE)
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
+        @Suppress("DEPRECATION")
         webSetting.pluginState = WebSettings.PluginState.ON_DEMAND
 
         browserSRL.setOnRefreshListener {
