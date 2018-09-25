@@ -11,7 +11,6 @@
     tools:context=".pages.user.UserSettingActivity">
 
     <RelativeLayout
-        android:padding="@dimen/dimenSpace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary">
@@ -21,11 +20,12 @@
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
             android:gravity="center"
             android:text="@string/fragment_user_about"
             android:textColor="?colorDefault"
-            android:layout_gravity="center"
             android:textSize="@dimen/dimenFont"
             tools:targetApi="m" />
     </RelativeLayout>

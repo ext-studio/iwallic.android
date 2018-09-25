@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".pages.wallet.WalletActivity"
+    tools:context=".pages.wallet.WalletGuardActivity"
     android:background="?colorDefault">
     <ImageView
         android:contentDescription="@null"
@@ -32,31 +32,57 @@
                 android:layout_marginStart="@dimen/dimenLarge"
                 android:layout_marginEnd="@dimen/dimenLarge"
                 android:orientation="vertical">
-                <Button
+                <FrameLayout
                     android:id="@+id/wallet_import_btn"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="?colorDefault"
-                    android:text="@string/wallet_import"/>
+                    android:layout_margin="@dimen/dimenSpace"
+                    android:layout_width="230dp"
+                    android:layout_height="36dp"
+                    android:elevation="@dimen/dimenSpaceM"
+                    android:background="@drawable/shape_round_primary"
+                    tools:targetApi="lollipop">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/wallet_import"
+                        android:textColor="?colorDefault"
+                        android:textSize="@dimen/dimenFont"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground"/>
+                </FrameLayout>
 
-                <Button
+                <FrameLayout
                     android:id="@+id/wallet_create_btn"
-                    android:layout_width="240dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="?colorDefault"
-                    android:layout_marginTop="@dimen/dimenSpace"
-                    android:text="@string/wallet_create"/>
+                    android:layout_margin="@dimen/dimenSpace"
+                    android:layout_width="230dp"
+                    android:layout_height="36dp"
+                    android:elevation="@dimen/dimenSpaceM"
+                    android:background="@drawable/shape_round_secondary"
+                    tools:targetApi="lollipop">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/wallet_create"
+                        android:textColor="?colorDefault"
+                        android:textSize="@dimen/dimenFont"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground" />
+                </FrameLayout>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/wallet_history_btn"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:backgroundTint="?colorPrimary"
                     android:src="@drawable/icon_history"
                     android:tint="?colorDefault"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/dimenSpace"
+                    android:layout_margin="@dimen/dimenSpaceM"
                     tools:targetApi="lollipop" />
             </LinearLayout>
 

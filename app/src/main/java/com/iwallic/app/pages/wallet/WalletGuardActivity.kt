@@ -8,21 +8,21 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.adapters.WalletHistoryAdapter
-import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletAgentModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 
-class WalletActivity : BaseActivity() {
-    private lateinit var createB: Button
-    private lateinit var importB: Button
+class WalletGuardActivity : BaseAuthActivity() {
+    private lateinit var createFL: FrameLayout
+    private lateinit var importFL: FrameLayout
     private lateinit var historyFAB: FloatingActionButton
     private lateinit var history: ArrayList<WalletAgentModel>
     private lateinit var historyLL: LinearLayout
@@ -36,15 +36,15 @@ class WalletActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        setContentView(R.layout.activity_wallet)
+        setContentView(R.layout.activity_wallet_guard)
         initDOM()
         initListener()
         initHistory()
     }
 
     private fun initDOM() {
-        createB = findViewById(R.id.wallet_create_btn)
-        importB = findViewById(R.id.wallet_import_btn)
+        createFL = findViewById(R.id.wallet_create_btn)
+        importFL = findViewById(R.id.wallet_import_btn)
         historyFAB = findViewById(R.id.wallet_history_btn)
         historyRV = findViewById(R.id.wallet_history_list_view)
         historyLL = findViewById(R.id.wallet_history_list)
@@ -53,10 +53,10 @@ class WalletActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        createB.setOnClickListener {
+        createFL.setOnClickListener {
             startActivity(Intent(this, WalletCreateActivity::class.java))
         }
-        importB.setOnClickListener {
+        importFL.setOnClickListener {
             startActivity(Intent(this, WalletImportActivity::class.java))
         }
         historyFAB.setOnClickListener {
@@ -72,8 +72,10 @@ class WalletActivity : BaseActivity() {
     private fun initHistory() {
         history = WalletDBUtils(this).getAll()
         if (history.isNotEmpty()) {
-            historyFAB.visibility = View.VISIBLE
+            historyFAB.show()
             resolveList()
+        } else {
+            historyFAB.hide()
         }
     }
 
@@ -82,57 +84,53 @@ class WalletActivity : BaseActivity() {
         adapter = WalletHistoryAdapter(history)
         historyRV.layoutManager = adapterViewManager
         historyRV.adapter = adapter
-        adapter.onChoose().subscribe {
+        adapter.setOnChooseListener {
             resolveOpen(adapter.getData(it))
         }
-        adapter.onDelete().subscribe {
+        adapter.setOnDeleteListener {
             resolveDel(adapter.getData(it), it)
         }
     }
 
     private fun resolveOpen(w: WalletAgentModel) {
         Log.i("【Wallet】", "open wallet【${w._ID}】")
-        DialogUtils.password(this).subscribe { pwd ->
+        DialogUtils.password(this) { pwd ->
             if (pwd.isEmpty()) {
-                return@subscribe
+                return@password
             }
-            DialogUtils.load(this).subscribe {
-                WalletUtils.switch(baseContext, w, pwd).subscribe {rs ->
-                    it.dismiss()
+            val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
+                NeonUtils.switch(this, w, pwd).subscribe ({ rs ->
+                    loader.dismiss()
                     if (rs == 0) {
-                        val intent = Intent(baseContext, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
-                        finish()
                     } else {
-                        if (!DialogUtils.error(baseContext, rs)) {
-                            Toast.makeText(baseContext, "$rs", Toast.LENGTH_SHORT).show()
+                        if (!DialogUtils.error(this, rs)) {
+                            Toast.makeText(this, "$rs", Toast.LENGTH_SHORT).show()
                         }
                     }
-                }
-            }
+                }, {
+                    loader.dismiss()
+                    DialogUtils.error(this, 99999)
+                })
         }
     }
 
     private fun resolveDel(w: WalletAgentModel, p: Int) {
         Log.i("【Wallet】", "del wallet at【$p】")
-        DialogUtils.confirm(
-            this,
-            R.string.dialog_title_warn,
-            R.string.dialog_content_addrdel,
-            R.string.dialog_ok,
-            R.string.dialog_no
-        ).subscribe {
+        DialogUtils.confirm(this, {
             if (!it) {
-                return@subscribe
+                return@confirm
             }
-            WalletUtils.remove(baseContext, w)
+            NeonUtils.remove(baseContext, w)
             adapter.remove(p)
             if (adapter.itemCount == 0) {
                 historyLL.visibility = View.GONE
                 gateLL.visibility = View.VISIBLE
-                historyFAB.visibility = View.GONE
+                historyFAB.hide()
             }
-        }
+        }, R.string.dialog_content_addrdel, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no)
     }
 }

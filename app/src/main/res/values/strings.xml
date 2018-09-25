@@ -6,6 +6,7 @@
     <string name="fragment_transaction_unconfirmed">Unconfirmed</string>
     <string name="navigation_find_title">Find</string>
     <string name="navigation_user_title">User</string>
+    <string name="main_exit">Press again to exit</string>
     <string name="fragment_asset_title">Assets</string>
     <string name="fragment_transaction_title">Transactions</string>
     <string name="fragment_find_title">Find</string>
@@ -25,6 +26,8 @@
     <string name="asset_detail_claim_un_collect">Can collect: %1$s</string>
     <string name="asset_detail_claim_success">Claim is submitted, please wait for confirm</string>
     <string name="asset_detail_collect_success">Collection is submitted, please wait for confirm</string>
+    <string name="asset_detail_collecting">Collecting</string>
+    <string name="asset_detail_claiming">Claiming</string>
     <string name="user_setting_language">Language</string>
     <string name="user_setting_skin">Theme</string>
     <string name="user_setting_skin_default">Default</string>
@@ -36,6 +39,8 @@
     <string name="wallet_history_count">Contains %1$d address</string>
     <string name="wallet_import">Import wallet</string>
     <string name="wallet_create">Create wallet</string>
+    <string name="wallet_create_password">Password</string>
+    <string name="wallet_create_confirm">Confirm</string>
     <string name="wallet_create_tip">You need to set a cipher to keep your private key and transactions in safe. iWallic will never save your cipher, nor to help you find it back. So do keep it in mind.</string>
     <string name="wallet_create_tip_new">Here is your new wallet, you can backup it by save the WIF key or the wallet file(recommanded) now. When paying iWallic will ask for the cipher you just given to verify. Do protect your WIF key or wallet file.</string>
     <string name="wallet_create_confirm_hint">Confirm your password here</string>
@@ -47,7 +52,12 @@
     <string name="wallet_create_new_title">Your WIF:</string>
     <string name="wallet_create_new_copy">Copy WIF</string>
     <string name="wallet_create_new_save">Save File</string>
+    <string name="wallet_create_creating">Creating</string>
+    <string name="wallet_import_importing">Opening</string>
     <string name="wallet_import_tip">Import your WIF key at this page, then set a password to protect it. Or directly choose your wallet file(iWallic support NEP-6 file).</string>
+    <string name="wallet_import_wif">WIF key</string>
+    <string name="wallet_import_password">Password</string>
+    <string name="wallet_import_confirm">Confirm</string>
     <string name="wallet_import_wif_hint">Enter your WIF key</string>
     <string name="wallet_import_btn_wif">Import</string>
     <string name="wallet_import_btn_file">Import wallet file</string>
@@ -57,8 +67,10 @@
     <string name="wallet_backup_save">Export file</string>
     <string name="wallet_backup_gate">Verify first to show your WIF key.</string>
     <string name="wallet_backup_toggle">Your WIF</string>
+    <string name="find_height">Local block height: %1$d</string>
+    <string name="find_time">Generated at: %1$s</string>
     <string name="transaction_transfer">Transfer</string>
-    <string name="transaction_transfer_chooseAsset">Choose Asset</string>
+    <string name="transaction_transfer_chooseAsset">Asset</string>
     <string name="transaction_transfer_target_hint">Target</string>
     <string name="transaction_transfer_amount_hint">Amount</string>
     <string name="transaction_transfer_balance_hint">Balance: %1$s</string>
@@ -71,6 +83,8 @@
     <string name="transaction_transfer_error_create">Generation failed</string>
     <string name="transaction_transfer_error_send">Transaction failed</string>
     <string name="transaction_transfer_error_rpc">Block net error</string>
+    <string name="transaction_transfer_sending">Transferring</string>
+    <string name="transaction_transfer_verifying">Verifying</string>
     <string name="transaction_receive">Receive</string>
     <string name="transaction_receive_address_copy">Copy Address</string>
     <string name="transaction_unconfirmed">Unconfirmed</string>
@@ -113,15 +127,11 @@
     <string name="list_loading">loading</string>
     <string name="activity_user_about_version">Current version</string>
     <string name="activity_user_about_disclaimer">Disclaimer</string>
-    <string name="activity_user_about_version_content">0.0.8</string>
     <string name="activity_user_support_wallet_guide">Wallet guide</string>
     <string name="activity_user_support_transaction_guide">Transaction guide</string>
     <string name="activity_user_support_blockchain_browser">Blockchain browser</string>
-    <string name="activity_user_support_blockchain_browser_link">blolys.com</string>
     <string name="activity_user_support_community">Community</string>
-    <string name="activity_user_support_community_link">bbs.iwallic.com</string>
     <string name="activity_user_support_contact">Contact</string>
-    <string name="activity_user_support_contact_link">contact@iwallic.com</string>
     <string name="activity_transaction_detail_title">My transaction</string>
     <string name="activity_transaction_detail_blockheight">Index</string>
     <string name="activity_transaction_detail_txid">Transaction hash</string>
@@ -131,7 +141,25 @@
     <string name="adapter_tx_status_un">Unconfirmed</string>
     <string name="adapter_tx_status_no">Cancelled</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="adapter_pager_nomore">No more data here</string>
+
+    <string name="version_updating">Updating</string>
+    <string name="version_finishing">Completing</string>
+    <string name="version_error">Failed</string>
+    <string name="version_error_download">Download failed</string>
+    <string name="version_error_unknown">Unknown error</string>
+    <string name="version_error_permission">Permission error</string>
+    <string name="app_notification_progress">Progress notify</string>
+    <string name="app_notification_common">Common notify</string>
+    <string name="transaction_receive_address">Your address</string>
+    <string name="main_toggle_transfer">Transfer</string>
+    <string name="main_toggle_receive">Receive</string>
+    <string name="user_setting_language_system">System</string>
+
+    <string name="version_title">Update exists</string>
+    <string name="version_ok">Update</string>
+    <string name="version_no">Skip</string>
+    <string name="version_title_force">Important update</string>
+    <string name="version_no_force">Not now</string>
+    <string name="welcome_updating">Updating in background</string>
 </resources>

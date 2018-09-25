@@ -9,35 +9,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary"
         android:gravity="center_vertical">
         <TextView
-            android:id="@+id/user_browser_back"
+            android:id="@+id/browser_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/icon_back"
-            android:drawableTint="?colorLight"
+            android:layout_height="48dp"
+            android:padding="@dimen/dimenSpace"
+            android:drawableStart="@drawable/icon_close"
+            android:drawableTint="?colorDefault"
             android:gravity="center_vertical"
             tools:targetApi="m"/>
         <TextView
-            android:id="@+id/user_browser_title"
+            android:id="@+id/browser_title"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="start|center_vertical"
             android:layout_height="wrap_content"
             android:textColor="?colorDefault"
+            android:layout_marginEnd="@dimen/dimenSpace"
             android:textSize="@dimen/dimenFontL"
             android:ellipsize="end"
             android:lines="1" />
     </LinearLayout>
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/user_browser_refresh"
+        android:id="@+id/browser_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <WebView
-            android:id="@+id/user_browser_webview"
+        <com.tencent.smtt.sdk.WebView
+            android:id="@+id/browser_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>

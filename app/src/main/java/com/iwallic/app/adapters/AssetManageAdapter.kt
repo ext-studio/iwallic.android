@@ -13,9 +13,10 @@ import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.utils.*
 
-class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<AssetRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
+class AssetManageAdapter(_data: ArrayList<AssetRes>, _display: ArrayList<AssetRes>): RecyclerView.Adapter<AssetManageAdapter.ViewHolder>() {
     private var data = _data
     private var display = _display
+    private var _onToggle: ((Int, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset_manage, parent, false) as ViewGroup
@@ -23,51 +24,44 @@ class AssetManageAdapter(_data: PageDataPyModel<AssetRes>, _display: ArrayList<A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data.items[position].symbol
+        holder.itemView.findViewById<TextView>(R.id.asset_manage_name).text = data[position].symbol
         val toggleSC = holder.itemView.findViewById<SwitchCompat>(R.id.asset_manage_toggle)
-        if (listOf(CommonUtils.EXT, CommonUtils.EDS, CommonUtils.NEO, CommonUtils.GAS).contains(data.items[position].asset_id)) {
+        if (listOf(CommonUtils.EXT, CommonUtils.EDS, CommonUtils.NEO, CommonUtils.GAS).contains(data[position].asset_id)) {
             toggleSC.visibility = View.GONE
         } else {
             toggleSC.visibility = View.VISIBLE
             toggleSC.isChecked = display.indexOfFirst {
-                it.asset_id == data.items[position].asset_id
+                it.asset_id == data[position].asset_id
             } >= 0
             toggleSC.setOnClickListener {
-                if (toggleSC.isChecked) {
-                    SharedPrefUtils.addAsset(holder.itemView.context, data.items[position])
-                    Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【on】")
-                } else {
-                    SharedPrefUtils.rmAsset(holder.itemView.context, data.items[position].asset_id)
-                    Log.i("【AssetManage】", "switch【${data.items[position].symbol}】to【off】")
-                }
+                _onToggle?.invoke(position, toggleSC.isChecked)
             }
         }
     }
 
-    override fun getItemCount() = data.items.size
+    override fun getItemCount() = data.size
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
     }
 
-    fun push(newData: PageDataPyModel<AssetRes>) {
-        if (newData.page == 1) {
-            notifyItemRangeRemoved(0, data.items.size)
-            data = newData
-            notifyItemRangeInserted(0, data.items.size)
-        } else {
-            val p = data.items.size
-            data.page = newData.page
-            data.pages = newData.pages
-            data.total = newData.total
-            data.per_page = newData.per_page
-            data.items.addAll(newData.items)
-            notifyItemRangeInserted(p, newData.items.size)
-        }
+    fun setOnToggle(listener: (Int, Boolean) -> Unit) {
+        _onToggle = listener
     }
 
-    fun getItem(position: Int): AssetRes {
-        return data.items[position]
+    fun getAsset(position: Int): AssetRes {
+        return data[position]
+    }
+
+    fun push(newData: ArrayList<AssetRes>) {
+        val old = data.size
+        data.addAll(newData)
+        notifyItemRangeInserted(old, newData.size)
+    }
+
+    fun set(newData: ArrayList<AssetRes>) {
+        data = newData
+        notifyDataSetChanged()
     }
 
     class ViewHolder(

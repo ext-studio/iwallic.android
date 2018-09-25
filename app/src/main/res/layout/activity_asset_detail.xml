@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:src="?drawableAssetDetailBg"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,35 +23,31 @@
             <View
                 android:id="@+id/app_top_space"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimenStatusBar"/>
+                android:layout_height="@dimen/dimenStatusBar"
+                android:background="@color/colorTransparent"/>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <ImageView
                     android:id="@+id/asset_detail_back"
-                    android:layout_width="@dimen/dimenLarge"
-                    android:layout_height="@dimen/dimenLarge"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="@dimen/dimenSpaceM"
                     android:contentDescription="@null"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_back"
-                    android:tint="?colorDefault"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimenSmall"
-                    android:layout_marginTop="@dimen/dimenSmall"/>
+                    android:tint="?colorDefault"/>
 
                 <ImageView
                     android:id="@+id/asset_detail_transfer"
-                    android:layout_width="@dimen/dimenIcon"
-                    android:layout_height="@dimen/dimenIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="@dimen/dimenSpaceM"
                     android:contentDescription="@null"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon_send"
                     android:tint="?colorDefault"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/dimenSmall"
-                    android:layout_marginTop="@dimen/dimenSmall"/>
+                    android:layout_alignParentEnd="true"/>
 
                 <LinearLayout
                     android:visibility="visible"
@@ -62,26 +57,27 @@
                     android:orientation="vertical"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/dimenSpace">
+                    android:layout_marginTop="@dimen/dimenSpace"
+                    tools:ignore="RelativeOverlap">
                     <TextView
                         android:id="@+id/asset_detail_title"
-                        android:textColor="?colorDefault"
+                        android:textColor="?colorLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/dimenLarge"/>
+                        android:textSize="32sp"/>
                     <TextView
                         android:id="@+id/asset_detail_balance"
-                        android:textColor="?colorDefault"
+                        android:textColor="?colorLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/dimenIcon"/>
+                        android:textSize="24sp"/>
                     <TextView
                         android:visibility="gone"
                         android:id="@+id/asset_detail_claim_enter"
                         android:layout_marginTop="@dimen/dimenSpace"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?colorDefault"
+                        android:textColor="?colorLight"
                         android:background="#44000000"
                         android:padding="@dimen/dimenSmall"
                         android:text="@string/asset_detail_claim_enter"/>
@@ -141,7 +137,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/asset_detail_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,23 +152,5 @@
             android:layout_height="wrap_content"
             app:srlAccentColor="?colorPrimary"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/asset_detail_load"-->
-        <!--android:visibility="visible"-->
-        <!--android:layout_margin="@dimen/dimenSpace"-->
-        <!--android:foregroundTint="?colorPrimary"-->
-        <!--android:layout_width="@dimen/dimenLarge"-->
-        <!--android:layout_height="@dimen/dimenLarge"-->
-        <!--android:layout_gravity="center"-->
-        <!--tools:targetApi="lollipop" />-->
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/asset_detail_list_refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/asset_detail_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
 </LinearLayout>

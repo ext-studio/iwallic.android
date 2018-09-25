@@ -13,13 +13,11 @@ import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
 import com.iwallic.app.utils.DialogUtils
-import com.iwallic.app.utils.WalletUtils
-import com.iwallic.app.pages.wallet.WalletActivity
+import com.iwallic.app.utils.NeonUtils
+import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
-import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
-import com.iwallic.app.states.TransactionState
-import com.iwallic.app.states.UnconfirmedState
+import com.iwallic.app.utils.ACache
 
 class UserFragment : BaseFragment() {
     private lateinit var backupLL: FrameLayout
@@ -41,7 +39,6 @@ class UserFragment : BaseFragment() {
         supportLL = view.findViewById(R.id.fragment_user_support)
         aboutLL = view.findViewById(R.id.fragment_user_about)
         closeLL = view.findViewById(R.id.fragment_user_signout)
-        setStatusBar(view.findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -63,18 +60,16 @@ class UserFragment : BaseFragment() {
     }
 
     private fun resolveSignOut() {
-        DialogUtils.confirm(context!!, R.string.dialog_title_warn, R.string.dialog_content_signout, R.string.dialog_ok, R.string.dialog_no).subscribe {
+        DialogUtils.confirm(context!!, {
             if (it) {
-                AssetState.clear()
-                TransactionState.clear()
-                UnconfirmedState.clear()
-                AssetManageState.clear()
-                WalletUtils.close(context!!)
-                val intent = Intent(context, WalletActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
-                activity?.finish()
+                AssetState.cached = null
+                ACache.get(context).clear()
+                NeonUtils.close(context!!)
+                val intent = Intent(context, WalletGuardActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context?.startActivity(intent)
             }
-        }
+        }, R.string.dialog_content_signout, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no)
     }
 }

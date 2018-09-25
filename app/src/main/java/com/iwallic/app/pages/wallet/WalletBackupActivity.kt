@@ -11,11 +11,7 @@ import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
-import com.iwallic.app.utils.WalletUtils
-import kotlinx.coroutines.experimental.launch
-import android.content.Intent
-import android.net.Uri
-import java.io.File
+import com.iwallic.app.utils.NeonUtils
 
 
 class WalletBackupActivity : BaseActivity() {
@@ -96,23 +92,25 @@ class WalletBackupActivity : BaseActivity() {
     }
 
     private fun resolveVerify() {
-        DialogUtils.password(this).subscribe{pwd ->
+        DialogUtils.password(this) { pwd ->
             if (pwd.isEmpty()) {
-                return@subscribe
+                return@password
             }
-            DialogUtils.load(this).subscribe{ load ->
-                WalletUtils.verify(this, pwd).subscribe{rs ->
-                    wif = rs
-                    Log.i("【WalletBackup】", wif)
-                    load.dismiss()
-                    if (wif.isEmpty()) {
-                        Toast.makeText(this, R.string.error_password, Toast.LENGTH_SHORT).show()
-                    } else {
-                        verified = true
-                        resolveVerified()
-                    }
+            val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
+            NeonUtils.verify(this, pwd, {
+                loader.dismiss()
+                wif = it
+                Log.i("【WalletBackup】", wif)
+                if (wif.isEmpty()) {
+                    Toast.makeText(this, R.string.error_password, Toast.LENGTH_SHORT).show()
+                } else {
+                    verified = true
+                    resolveVerified()
                 }
-            }
+            }, {
+                loader.dismiss()
+                Toast.makeText(this, R.string.error_failed, Toast.LENGTH_SHORT).show()
+            })
         }
     }
 

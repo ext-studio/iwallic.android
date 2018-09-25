@@ -10,30 +10,29 @@ import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import android.content.*
-import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.neon.wallet.Wallet
 
-
-class WalletCreateActivity : BaseActivity() {
+class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var step1LL: LinearLayout
     private lateinit var step2LL: LinearLayout
     private lateinit var backTV: TextView
     private lateinit var pwdET: EditText
     private lateinit var confirmET: EditText
-    private lateinit var createPB: ProgressBar
     private lateinit var errorTipTV: TextView
     private lateinit var wifTV: TextView
     private lateinit var qrCodeIV: ImageView
-    private lateinit var copyB: Button
-    private lateinit var saveB: Button
-    private lateinit var createB: Button
-    private lateinit var enterB: Button
-    private lateinit var enterPB: ProgressBar
+    private lateinit var copyTV: TextView
+    private lateinit var saveTV: TextView
+    private lateinit var createFL: FrameLayout
+    private lateinit var enterFL: FrameLayout
+
+    private lateinit var tipTV: TextView
 
     var newWallet: WalletModel? = null
     private var newWif: String = ""
@@ -55,23 +54,23 @@ class WalletCreateActivity : BaseActivity() {
         pwdET = findViewById(R.id.wallet_create_pwd)
         confirmET = findViewById(R.id.wallet_create_confirm)
         errorTipTV = findViewById(R.id.wallet_create_error)
-        createB = findViewById(R.id.wallet_create_btn_create)
-        createPB = findViewById(R.id.wallet_create_load_create)
+        createFL = findViewById(R.id.wallet_create_btn_create)
         step1LL = findViewById(R.id.wallet_create_step_1)
         step2LL = findViewById(R.id.wallet_create_step_2)
 
-        enterB = findViewById(R.id.wallet_create_btn_enter)
+        enterFL = findViewById(R.id.wallet_create_btn_enter)
         qrCodeIV = findViewById(R.id.wallet_create_qrcode)
         wifTV = findViewById(R.id.wallet_create_new_wif)
-        copyB = findViewById(R.id.wallet_create_btn_copy)
-        saveB = findViewById(R.id.wallet_create_btn_save)
-        enterPB = findViewById(R.id.wallet_create_load_enter)
+        copyTV = findViewById(R.id.wallet_create_btn_copy)
+        saveTV = findViewById(R.id.wallet_create_btn_save)
+
+        tipTV = findViewById(R.id.wallet_create_tip)
     }
     private fun initClick() {
         backTV.setOnClickListener {
             finish()
         }
-        createB.setOnClickListener {
+        createFL.setOnClickListener {
             if (pwd.isEmpty() || confirmPwd.isEmpty()) {
                 Toast.makeText(this, resources.getText(R.string.error_empty), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -81,27 +80,21 @@ class WalletCreateActivity : BaseActivity() {
             }
             resolveCreate()
         }
-        enterB.setOnClickListener {_ ->
+        enterFL.setOnClickListener {_ ->
             if (copied || saved) {
                 resolveEnter()
                 return@setOnClickListener
             }
-            DialogUtils.confirm(
-                this,
-                R.string.dialog_title_primary,
-                R.string.wallet_create_dialog_enter,
-                R.string.dialog_ok_enter,
-                R.string.dialog_no
-            ).subscribe {
+            DialogUtils.confirm( this, {
                 if (it) {
                     resolveEnter()
                 }
-            }
+            }, R.string.wallet_create_dialog_enter, R.string.dialog_title_primary, R.string.dialog_ok_enter, R.string.dialog_no)
         }
-        saveB.setOnClickListener {
+        saveTV.setOnClickListener {
             Toast.makeText(baseContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
-        copyB.setOnClickListener {
+        copyTV.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("WIF", newWif)
             clipboard.primaryClip = clip
@@ -140,21 +133,18 @@ class WalletCreateActivity : BaseActivity() {
     }
 
     private fun resolveCreate() {
-        createPB.visibility = View.VISIBLE
-        createB.visibility = View.INVISIBLE
-
-        hideKeyBoard()
-
+        val loader = DialogUtils.loader(this, R.string.wallet_create_creating)
         launch {
             var done = true
             try {
                 val privateKey = Wallet.generate()
-                newWallet = WalletUtils.create(pwd, privateKey)
+                newWallet = NeonUtils.create(pwd, privateKey)
                 newWif = Wallet.priv2Wif(privateKey)
             } catch (e: Exception) {
                 done = false
             }
             withContext(UI) {
+                loader.dismiss()
                 if (done) {
                     resolveNewWallet()
                 } else {
@@ -170,8 +160,7 @@ class WalletCreateActivity : BaseActivity() {
         }
         val qrCode = QRCodeUtils.generate(newWif, this)
         if (qrCode != null) {
-            createPB.visibility = View.INVISIBLE
-            createB.visibility = View.VISIBLE
+            tipTV.setText(R.string.wallet_create_tip_new)
             step1LL.visibility = View.GONE
             step2LL.visibility = View.VISIBLE
             qrCodeIV.setImageBitmap(qrCode)
@@ -179,10 +168,12 @@ class WalletCreateActivity : BaseActivity() {
         }
     }
     private fun resolveEnter() {
-        enterPB.visibility = View.VISIBLE
-        enterB.visibility = View.INVISIBLE
+        val loader = DialogUtils.loader(this)
         launch {
-            if (WalletUtils.save(baseContext, newWallet!!)) {
+            if (NeonUtils.save(baseContext, newWallet!!)) {
+                withContext(UI) {
+                    loader.dismiss()
+                }
                 val intent = Intent(baseContext, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
@@ -190,8 +181,7 @@ class WalletCreateActivity : BaseActivity() {
                 return@launch
             }
             withContext(UI) {
-                enterPB.visibility = View.INVISIBLE
-                enterB.visibility = View.VISIBLE
+                loader.dismiss()
                 Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             }
         }

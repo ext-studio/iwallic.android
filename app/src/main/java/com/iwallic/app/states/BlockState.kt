@@ -1,48 +1,40 @@
 package com.iwallic.app.states
 
+import android.content.Context
 import com.google.gson.Gson
 import com.iwallic.app.models.BlockTimeRes
+import com.iwallic.app.utils.ACache
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 object BlockState {
-    private var height: Long = 0
-    private val _data = PublishSubject.create<BlockTimeRes>()
-    private val _error = PublishSubject.create<Int>()
-    private var loading: Boolean = false
+    private var _current = BlockTimeRes()
     private val gson = Gson()
-    fun data(): Observable<BlockTimeRes> {
-        return _data
-    }
-    fun error(): Observable<Int> {
-        return _error
-    }
-    fun fetch() {
-        if (loading) {
-            return
-        }
-        loading = true
-        HttpUtils.post("getblocktime", emptyList(), fun (res) {
-            loading = false
-            val blockData = gson.fromJson(res, BlockTimeRes::class.java)
+
+    fun fetch(context: Context?, ok: (BlockTimeRes, Boolean) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.post(context, "getblocktime", emptyList(), fun (res) {
+            val blockData = try {gson.fromJson(res, BlockTimeRes::class.java)} catch (_: Throwable) {null}
             if (blockData == null) {
-                _error.onNext(99998)
+                no(99998)
             } else {
-                if (blockData.lastBlockIndex > height) {
-                    height = blockData.lastBlockIndex
-                    _data.onNext(blockData)
+                if (blockData.lastBlockIndex > _current.lastBlockIndex) {
+                    _current = blockData
+                    ok(_current, true)
                 } else {
-                    _error.onNext(99799)
+                    ok(_current, false)
                 }
             }
         }, fun (err) {
-            loading = false
-            _error.onNext(err)
+            no(err)
         })
     }
-    fun clear() {
-        height = 0
-        loading = false
+
+    fun current(context: Context?, ok: (BlockTimeRes, Boolean) -> Unit, no: (Int) -> Unit) {
+        if (_current.lastBlockIndex == 0.toLong()) {
+            fetch(context, ok, no)
+        } else {
+            ok(_current, false)
+        }
     }
 }

@@ -13,27 +13,38 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?colorPrimary"
-        android:padding="@dimen/dimenSpace">
+        android:background="?colorPrimary">
         <TextView
             android:id="@+id/wallet_create_back"
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
             android:text="@string/wallet_create"
             android:textColor="?colorDefault"
-            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
             android:textSize="@dimen/dimenFont"
             tools:targetApi="m" />
     </RelativeLayout>
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <TextView
+        android:id="@+id/wallet_create_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/dimenSpace"
+        android:paddingBottom="@dimen/dimenSpace"
+        android:paddingEnd="@dimen/dimenSpace"
+        android:text="@string/wallet_create_tip"
+        android:background="?colorPrimary"
+        android:textColor="?colorDefault"
+        android:textSize="@dimen/dimenFontM"/>
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlEnableRefresh="false"
-        app:srlEnableLoadMore="false"
-        app:srlEnableOverScrollDrag="true">
+        android:overScrollMode="never"
+        android:scrollbars="none">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -43,48 +54,73 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/dimenSpace"
-                    android:text="@string/wallet_create_tip"
-                    android:background="?colorPrimary"
-                    android:textColor="?colorDefault"
-                    android:textSize="@dimen/dimenFontM"/>
 
-                <EditText
-                    android:id="@+id/wallet_create_pwd"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:layout_marginTop="@dimen/dimenSpace"
-                    android:inputType="textPassword"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
                     android:background="?colorDefault"
-                    android:textSize="@dimen/dimenFont"
-                    android:padding="@dimen/dimenSpace"
-                    android:hint="@string/wallet_create_pwd_hint"
-                    android:textColor="?colorFont"
-                    android:textColorHint="?colorFont"
-                    android:focusedByDefault="true"
-                    tools:targetApi="o" />
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/dimenSpace">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/wallet_create_password"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorPrimary"
+                        android:gravity="center_vertical|start"
+                        android:layout_marginStart="@dimen/dimenSpace"/>
+                    <EditText
+                        android:id="@+id/wallet_create_pwd"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="60dp"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:background="?colorDefault"
+                        android:textSize="@dimen/dimenFont"
+                        android:paddingStart="@dimen/dimenSpace"
+                        android:paddingEnd="@dimen/dimenSpace"
+                        android:hint="@string/wallet_create_pwd_hint"
+                        android:textColor="?colorFont"
+                        android:textColorHint="?colorFont3"
+                        tools:targetApi="o" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimenLine"
                     android:background="?colorLine"/>
 
-                <EditText
-                    android:id="@+id/wallet_create_confirm"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/wallet_create_confirm_hint"
-                    android:inputType="textPassword"
-                    android:padding="@dimen/dimenSpace"
-                    android:textSize="@dimen/dimenFont"
-                    android:textColorHint="?colorFont"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
                     android:background="?colorDefault"
-                    android:textColor="?colorFont" />
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/wallet_create_confirm"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColor="?colorPrimary"
+                        android:gravity="center_vertical|start"
+                        android:layout_marginStart="@dimen/dimenSpace"/>
+                    <EditText
+                        android:id="@+id/wallet_create_confirm"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:hint="@string/wallet_create_confirm_hint"
+                        android:inputType="textPassword"
+                        android:paddingStart="@dimen/dimenSpace"
+                        android:paddingEnd="@dimen/dimenSpace"
+                        android:textSize="@dimen/dimenFont"
+                        android:textColorHint="?colorFont3"
+                        android:background="?colorDefault"
+                        android:textColor="?colorFont" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/wallet_create_error"
@@ -93,86 +129,61 @@
                     android:paddingStart="@dimen/dimenSpace"
                     android:paddingEnd="@dimen/dimenSpace"
                     android:paddingTop="@dimen/dimenSpace"
-                    android:textColor="?colorDanger"
-                    android:visibility="invisible"/>
+                    android:textColor="?colorDanger"/>
 
                 <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimenSpace">
-                    <Button
-                        android:id="@+id/wallet_create_btn_create"
-                        android:layout_width="match_parent"
+                    android:id="@+id/wallet_create_btn_create"
+                    android:layout_width="230dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="36dp"
+                    android:layout_margin="@dimen/dimenSpace"
+                    android:background="@drawable/shape_round_primary">
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:visibility="visible"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/dimenFont"
                         android:textColor="?colorDefault"
                         android:layout_gravity="center"
                         android:text="@string/wallet_create_btn_create" />
-                    <ProgressBar
-                        android:id="@+id/wallet_create_load_create"
-                        android:visibility="invisible"
-                        android:foregroundTint="?colorPrimary"
-                        android:layout_width="@dimen/dimenLarge"
-                        android:layout_height="@dimen/dimenLarge"
-                        android:layout_gravity="center"
-                        tools:targetApi="lollipop" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground"/>
                 </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/wallet_create_step_2"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/dimenSpace"
-                    android:text="@string/wallet_create_tip_new"
-                    android:background="?colorPrimary"
-                    android:textColor="?colorDefault"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_gravity="center"
-                        style="@style/qrcode_container">
-                        <ImageView
-                            android:id="@+id/wallet_create_qrcode"
-                            android:layout_width="160dp"
-                            android:layout_height="160dp"
-                            android:scaleType="fitXY"/>
-                    </LinearLayout>
-                </FrameLayout>
+                <LinearLayout
+                    android:layout_gravity="center"
+                    style="@style/qrcode_container">
+                    <ImageView
+                        android:contentDescription="@null"
+                        android:id="@+id/wallet_create_qrcode"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:scaleType="fitXY"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginTop="@dimen/dimenSpace">
-                    <LinearLayout
-                        android:contentDescription="@null"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/wallet_create_new_title"
-                            android:textColor="?colorFont"/>
-                        <ImageView
-                            android:contentDescription="@null"
-                            android:id="@+id/wallet_create_eye"
-                            android:layout_width="@dimen/dimenIcon"
-                            android:layout_height="@dimen/dimenIcon"
-                            android:layout_marginStart="@dimen/dimenSpace"
-                            android:src="@drawable/icon_eye"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
+                        android:layout_gravity="center"
+                        android:text="@string/wallet_create_new_title"
+                        android:textColor="?colorFont"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="@dimen/dimenSpace"
+                        android:drawableEnd="@drawable/icon_eye"/>
                     <TextView
                         android:id="@+id/wallet_create_new_wif"
                         android:layout_width="match_parent"
@@ -186,46 +197,48 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:orientation="horizontal">
-                        <Button
+                        <TextView
                             android:id="@+id/wallet_create_btn_copy"
-                            android:layout_width="wrap_content"
+                            android:layout_width="108dp"
                             android:text="@string/wallet_create_new_copy"
+                            android:background="@drawable/shape_round_primary"
                             android:textColor="?colorDefault"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"/>
-                        <Button
+                            android:gravity="center"
+                            android:layout_height="36dp"/>
+                        <TextView
                             android:id="@+id/wallet_create_btn_save"
-                            android:layout_width="wrap_content"
+                            android:layout_width="108dp"
                             android:text="@string/wallet_create_new_save"
                             android:textColor="?colorDefault"
-                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_round_primary"
+                            android:gravity="center"
+                            android:layout_height="36dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="@dimen/dimenSpace"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimenSpace">
-                    <Button
-                        android:id="@+id/wallet_create_btn_enter"
-                        android:layout_width="match_parent"
+                    android:id="@+id/wallet_create_btn_enter"
+                    android:layout_width="230dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="36dp"
+                    android:layout_margin="@dimen/dimenSpace"
+                    android:background="@drawable/shape_round_primary">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:visibility="visible"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/dimenFont"
                         android:textColor="?colorDefault"
-                        android:layout_gravity="bottom"
-                        android:layout_margin="@dimen/dimenSpace"
-                        android:text="@string/wallet_create_btn_enter" />
-                    <ProgressBar
-                        android:id="@+id/wallet_create_load_enter"
-                        android:visibility="invisible"
-                        android:foregroundTint="?colorPrimary"
-                        android:layout_width="@dimen/dimenLarge"
-                        android:layout_height="@dimen/dimenLarge"
                         android:layout_gravity="center"
-                        tools:targetApi="lollipop" />
+                        android:text="@string/wallet_create_btn_enter" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground"/>
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </ScrollView>
 </LinearLayout>

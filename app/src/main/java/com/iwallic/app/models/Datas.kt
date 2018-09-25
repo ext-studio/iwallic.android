@@ -1,5 +1,13 @@
 package com.iwallic.app.models
 
+import com.iwallic.app.base.BaseFragment
+
+data class Pager(
+    val id: Int,
+    val fragment: BaseFragment,
+    val title: String = ""
+)
+
 data class PageDataRes<T>(
     var page: Int = 1,
     var pageSize: Int = 10,
@@ -36,8 +44,8 @@ data class TransactionDetailToRes(
 )
 
 data class BlockTimeRes (
-    val lastBlockIndex: Long,
-    val time: Long
+    val lastBlockIndex: Long = 0,
+    val time: Long = 0
 )
 
 data class AssetRes (
@@ -57,8 +65,8 @@ data class VersionRes (
 
 data class ResponsePyModel (
     val msg: String = "",
-    val data: Any?,
-    val error_code: Int?,
+    val data: Any? = null,
+    val error_code: Int? = 99999,
     val bool_status: Boolean = false
 )
 
@@ -82,9 +90,9 @@ data class RequestGoModel (
 )
 
 data class ResponseGoModel (
-    val code: Int,
-    val msg: String,
-    val result: Any?
+    val code: Int = 99999,
+    val msg: String = "",
+    val result: Any? = null
 )
 
 data class ClaimsRes (

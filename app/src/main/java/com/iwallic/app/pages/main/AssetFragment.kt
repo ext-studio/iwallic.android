@@ -1,7 +1,5 @@
 package com.iwallic.app.pages.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -15,42 +13,45 @@ import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.broadcasts.AssetBroadCast
+import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
 import com.iwallic.app.pages.asset.AssetManageActivity
+import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import io.reactivex.disposables.Disposable
 
 class AssetFragment : BaseFragment() {
+    private lateinit var address: String
     private lateinit var assetRV: RecyclerView
     private lateinit var assetSRL: SmartRefreshLayout
     private lateinit var refreshCH: ClassicsHeader
     private lateinit var assetAdapter: AssetAdapter
-    private lateinit var assetManager: RecyclerView.LayoutManager
+    private lateinit var assetManager: LinearLayoutManager
     private lateinit var mainAssetTV: TextView
     private lateinit var mainBalanceTV: TextView
     private lateinit var manageIV: ImageView
-    private val mainAsset = AssetRes("0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b", "0", "NEO", "NEO")
 
-    private lateinit var listListen: Disposable
-    private lateinit var errorListen: Disposable
+    private var broadCast: BlockBroadCast? = null
+    private var assetBroadCast: AssetBroadCast? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
         initDOM(view)
         initListener()
-        context?.registerReceiver(BlockListener, IntentFilter(CommonUtils.ACTION_NEWBLOCK))
+        initList()
+        initBroadCast()
+        initAssetBroadCast()
         return view
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        listListen.dispose()
-        errorListen.dispose()
-        context!!.unregisterReceiver(BlockListener)
+        context?.unregisterReceiver(broadCast)
+        context?.unregisterReceiver(assetBroadCast)
     }
 
     private fun initDOM(view: View) {
@@ -62,50 +63,65 @@ class AssetFragment : BaseFragment() {
         manageIV = view.findViewById(R.id.fragment_asset_manage)
         assetAdapter = AssetAdapter(arrayListOf())
         assetManager = LinearLayoutManager(context!!)
+
+        address = SharedPrefUtils.getAddress(context)
+
+        assetRV.isNestedScrollingEnabled = false
         assetRV.layoutManager = assetManager
         assetRV.adapter = assetAdapter
     }
 
+    private fun initBroadCast() {
+        broadCast = BlockBroadCast()
+        broadCast?.setNewBlockListener { _, _ ->
+            initList(true)
+        }
+        context?.registerReceiver(broadCast, IntentFilter(CommonUtils.broadCastBlock))
+    }
+    private fun initAssetBroadCast() {
+        assetBroadCast = AssetBroadCast()
+        assetBroadCast?.setOnAssetChangedListener { _, _ ->
+            initList()
+        }
+        context?.registerReceiver(assetBroadCast, IntentFilter(CommonUtils.broadCastAsset))
+    }
+
     private fun initListener() {
-        listListen = AssetState.list(WalletUtils.address(context!!)).subscribe({
-            resolveList(it)
-            assetSRL.finishRefresh(true)
-        }, {
-            assetSRL.finishRefresh(false)
-            Log.i("【AssetList】", "error【${it}】")
-        })
-        errorListen = AssetState.error().subscribe({
-            assetSRL.finishRefresh(false)
-            if (!DialogUtils.error(context!!, it)) {
-                Toast.makeText(context!!, it.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            assetSRL.finishRefresh(false)
-            Log.i("【AssetList】", "error【${it}】")
-        })
         assetSRL.setOnRefreshListener {
-            AssetState.fetch()
+            initList(true)
         }
         manageIV.setOnClickListener {
-            activity!!.startActivity(Intent(context!!, AssetManageActivity::class.java))
+            context?.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
-        assetAdapter.onClick().subscribe {
+        assetAdapter.setOnAssetClickListener {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
-            context!!.startActivity(intent)
+            context?.startActivity(intent)
         }
     }
 
+    private fun initList(force: Boolean = false) {
+        AssetState.list(context, address, force, {
+            resolveList(it)
+            assetSRL.finishRefresh(true)
+        }, {
+            assetSRL.finishRefresh()
+            if (!DialogUtils.error(context, it)) {
+                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun resolveList(list: ArrayList<AssetRes>) {
-        mainAssetTV.text = mainAsset.name
+        mainAssetTV.text = "NEO"
 
         val balance = list.find {
-            it.asset_id == mainAsset.asset_id
+            it.asset_id == CommonUtils.NEO
         }?.balance ?: "0"
 
         mainBalanceTV.text = if (balance == "0.0") "0" else balance
 
-        for (asset in SharedPrefUtils.getAsset(context!!)) {
+        for (asset in AssetManageState.watch(context)) {
             if (list.indexOfFirst {
                 it.asset_id == asset.asset_id
             } < 0) {
@@ -113,11 +129,5 @@ class AssetFragment : BaseFragment() {
             }
         }
         assetAdapter.set(list)
-    }
-
-    companion object BlockListener: BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            AssetState.fetch("", true)
-        }
     }
 }

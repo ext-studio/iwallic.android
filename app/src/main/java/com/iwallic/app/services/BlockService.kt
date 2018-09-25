@@ -5,49 +5,43 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
+import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.CommonUtils
+import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.disposables.Disposable
 import java.util.*
 import kotlin.concurrent.schedule
 
 class BlockService : Service() {
-    private val newBlock = Intent(CommonUtils.ACTION_NEWBLOCK)
-    private var timer: Timer? = null
-    private val peried: Long = 60000
-    private lateinit var blockListen: Disposable
-    private lateinit var errorListen: Disposable
+    private var timer: TimerTask? = null
 
     override fun onCreate() {
         super.onCreate()
         Log.i("【BlockService】", "create")
-        timer = Timer()
-        timer!!.schedule(peried, peried) {
-            BlockState.fetch()
+        timer = Timer().schedule(CommonUtils.listenPeried, CommonUtils.listenPeried) {
+            BlockState.fetch(applicationContext, { data, isNew ->
+                if (isNew) {
+                    Log.i("【BlockService】", "new block【${data.lastBlockIndex}】")
+                    BlockBroadCast.send(applicationContext, data.lastBlockIndex, data.time)
+                } else {
+                    Log.i("【BlockService】", "no new block")
+                }
+            }, {
+                Log.i("【BlockService】", "error【$it】")
+                if (!DialogUtils.error(applicationContext, it)) {
+                    Toast.makeText(applicationContext, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
-        blockListen = BlockState.data().subscribe({
-            Log.i("【BlockService】", "new block arrived【${it.lastBlockIndex}】")
-            UnconfirmedState.fetch(context = this)
-            sendBroadcast(newBlock)
-        }, {
-            Log.i("【BlockService】", "error【$it】")
-        })
-        errorListen = BlockState.error().subscribe({
-            Log.i("【BlockService】", "error【$it】")
-            sendBroadcast(newBlock)
-        }, {
-            Log.i("【BlockService】", "error【$it】")
-        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        timer!!.cancel()
-        timer!!.purge()
-        timer = null
-        blockListen.dispose()
+        timer?.cancel()
         Log.i("【BlockService】", "destroy")
     }
 

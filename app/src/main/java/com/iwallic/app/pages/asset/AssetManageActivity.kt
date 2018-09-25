@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
+import com.iwallic.app.broadcasts.AssetBroadCast
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
@@ -20,24 +21,26 @@ import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.disposables.Disposable
 
-
 class AssetManageActivity : BaseActivity() {
     private lateinit var backTV: TextView
     private lateinit var amRV: RecyclerView
     private lateinit var amSRL: SmartRefreshLayout
     private lateinit var amAdapter: AssetManageAdapter
     private lateinit var amManager: LinearLayoutManager
-
-    private lateinit var address: String
-    private lateinit var listListen: Disposable
-    private lateinit var errorListen: Disposable
+    private var changed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_asset_manage)
         initDOM()
         initListener()
-        address = WalletUtils.address(this)
+        AssetManageState.init(this, {
+            amAdapter.set(it)
+        }, {
+            if (!DialogUtils.error(this, it)) {
+                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun initDOM() {
@@ -45,53 +48,55 @@ class AssetManageActivity : BaseActivity() {
         amRV = findViewById(R.id.asset_manage_list)
         amSRL = findViewById(R.id.asset_manage_pager)
         amManager = LinearLayoutManager(this)
-        amAdapter = AssetManageAdapter(PageDataPyModel(), SharedPrefUtils.getAsset(this))
+        amAdapter = AssetManageAdapter(arrayListOf(), AssetManageState.watch(this))
         amRV.layoutManager = amManager
         amRV.adapter = amAdapter
-
-        amSRL.setEnableOverScrollDrag(true)
     }
 
     private fun initListener() {
         backTV.setOnClickListener {
             finish()
         }
-        listListen = AssetManageState.list(WalletUtils.address(this)).subscribe({
-            amAdapter.push(it)
-            amSRL.finishRefresh(true)
-            if (it.page == it.pages) {
-                amSRL.finishLoadMoreWithNoMoreData()
-            } else {
-                amSRL.finishLoadMore(true)
-            }
-        }, {
-            Log.i("【AssetManage】", "error【$it】")
-            amSRL.finishRefresh(false)
-            amSRL.finishLoadMore(false)
-        })
-        errorListen = AssetManageState.error().subscribe({
-            if (!DialogUtils.error(this, it)) {
-                Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
-            }
-            amSRL.finishRefresh()
-            amSRL.finishLoadMore()
-        }, {
-            Log.i("【AssetManage】", "error【$it】")
-            amSRL.finishRefresh()
-            amSRL.finishLoadMore()
-        })
-        amSRL.setOnRefreshListener {
-            AssetManageState.fetch()
+        amSRL.setOnRefreshListener { _ ->
+            AssetManageState.refresh(this, {
+                amAdapter.set(it)
+                amSRL.finishRefresh(true)
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+                amSRL.finishRefresh()
+            })
         }
-        amSRL.setOnLoadMoreListener {
-            AssetManageState.next()
+        amSRL.setOnLoadMoreListener { _ ->
+            AssetManageState.older(this, {
+                amAdapter.push(it)
+                if (it.size > 0) {
+                    amSRL.finishLoadMore(true)
+                } else {
+                    amSRL.finishLoadMoreWithNoMoreData()
+                }
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+                amSRL.finishLoadMore()
+            })
+        }
+        amAdapter.setOnToggle { position: Int, state ->
+            if (state) {
+                AssetManageState.addWatch(this, amAdapter.getAsset(position))
+            } else {
+                AssetManageState.rmWatch(this, amAdapter.getAsset(position))
+            }
+            changed = true
         }
     }
 
     override fun onDestroy() {
+        if (changed) {
+            AssetBroadCast.send(this)
+        }
         super.onDestroy()
-        AssetState.touch()
-        listListen.dispose()
-        errorListen.dispose()
     }
 }

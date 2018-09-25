@@ -9,14 +9,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
         <TextView
             android:id="@+id/transaction_unconfirmed"
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
+            android:gravity="center"
             android:text="@string/transaction_unconfirmed"
             android:textColor="?colorDefault"
             android:layout_gravity="center"
@@ -27,7 +29,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/transaction_unconfirmed_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,19 +44,4 @@
             android:layout_height="wrap_content"
             app:srlAccentColor="?colorPrimary"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    <!--<ProgressBar-->
-        <!--android:id="@+id/transaction_unconfirmed_load"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="@dimen/dimenSpace"/>-->
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/transaction_unconfirmed_refresh"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/transaction_unconfirmed_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

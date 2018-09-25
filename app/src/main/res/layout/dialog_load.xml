@@ -5,22 +5,25 @@
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/dimenSpace"
+    android:padding="24dp"
     android:layout_gravity="center"
     android:gravity="center">
     <ProgressBar
-        android:foregroundTint="?colorPrimary"
-        android:layout_width="@dimen/dimenLarge"
-        android:layout_height="@dimen/dimenLarge"
+        android:indeterminateTint="?colorPrimary"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         tools:targetApi="lollipop"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dimenSpace"
+        android:layout_marginEnd="@dimen/dimenSpace"/>
     <TextView
         android:id="@+id/load_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="17sp"
         android:textColor="?colorFont"
         android:textStyle="bold"
-        android:text="@string/load_load"
         android:layout_gravity="center"/>
 </LinearLayout>

@@ -1,33 +1,30 @@
 package com.iwallic.app.pages.wallet
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
-import com.iwallic.app.base.BaseActivity
+import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.NeonUtils
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 
-class WalletImportActivity : BaseActivity() {
+class WalletImportActivity : BaseAuthActivity() {
 
     private lateinit var backTV: TextView
     private lateinit var wifET: EditText
-    private lateinit var fileB: Button
-    private lateinit var importB: Button
+    private lateinit var importFL: FrameLayout
     private lateinit var pwdET: EditText
     private lateinit var confirmET: EditText
     private lateinit var errorTV: TextView
-    private lateinit var importPB: ProgressBar
     private lateinit var scanIV: ImageView
     var wif: String = ""
     var pwd: String = ""
@@ -46,7 +43,7 @@ class WalletImportActivity : BaseActivity() {
         if (result != null) {
             if (result.contents != null) {
                 Log.i("【WalletImport】", "scanned【${result.contents}】")
-                if (WalletUtils.check(result.contents, "wif")) {
+                if (NeonUtils.check(result.contents, "wif")) {
                     wif = result.contents
                     wifET.setText(result.contents)
                 } else {
@@ -62,12 +59,10 @@ class WalletImportActivity : BaseActivity() {
     private fun initDOM() {
         backTV = findViewById(R.id.wallet_import_back)
         wifET = findViewById(R.id.wallet_import_wif)
-        fileB = findViewById(R.id.wallet_import_btn_file)
-        importB = findViewById(R.id.wallet_import_btn_wif)
+        importFL = findViewById(R.id.wallet_import_btn_wif)
         pwdET = findViewById(R.id.wallet_import_pwd)
         confirmET = findViewById(R.id.wallet_import_confirm)
         errorTV = findViewById(R.id.wallet_import_error)
-        importPB = findViewById(R.id.wallet_import_load_wif)
         scanIV = findViewById(R.id.wallet_import_scan)
     }
     private fun initInput() {
@@ -100,17 +95,14 @@ class WalletImportActivity : BaseActivity() {
         backTV.setOnClickListener {
             finish()
         }
-        importB.setOnClickListener {
+        importFL.setOnClickListener {
             if (wif.isEmpty() || pwd.isEmpty() || confirm.isEmpty()) {
                 Toast.makeText(this, R.string.error_empty, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (WalletUtils.check(wif, "wif") && pwd.length > 5 && pwd == confirm) {
+            if (NeonUtils.check(wif, "wif") && pwd.length > 5 && pwd == confirm) {
                 resolveImport()
             }
-        }
-        fileB.setOnClickListener {
-            Toast.makeText(this, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
         scanIV.setOnClickListener {
             val scan = IntentIntegrator(this)
@@ -119,7 +111,7 @@ class WalletImportActivity : BaseActivity() {
         }
     }
     private fun resolveError() {
-        if (!WalletUtils.check(wif, "wif")) {
+        if (!NeonUtils.check(wif, "wif")) {
             errorTV.setText(R.string.wallet_import_error_wif)
             errorTV.visibility = View.VISIBLE
         } else if (pwd.isNotEmpty() && pwd.length < 6) {
@@ -133,24 +125,15 @@ class WalletImportActivity : BaseActivity() {
         }
     }
     private fun resolveImport() {
-        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-
-        importB.visibility = View.INVISIBLE
-        importPB.visibility = View.VISIBLE
+        val loader = DialogUtils.loader(this, R.string.wallet_import_importing)
         launch {
             var done = true
-            val w = WalletUtils.import(wif, pwd)
-            if (w == null || !WalletUtils.save(baseContext, w)) {
+            val w = NeonUtils.import(wif, pwd)
+            if (w == null || !NeonUtils.save(baseContext, w)) {
                 done = false
             }
             withContext(UI) {
-                importB.visibility = View.VISIBLE
-                importPB.visibility = View.INVISIBLE
+                loader.dismiss()
                 if (done) {
                     val intent = Intent(baseContext, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

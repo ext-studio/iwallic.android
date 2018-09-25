@@ -9,7 +9,7 @@ import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.utils.QRCodeUtils
-import com.iwallic.app.utils.WalletUtils
+import com.iwallic.app.utils.NeonUtils
 
 class TransactionReceiveActivity : BaseActivity() {
     private lateinit var backL: LinearLayout
@@ -35,7 +35,7 @@ class TransactionReceiveActivity : BaseActivity() {
     }
 
     private fun initQRCode() {
-        address = WalletUtils.address(this)
+        address = NeonUtils.address(this)
         val qrCode = QRCodeUtils.generate(address, this)
         addressTV.text = address
         if (qrCode != null) {

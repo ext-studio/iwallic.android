@@ -8,56 +8,36 @@
     android:background="?colorDefault2"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/app_top_space"
+        style="@style/app_status_bar"
+        android:orientation="horizontal"/>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:paddingStart="@dimen/dimenSpace"
+        android:paddingEnd="@dimen/dimenSpace"
         android:background="?colorPrimary">
-        <View
-            android:id="@+id/app_top_space"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimenStatusBar"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/dimenSpace">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/fragment_transaction_title"
-                android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenFontL"/>
-            <TextView
-                android:id="@+id/transaction_unconfirmed_enter"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/fragment_transaction_unconfirmed"
-                android:textColor="?colorDefault"
-                android:textSize="@dimen/dimenFont"
-                android:drawableEnd="@drawable/icon_arrowright"
-                android:drawableTint="?colorDefault"
-                tools:targetApi="m"
-                tools:ignore="RelativeOverlap" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/transaction_pager"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@string/fragment_transaction_title"
+            android:textColor="?colorDefault"
+            android:textSize="@dimen/dimenFontL"/>
+    </RelativeLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tx_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srlAccentColor="?colorPrimary"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/transaction_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srlAccentColor="?colorPrimary"/>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        android:layout_height="44dp"
+        app:tabTextColor="?colorFont3"
+        android:background="?colorDefault"
+        app:tabSelectedTextColor="?colorPrimary"
+        app:tabIndicatorColor="?colorPrimary"
+        app:tabMode="fixed"
+        app:tabGravity="fill"/>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tx_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

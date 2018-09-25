@@ -10,14 +10,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimenSpace"
         android:background="?colorPrimary">
         <TextView
             android:id="@+id/asset_manage_back"
             android:drawableStart="@drawable/icon_back"
             android:drawableTint="?colorDefault"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:paddingStart="@dimen/dimenSpace"
+            android:paddingEnd="@dimen/dimenSpace"
             android:text="@string/asset_manage"
             android:textColor="?colorDefault"
             android:gravity="center"
@@ -29,7 +30,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/asset_manage_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:srlEnableOverScrollDrag="true">
         <com.scwang.smartrefresh.layout.header.ClassicsHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +39,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/asset_manage_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

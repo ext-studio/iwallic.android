@@ -6,6 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.models.TransactionRes
+import com.iwallic.app.utils.ACache
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
@@ -15,126 +17,90 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 
 object UnconfirmedState {
-    private var cached: PageDataPyModel<TransactionRes>? = null
-    private var address: String = ""
-    private val _list = PublishSubject.create<PageDataPyModel<TransactionRes>>()
-    private val _error = PublishSubject.create<Int>()
+    private const val take = 15
+    private var currentPage = 1
     private val gson = Gson()
-    var fetching: Boolean = false
-    fun has(): Boolean {
-        return cached?.items!!.size > 0
-    }
-    fun list(addr: String = ""): Observable<PageDataPyModel<TransactionRes>> {
-        if (cached == null || (addr.isNotEmpty() && addr != address)) {
-            fetch(addr)
-            return _list
-        }
-        return _list.startWith(cached)
-    }
-    fun error(): Observable<Int> {
-        return _error
-    }
-    fun next() {
-        if (cached!!.page >= cached!!.pages || fetching || address.isEmpty()) {
-            return
-        }
-        fetching = true
-        resolveFetch(address, cached!!.page+1, cached!!.per_page, {
-            if (it.page > 1) {
-                cached!!.page = it.page
-                cached!!.total = it.total
-                cached!!.per_page = it.per_page
-                cached!!.items.addAll(it.items)
-            }
-            launch (UI) {
-                delay(500)
-                _list.onNext(it)
-                fetching = false
-            }
-        }, {
-            launch (UI) {
-                delay(500)
-                _error.onNext(it)
-                fetching = false
-            }
-        })
-    }
-    fun fetch(addr: String = "", context: Context? = null) {
-        if (fetching) {
-            return
-        }
-        if (addr.isNotEmpty()) {
-            Log.i("【UnconfirmedState】", "set address")
-            address = addr
-        }
-        if (address.isEmpty()) {
-            _error.onNext(99899)
-        }
-        fetching = true
-        resolveFetch(address, 1, 15, {pageData ->
-            cached = pageData
-            if (context != null) {
-                resolveClaim(context)
-            }
-            launch (UI) {
-                delay(500)
-                _list.onNext(cached!!)
-                fetching = false
-            }
-        }, {
-            launch (UI) {
-                delay(500)
-                _error.onNext(it)
-                fetching = false
-            }
-        })
-    }
 
-    private fun resolveClaim(context: Context) {
-        val claim = SharedPrefUtils.getClaim(context)
-        val collect = SharedPrefUtils.getCollect(context)
-        if (claim.isNotEmpty()) {
-            if (cached!!.items.indexOfFirst {
-                it.txid == claim
-            } < 0) {
-                Log.i("【Unconfirmed】", "claim complete【$claim】")
-                SharedPrefUtils.setClaim(context, "")
-            } else {
-                Log.i("【Unconfirmed】", "claim incomplete【$claim】")
-            }
-        }
-        if (collect.isNotEmpty()) {
-            if (cached!!.items.indexOfFirst {
-                it.txid == collect
-            } < 0) {
-                Log.i("【Unconfirmed】", "collect complete【$collect】")
-                SharedPrefUtils.setCollect(context, "")
-            } else {
-                Log.i("【Unconfirmed】", "collect incomplete【$collect】")
-            }
+    fun init(context: Context?, ok: (ArrayList<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        currentPage = 1
+        val aCache = ACache.get(context)
+        val localData = local(aCache, currentPage)
+        if (localData != null) {
+            ok(localData)
+        } else {
+            refresh(context, ok, no)
         }
     }
 
-    private fun resolveFetch(addr: String, page: Int, size: Int, ok: (data: PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
-        HttpUtils.getPy("/client/transaction/list?page=$page&page_size=$size&wallet_address=$addr&confirmed=false", {
-            if (it.isEmpty()) {
-                ok(PageDataPyModel())
-                return@getPy
-            }
-            val data = gson.fromJson<PageDataPyModel<TransactionRes>>(it, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)
-            if (data == null) {
-                no(99998)
-            } else {
-                ok(data)
-            }
+    fun refresh(context: Context?, ok: (ArrayList<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        currentPage = 1
+        val aCache = ACache.get(context)
+        fetch(context, currentPage, {
+            set(aCache, it)
+            ok(it.items)
         }, {
             no(it)
         })
     }
 
-    fun clear() {
-        cached = null
-        address = ""
-        fetching = false
+    fun older(context: Context?, ok: (ArrayList<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        val next = currentPage + 1
+        val aCache = ACache.get(context)
+        val localData = local(aCache, next)
+        if (localData != null && localData.isNotEmpty()) {
+            currentPage = next
+            ok(localData)
+        } else {
+            fetch(context, next, {
+                if (it.items.size > 0) {
+                    push(aCache, it)
+                    currentPage = next
+                }
+                ok(it.items)
+            }, {
+                no(it)
+            })
+        }
+    }
+
+    fun clear(context: Context?) {
+        ACache.get(context).remove("tx_unconfirmed")
+    }
+
+    private fun local(aCache: ACache, page: Int): ArrayList<TransactionRes>? {
+        val strRs = aCache.getAsString("tx_unconfirmed") ?: return null
+        val rs = try {gson.fromJson<PageDataPyModel<TransactionRes>>(strRs, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)} catch (_: Throwable) {null}
+        return if (rs == null) {
+            null
+        } else {
+            CommonUtils.safeSlice(rs.items, (page-1)*take, take)
+        }
+    }
+
+    private fun push(aCache: ACache, data: PageDataPyModel<TransactionRes>) {
+        val strRs = aCache.getAsString("tx_unconfirmed") ?: return
+        val rs = try {gson.fromJson<PageDataPyModel<TransactionRes>>(strRs, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)} catch (_: Throwable) {null}
+        if (rs == null) {
+            aCache.put("tx_unconfirmed", gson.toJson(data))
+        } else {
+            rs.pages = data.pages
+            rs.total = data.total
+            rs.page = data.page
+            rs.items.addAll(data.items)
+            aCache.put("tx_unconfirmed", gson.toJson(rs))
+        }
+    }
+
+    private fun set(aCache: ACache, data: PageDataPyModel<TransactionRes>) {
+        aCache.put("tx_unconfirmed", gson.toJson(data))
+    }
+
+    private fun fetch(context: Context?, page: Int, ok: (PageDataPyModel<TransactionRes>) -> Unit, no: (Int) -> Unit) {
+        HttpUtils.getPy(context, "/client/transaction/list?page=$page&page_size=$take&wallet_address=${SharedPrefUtils.getAddress(context)}&confirmed=false", {
+            val rs = try {gson.fromJson<PageDataPyModel<TransactionRes>>(it, object: TypeToken<PageDataPyModel<TransactionRes>>() {}.type)} catch (_: Throwable) {null}
+            ok(rs ?: PageDataPyModel())
+        }, {
+            no(it)
+        })
     }
 }
