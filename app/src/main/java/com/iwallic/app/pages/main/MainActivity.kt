@@ -82,8 +82,6 @@ class MainActivity : BaseActivity() {
         navBNV = findViewById(R.id.main_navigation)
     }
     private fun initNav() {
-        navBNV.disableShiftMode()
-
         adapter = BaseFragmentAdapter(supportFragmentManager)
         adapter.setPage(Pager(R.id.menu_main_asset, AssetFragment()))
 
@@ -130,28 +128,6 @@ class MainActivity : BaseActivity() {
             R.id.menu_main_find -> FindFragment()
             R.id.menu_main_user -> UserFragment()
             else -> AssetFragment()
-        }
-    }
-
-    @SuppressLint("RestrictedApi")
-    fun BottomNavigationView.disableShiftMode() {
-        val menuView = getChildAt(0) as BottomNavigationMenuView
-        try {
-            menuView.javaClass.getDeclaredField("mShiftingMode").also { shiftMode ->
-                shiftMode.isAccessible = true
-                shiftMode.setBoolean(menuView, false)
-                shiftMode.isAccessible = false
-            }
-            for (i in 0 until menuView.childCount) {
-                (menuView.getChildAt(i) as BottomNavigationItemView).also { item ->
-                    item.setShiftingMode(false)
-                    item.setChecked(item.itemData.isChecked)
-                }
-            }
-        } catch (t: Throwable) {
-            Log.e("BottomNavigationHelper", "Unable to get shift mode field", t)
-        } catch (e: IllegalAccessException) {
-            Log.e("BottomNavigationHelper", "Unable to change value of shift mode", e)
         }
     }
 }

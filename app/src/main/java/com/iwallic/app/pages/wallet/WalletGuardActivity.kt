@@ -72,10 +72,10 @@ class WalletGuardActivity : BaseAuthActivity() {
     private fun initHistory() {
         history = WalletDBUtils(this).getAll()
         if (history.isNotEmpty()) {
-            historyFAB.visibility = View.VISIBLE
+            historyFAB.show()
             resolveList()
         } else {
-            historyFAB.visibility = View.GONE
+            historyFAB.hide()
         }
     }
 
@@ -84,10 +84,10 @@ class WalletGuardActivity : BaseAuthActivity() {
         adapter = WalletHistoryAdapter(history)
         historyRV.layoutManager = adapterViewManager
         historyRV.adapter = adapter
-        adapter.onChoose().subscribe {
+        adapter.setOnChooseListener {
             resolveOpen(adapter.getData(it))
         }
-        adapter.onDelete().subscribe {
+        adapter.setOnDeleteListener {
             resolveDel(adapter.getData(it), it)
         }
     }
@@ -120,23 +120,17 @@ class WalletGuardActivity : BaseAuthActivity() {
 
     private fun resolveDel(w: WalletAgentModel, p: Int) {
         Log.i("【Wallet】", "del wallet at【$p】")
-        DialogUtils.confirm(
-            this,
-            R.string.dialog_content_addrdel,
-            R.string.dialog_title_warn,
-            R.string.dialog_ok,
-            R.string.dialog_no
-        ).subscribe {
+        DialogUtils.confirm(this, {
             if (!it) {
-                return@subscribe
+                return@confirm
             }
             NeonUtils.remove(baseContext, w)
             adapter.remove(p)
             if (adapter.itemCount == 0) {
                 historyLL.visibility = View.GONE
                 gateLL.visibility = View.VISIBLE
-                historyFAB.visibility = View.GONE
+                historyFAB.hide()
             }
-        }
+        }, R.string.dialog_content_addrdel, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no)
     }
 }

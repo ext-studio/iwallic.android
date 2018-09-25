@@ -163,10 +163,10 @@ class AssetDetailActivity : BaseActivity() {
             val lastClaim = SharedPrefUtils.getClaim(this)
             when {
                 lastClaim.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, null, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok)
                 }
                 lastCollect.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, null, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok)
                 }
                 else -> {
                     resolveClaim()
@@ -182,10 +182,10 @@ class AssetDetailActivity : BaseActivity() {
             val lastClaim = SharedPrefUtils.getClaim(this)
             when {
                 lastClaim.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, null, R.string.error_claim_claiming, R.string.dialog_title_primary, R.string.dialog_ok)
                 }
                 lastCollect.isNotEmpty() -> {
-                    DialogUtils.confirm(this, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok).subscribe()
+                    DialogUtils.confirm(this, null, R.string.error_claim_collecting, R.string.dialog_title_primary, R.string.dialog_ok)
                 }
                 else -> {
                     resolveCollect()
@@ -203,12 +203,12 @@ class AssetDetailActivity : BaseActivity() {
             intent.putExtra("asset", asset.asset_id)
             startActivity(intent)
         }
-        txAdapter.onEnter().subscribe {
+        txAdapter.setOnTxEnterListener {
             val intent = Intent(this, BrowserActivity::class.java)
             intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
             startActivity(intent)
         }
-        txAdapter.onCopy().subscribe {
+        txAdapter.setOnTxCopyListener {
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
         }

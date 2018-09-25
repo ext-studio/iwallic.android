@@ -85,17 +85,11 @@ class WalletCreateActivity : BaseAuthActivity() {
                 resolveEnter()
                 return@setOnClickListener
             }
-            DialogUtils.confirm(
-                this,
-                R.string.wallet_create_dialog_enter,
-                R.string.dialog_title_primary,
-                R.string.dialog_ok_enter,
-                R.string.dialog_no
-            ).subscribe {
+            DialogUtils.confirm( this, {
                 if (it) {
                     resolveEnter()
                 }
-            }
+            }, R.string.wallet_create_dialog_enter, R.string.dialog_title_primary, R.string.dialog_ok_enter, R.string.dialog_no)
         }
         saveTV.setOnClickListener {
             Toast.makeText(baseContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()

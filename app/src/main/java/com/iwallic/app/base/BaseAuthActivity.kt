@@ -26,9 +26,9 @@ open class BaseAuthActivity: AppCompatActivity() {
         resolveTheme()
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtils.onAttach(base))
-    }
+//    override fun attachBaseContext(base: Context) {
+//        super.attachBaseContext(LocaleUtils.onAttach(base))
+//    }
 
     override fun finish() {
         super.finish()

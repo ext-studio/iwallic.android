@@ -64,7 +64,6 @@
             <View style="@style/option_item_line_full" />
 
             <FrameLayout
-                android:id="@+id/user_setting_lang_cn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:background="?colorDefault">
@@ -80,15 +79,13 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="简体中文"
+                        android:text="@string/user_setting_language_system"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
                         android:textColor="?colorFont"
                         tools:ignore="HardcodedText" />
                     <ImageView
-                        android:id="@+id/user_setting_lang_cn_chosen"
                         android:contentDescription="@null"
-                        android:visibility="gone"
                         android:src="@drawable/icon_done"
                         style="@style/option_item_imgarrow"/>
                 </LinearLayout>
@@ -101,43 +98,81 @@
                     style="@style/option_item_line_full"/>
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/user_setting_lang_en"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="?colorDefault">
-                <LinearLayout
-                    android:gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="@dimen/dimenSpace"
-                    android:layout_marginEnd="@dimen/dimenSpace"
-                    tools:ignore="UseCompoundDrawables">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="English"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
-                        tools:ignore="HardcodedText" />
-                    <ImageView
-                        android:id="@+id/user_setting_lang_en_chosen"
-                        android:contentDescription="@null"
-                        android:visibility="gone"
-                        android:src="@drawable/icon_done"
-                        style="@style/option_item_imgarrow"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/selectableItemBackground" />
-                <View
-                    android:layout_gravity="bottom"
-                    style="@style/option_item_line_full"/>
-            </FrameLayout>
+            <!--<FrameLayout-->
+                <!--android:id="@+id/user_setting_lang_cn"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:background="?colorDefault">-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_marginStart="@dimen/dimenSpace"-->
+                    <!--android:layout_marginEnd="@dimen/dimenSpace"-->
+                    <!--tools:ignore="UseCompoundDrawables">-->
+                    <!--<TextView-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="简体中文"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:textSize="@dimen/dimenFont"-->
+                        <!--android:textColor="?colorFont"-->
+                        <!--tools:ignore="HardcodedText" />-->
+                    <!--<ImageView-->
+                        <!--android:id="@+id/user_setting_lang_cn_chosen"-->
+                        <!--android:contentDescription="@null"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:src="@drawable/icon_done"-->
+                        <!--style="@style/option_item_imgarrow"/>-->
+                <!--</LinearLayout>-->
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="?android:attr/selectableItemBackground" />-->
+                <!--<View-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--style="@style/option_item_line_full"/>-->
+            <!--</FrameLayout>-->
+
+            <!--<FrameLayout-->
+                <!--android:id="@+id/user_setting_lang_en"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:background="?colorDefault">-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_marginStart="@dimen/dimenSpace"-->
+                    <!--android:layout_marginEnd="@dimen/dimenSpace"-->
+                    <!--tools:ignore="UseCompoundDrawables">-->
+                    <!--<TextView-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="English"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:textSize="@dimen/dimenFont"-->
+                        <!--android:textColor="?colorFont"-->
+                        <!--tools:ignore="HardcodedText" />-->
+                    <!--<ImageView-->
+                        <!--android:id="@+id/user_setting_lang_en_chosen"-->
+                        <!--android:contentDescription="@null"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:src="@drawable/icon_done"-->
+                        <!--style="@style/option_item_imgarrow"/>-->
+                <!--</LinearLayout>-->
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="?android:attr/selectableItemBackground" />-->
+                <!--<View-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--style="@style/option_item_line_full"/>-->
+            <!--</FrameLayout>-->
         </LinearLayout>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

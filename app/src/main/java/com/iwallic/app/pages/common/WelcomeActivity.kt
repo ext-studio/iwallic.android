@@ -30,17 +30,15 @@ class WelcomeActivity : BaseAuthActivity() {
     }
 
     private fun initVersion () {
-        VersionState.check(this, true).subscribe({
+        VersionState.check(this, true, {
             if (it != null) {
                 if (it.code > BuildConfig.VERSION_CODE) {
                     resolveNewVersion(it)
-                    return@subscribe
                 }
             }
             enter()
         }, {
-            val code = try {it.message?.toInt() ?: 99999}catch (_: Throwable) {99999}
-            if (!DialogUtils.error(this, code)) {
+            if (!DialogUtils.error(this, it)) {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
             enter()

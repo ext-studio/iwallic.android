@@ -19,26 +19,22 @@ object AssetState {
         return cached?.find { it.asset_id == id }
     }
 
-    fun list(context: Context?, address: String, force: Boolean = false): Observable<ArrayList<AssetRes>> {
-        return Observable.create { observer ->
-            if (cached != null && !force) {
-                observer.onNext(cached!!)
-                observer.onComplete()
-                return@create
-            }
-            HttpUtils.getPy(context, "/client/index/assets/display?wallet_address=$address", {
-                val data = try {gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)} catch (_: Throwable) {null}
-                if (data == null) {
-                    observer.onError(Throwable("99999"))
-                } else {
-                    cached = data
-                    observer.onNext(data)
-                    observer.onComplete()
-                }
-            }, {
-                observer.onError(Throwable("$it"))
-            })
+    fun list(context: Context?, address: String, force: Boolean = false, ok: (ArrayList<AssetRes>) -> Unit, no: (Int) -> Unit) {
+        if (cached != null && !force) {
+            ok(cached!!)
+            return
         }
+        HttpUtils.getPy(context, "/client/index/assets/display?wallet_address=$address", {
+            val data = try {gson.fromJson<ArrayList<AssetRes>>(it, object: TypeToken<ArrayList<AssetRes>>() {}.type)} catch (_: Throwable) {null}
+            if (data == null) {
+                no(99998)
+            } else {
+                cached = data
+                ok(data)
+            }
+        }, {
+            no(it)
+        })
     }
 
     fun checkClaim(): Boolean {

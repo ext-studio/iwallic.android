@@ -11,8 +11,8 @@ import io.reactivex.subjects.PublishSubject
 
 class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Adapter<WalletHistoryAdapter.ViewHolder>() {
     private val data = _list
-    private val _onChoose = PublishSubject.create<Int>()
-    private val _onDelete = PublishSubject.create<Int>()
+    private var onChooseListener: ((Int) -> Unit)? = null
+    private var onDeleteListener: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_wallet_history, parent, false) as LinearLayout
@@ -23,10 +23,10 @@ class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Ada
         holder.itemView.findViewById<TextView>(R.id.adapter_wallet_history_snapshot).text = data[position].snapshot
         holder.itemView.findViewById<TextView>(R.id.adapter_wallet_history_count).text = holder.itemView.context.resources.getString(R.string.wallet_history_count, data[position].count)
         holder.itemView.findViewById<FrameLayout>(R.id.adapter_wallet_history_enter).setOnClickListener {
-            _onChoose.onNext(position)
+            onChooseListener?.invoke(position)
         }
         holder.itemView.findViewById<ImageView>(R.id.adapter_wallet_history_del).setOnClickListener {
-            _onDelete.onNext(position)
+            onDeleteListener?.invoke(position)
         }
     }
 
@@ -40,12 +40,12 @@ class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Ada
         return data[position]
     }
 
-    fun onChoose(): Observable<Int> {
-        return _onChoose
+    fun setOnChooseListener(listener: (Int) -> Unit) {
+        onChooseListener = listener
     }
 
-    fun onDelete(): Observable<Int> {
-        return _onDelete
+    fun setOnDeleteListener(listener: (Int) -> Unit) {
+        onDeleteListener = listener
     }
 
     fun remove(position: Int) {

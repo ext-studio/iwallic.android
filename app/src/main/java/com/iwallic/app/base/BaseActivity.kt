@@ -49,9 +49,9 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleUtils.onAttach(base))
-    }
+//    override fun attachBaseContext(base: Context) {
+//        super.attachBaseContext(LocaleUtils.onAttach(base))
+//    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

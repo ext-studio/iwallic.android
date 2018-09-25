@@ -75,7 +75,6 @@
     <string name="transaction_transfer_target_hint">收款地址</string>
     <string name="transaction_transfer_amount_hint">打款数量</string>
     <string name="transaction_transfer_balance_hint">可用余额: %1$s</string>
-    <string name="transaction_transfer_tips_noChooseAsset">请选择资产</string>
     <string name="transaction_transfer_tips_target_error">请填写正确地址</string>
     <string name="transaction_transfer_tips_amount_error">请填写正确金额</string>
     <string name="transaction_transfer_tips_amount_unenough">余额不足</string>
@@ -83,7 +82,6 @@
     <string name="transaction_transfer_scan_error">未检测到地址</string>
     <string name="transaction_transfer_sending">转帐中</string>
     <string name="transaction_transfer_verifying">验证中</string>
-    <string name="transaction_receive_">收款</string>
     <string name="transaction_receive_address_copy">复制地址</string>
     <string name="transaction_transfer_success">交易已提交，等待区块确认</string>
     <string name="transaction_transfer_error_create">交易创建失败</string>
@@ -154,4 +152,8 @@
     <string name="transaction_receive_address">收款地址</string>
     <string name="main_toggle_transfer">转账</string>
     <string name="main_toggle_receive">收款</string>
+    <string name="user_setting_language_system">跟随系统</string>
+    <string name="error_scan_address">未检测到地址</string>
+    <string name="transaction_transfer_tips_noChooseAsset_error">请选择资产</string>
+    <string name="transaction_receive">收款地址</string>
 </resources>

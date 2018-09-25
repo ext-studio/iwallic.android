@@ -232,7 +232,7 @@
                         android:textSize="@dimen/dimenFont"
                         android:textColor="?colorDefault"
                         android:layout_gravity="center"
-                        android:text="@string/wallet_create_btn_create" />
+                        android:text="@string/wallet_create_btn_enter" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

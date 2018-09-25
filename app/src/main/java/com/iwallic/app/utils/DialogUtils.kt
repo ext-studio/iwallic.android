@@ -1,13 +1,11 @@
 package com.iwallic.app.utils
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import com.iwallic.app.R
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -20,11 +18,9 @@ import io.reactivex.Observable
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import java.util.*
 
 object DialogUtils {
-    fun confirm(context: Context, body: Int, title: Int? = null, ok: Int? = null, no: Int? = null): Observable<Boolean> {
-        return Observable.create { observer ->
+    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: Int, title: Int? = null, ok: Int? = null, no: Int? = null) {
             val view = View.inflate(context, R.layout.dialog_confirm, null)
             view.findViewById<TextView>(R.id.dialog_confirm_title).setText(title ?: R.string.dialog_title_primary)
             view.findViewById<TextView>(R.id.dialog_confirm_msg).setText(body)
@@ -32,25 +28,22 @@ object DialogUtils {
             val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
             okTV.setText(ok ?: R.string.dialog_ok)
             noTV.setText(no ?: R.string.dialog_no)
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
                 val dialog = Dialog(context)
                 dialog.setContentView(view)
                 dialog.create()
                 dialog.show()
-                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
                 okTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(true)
-                    observer.onComplete()
+                    callback?.invoke(true)
                 }
                 noTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
                 dialog.setOnDismissListener {
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
             } else {
                 val builder = android.support.v7.app.AlertDialog.Builder(context)
@@ -58,23 +51,19 @@ object DialogUtils {
                 builder.setView(view)
                 val dialog = builder.create()
                 dialog.show()
-                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
                 okTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(true)
-                    observer.onComplete()
+                    callback?.invoke(true)
                 }
                 noTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
                 dialog.setOnDismissListener {
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
             }
-        }
     }
 
     fun permission(context: Context?, permission: String) {
@@ -90,7 +79,7 @@ object DialogUtils {
         val dialog: Dialog
         val view = View.inflate(context, R.layout.dialog_loading, null)
         view.findViewById<TextView>(R.id.dialog_loading_text).text = msg
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             dialog = Dialog(context)
             dialog.setCancelable(false)
             dialog.setContentView(view)
@@ -117,7 +106,7 @@ object DialogUtils {
         val dialog: Dialog
         val view = View.inflate(context, R.layout.dialog_loading, null)
         view.findViewById<TextView>(R.id.dialog_loading_text).setText(msgRes)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             dialog = Dialog(context)
             dialog.setCancelable(false)
             dialog.setContentView(view)
@@ -140,8 +129,7 @@ object DialogUtils {
         return dialog
     }
 
-    fun confirm(context: Context, body: String, title: String = "提示", okStr: String = "确认", noStr: String = "取消"): Observable<Boolean> {
-        return Observable.create { observer ->
+    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: String, title: String = "提示", okStr: String = "确认", noStr: String = "取消") {
             val view = View.inflate(context, R.layout.dialog_confirm, null)
             view.findViewById<TextView>(R.id.dialog_confirm_title).text = title
             view.findViewById<TextView>(R.id.dialog_confirm_msg).text = body
@@ -149,25 +137,22 @@ object DialogUtils {
             val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
             okTV.text = okStr
             noTV.text = noStr
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
                 val dialog = Dialog(context)
                 dialog.setContentView(view)
                 dialog.create()
                 dialog.show()
-                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
                 okTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(true)
-                    observer.onComplete()
+                    callback?.invoke(true)
                 }
                 noTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
                 dialog.setOnDismissListener {
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
             } else {
                 val builder = AlertDialog.Builder(context)
@@ -175,23 +160,19 @@ object DialogUtils {
                 builder.setView(view)
                 val dialog = builder.create()
                 dialog.show()
-                dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
                 okTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(true)
-                    observer.onComplete()
+                    callback?.invoke(true)
                 }
                 noTV.setOnClickListener {
                     dialog.dismiss()
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
                 dialog.setOnDismissListener {
-                    observer.onNext(false)
-                    observer.onComplete()
+                    callback?.invoke(false)
                 }
             }
-        }
     }
 
     fun password(context: Context, ok: (String) -> Unit) {
@@ -209,7 +190,7 @@ object DialogUtils {
         })
 
         val dialog: Dialog
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             dialog = Dialog(context)
             dialog.setContentView(view)
             dialog.create()
@@ -224,27 +205,12 @@ object DialogUtils {
             dialog.dismiss()
         }
         dialog.show()
-        dialog.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
-        dialog.window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-        dialog.window.setBackgroundDrawableResource(R.color.colorTransparent)
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
 
         inputET?.requestFocus()
-    }
-
-    fun load(context: Context, text: Int = R.string.load_load): Observable<AlertDialog> {
-        return Observable.create{observer ->
-            val builder = AlertDialog.Builder(context)
-            val view = View.inflate(context, R.layout.dialog_load, null)
-            builder.setView(view)
-            view.findViewById<TextView>(R.id.load_title).text = context.resources.getText(text)
-            val dialog = builder.create()
-
-            dialog.show()
-
-            observer.onNext(dialog)
-            observer.onComplete()
-        }
     }
 
     fun list(context: Context, title: Int? = null, list: List<AssetRes> ?= null, callback: ((String) -> Unit)? = null) {
@@ -267,7 +233,7 @@ object DialogUtils {
             val dialog = builder.create()
             dialog.show()
         } else {
-            confirm(context, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok).subscribe {}
+            confirm(context, null, R.string.dialog_title_warn, R.string.dialog_content_noAsset, R.string.dialog_ok)
         }
     }
 

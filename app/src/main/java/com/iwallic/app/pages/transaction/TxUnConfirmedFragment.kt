@@ -80,12 +80,12 @@ class TxUnConfirmedFragment : BaseLazyFragment() {
                 }
             })
         }
-        txAdapter.onEnter().subscribe {
+        txAdapter.setOnTxEnterListener {
             val intent = Intent(context, BrowserActivity::class.java)
             intent.putExtra("url", "https://blolys.com/#/transaction/${txAdapter.getItem(it).txid}")
             context?.startActivity(intent)
         }
-        txAdapter.onCopy().subscribe {
+        txAdapter.setOnTxCopyListener {
             copy(txAdapter.getItem(it).txid, "txid")
             vibrate()
         }

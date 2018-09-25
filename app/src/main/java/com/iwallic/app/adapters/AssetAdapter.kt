@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 
 class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter.ViewHolder>() {
     private var data = list
-    private val _onClick = PublishSubject.create<Int>()
+    private var onClickListener: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_asset, parent, false) as FrameLayout
@@ -23,7 +23,7 @@ class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter
         holder.itemView.findViewById<TextView>(R.id.asset_list_name).text = data[position].symbol
         holder.itemView.findViewById<TextView>(R.id.asset_list_balance).text = if (data[position].balance == "0.0") "0" else data[position].balance
         holder.itemView.setOnClickListener {
-            _onClick.onNext(position)
+            onClickListener?.invoke(position)
         }
     }
 
@@ -33,8 +33,8 @@ class AssetAdapter(list: ArrayList<AssetRes>): RecyclerView.Adapter<AssetAdapter
         return position.toLong()
     }
 
-    fun onClick(): Observable<Int> {
-        return _onClick
+    fun setOnAssetClickListener(listener: (Int) -> Unit) {
+        onClickListener = listener
     }
 
     fun set(newData: ArrayList<AssetRes>) {

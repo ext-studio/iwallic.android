@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetManageAdapter
+import com.iwallic.app.broadcasts.AssetBroadCast
 import com.iwallic.app.models.PageDataPyModel
 import com.iwallic.app.states.AssetManageState
 import com.iwallic.app.states.AssetState
@@ -26,6 +27,7 @@ class AssetManageActivity : BaseActivity() {
     private lateinit var amSRL: SmartRefreshLayout
     private lateinit var amAdapter: AssetManageAdapter
     private lateinit var amManager: LinearLayoutManager
+    private var changed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +89,14 @@ class AssetManageActivity : BaseActivity() {
             } else {
                 AssetManageState.rmWatch(this, amAdapter.getAsset(position))
             }
-            // todo send watch change broadcast
+            changed = true
         }
     }
 
     override fun onDestroy() {
+        if (changed) {
+            AssetBroadCast.send(this)
+        }
         super.onDestroy()
     }
 }

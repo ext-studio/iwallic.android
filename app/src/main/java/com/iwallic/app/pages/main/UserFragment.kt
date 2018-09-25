@@ -59,7 +59,7 @@ class UserFragment : BaseFragment() {
     }
 
     private fun resolveSignOut() {
-        DialogUtils.confirm(context!!, R.string.dialog_content_signout, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no).subscribe {
+        DialogUtils.confirm(context!!, {
             if (it) {
                 AssetState.cached = null
                 NeonUtils.close(context!!)
@@ -68,6 +68,6 @@ class UserFragment : BaseFragment() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context?.startActivity(intent)
             }
-        }
+        }, R.string.dialog_content_signout, R.string.dialog_title_warn, R.string.dialog_ok, R.string.dialog_no)
     }
 }

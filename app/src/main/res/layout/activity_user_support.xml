@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="?colorFont3"
                         android:textSize="@dimen/dimenFont"
-                        android:text="@string/activity_user_support_blockchain_browser_link"/>
+                        android:text="blolys.com"/>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -174,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/dimenFont"
                         android:textColor="?colorFont3"
-                        android:text="@string/activity_user_support_contact_link"/>
+                        android:text="contact@iwallic.com"/>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"

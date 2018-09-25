@@ -159,14 +159,9 @@ class TransactionTransferActivity : BaseActivity() {
         if (list != null && list?.isNotEmpty() == true) {
             resolveAssetPick()
         } else {
-            DialogUtils.confirm(
-                this,
-                R.string.dialog_content_nobalance,
-                R.string.dialog_title_primary,
-                R.string.dialog_ok
-            ).subscribe {
+            DialogUtils.confirm(this, {
                 finish()
-            }
+            }, R.string.dialog_content_nobalance, R.string.dialog_title_primary, R.string.dialog_ok)
         }
     }
 

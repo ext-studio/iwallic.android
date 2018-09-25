@@ -47,10 +47,13 @@ object SharedPrefUtils {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("skin", skin).apply()
     }
     fun getSkin(context: Context): String {
-        return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("skin", "default")
+        return context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("skin", "default") ?: "default"
     }
     fun rmAddress(context: Context) {
-        context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().remove("chosen_wallet").remove("chosen_address").apply()
+        val sp = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit()
+        sp.remove("chosen_wallet")
+        sp.remove("chosen_address")
+        sp.apply()
     }
     fun getNet(context: Context?): String {
         return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chain_net", "main") ?: "main"
@@ -59,7 +62,7 @@ object SharedPrefUtils {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("chain_net", if (net == "main") "main" else "test").apply()
     }
     fun getClaim(context: Context): String {
-        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("claim", ",0").split(",")
+        val rs = (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("claim", ",0") ?: ",0").split(",")
         val txid = rs.getOrNull(0) ?: ""
         val time = rs.getOrNull(1)?.toLong() ?: 0.toLong()
         val expired = System.currentTimeMillis() / 1000 + 3600
@@ -69,7 +72,7 @@ object SharedPrefUtils {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("claim", "$txid,${System.currentTimeMillis()/1000}").apply()
     }
     fun getCollect(context: Context): String {
-        val rs = context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("collect", ",0").split(",")
+        val rs = (context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).getString("collect", ",0") ?: ",0").split(",")
         val txid = rs.getOrNull(0) ?: ""
         val time = rs.getOrNull(1)?.toLong() ?: 0.toLong()
         val expired = System.currentTimeMillis() / 1000 + 3600

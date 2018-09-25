@@ -1,7 +1,5 @@
 package com.iwallic.app.pages.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -14,8 +12,8 @@ import android.view.ViewGroup
 import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.adapters.AssetAdapter
-import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.broadcasts.AssetBroadCast
 import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.models.AssetRes
 import com.iwallic.app.pages.asset.AssetDetailActivity
@@ -25,7 +23,6 @@ import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.*
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import io.reactivex.disposables.Disposable
 
 class AssetFragment : BaseFragment() {
     private lateinit var address: String
@@ -39,6 +36,7 @@ class AssetFragment : BaseFragment() {
     private lateinit var manageIV: ImageView
 
     private var broadCast: BlockBroadCast? = null
+    private var assetBroadCast: AssetBroadCast? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_asset, container, false)
@@ -46,12 +44,14 @@ class AssetFragment : BaseFragment() {
         initListener()
         initList()
         initBroadCast()
+        initAssetBroadCast()
         return view
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         context?.unregisterReceiver(broadCast)
+        context?.unregisterReceiver(assetBroadCast)
     }
 
     private fun initDOM(view: View) {
@@ -78,6 +78,13 @@ class AssetFragment : BaseFragment() {
         }
         context?.registerReceiver(broadCast, IntentFilter(CommonUtils.broadCastBlock))
     }
+    private fun initAssetBroadCast() {
+        assetBroadCast = AssetBroadCast()
+        assetBroadCast?.setOnAssetChangedListener { _, _ ->
+            initList()
+        }
+        context?.registerReceiver(assetBroadCast, IntentFilter(CommonUtils.broadCastAsset))
+    }
 
     private fun initListener() {
         assetSRL.setOnRefreshListener {
@@ -86,7 +93,7 @@ class AssetFragment : BaseFragment() {
         manageIV.setOnClickListener {
             context?.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
-        assetAdapter.onClick().subscribe {
+        assetAdapter.setOnAssetClickListener {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
             context?.startActivity(intent)
@@ -94,14 +101,13 @@ class AssetFragment : BaseFragment() {
     }
 
     private fun initList(force: Boolean = false) {
-        AssetState.list(context, address, force).subscribe({
+        AssetState.list(context, address, force, {
             resolveList(it)
             assetSRL.finishRefresh(true)
         }, {
             assetSRL.finishRefresh()
-            val code = try {it.message?.toInt()?:99999}catch (_: Throwable){99999}
-            if (!DialogUtils.error(context, code)) {
-                Toast.makeText(context, "$code", Toast.LENGTH_SHORT).show()
+            if (!DialogUtils.error(context, it)) {
+                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
             }
         })
     }

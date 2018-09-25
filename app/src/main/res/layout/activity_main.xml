@@ -28,7 +28,8 @@
         app:itemTextColor="@drawable/selector_base_main_navigation"
         app:elevation="@dimen/dimenMini"
         app:menu="@menu/menu_main"
-        android:background="?colorDefault">
+        android:background="?colorDefault"
+        app:labelVisibilityMode="labeled">
         <ImageView
             android:id="@+id/main_toggle"
             android:layout_width="wrap_content"

@@ -24,7 +24,6 @@ class UserAboutActivity : BaseActivity() {
     private lateinit var disclamerFL: FrameLayout
     private lateinit var versionFL: FrameLayout
     private lateinit var versionTV: TextView
-    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,16 +57,14 @@ class UserAboutActivity : BaseActivity() {
     }
 
     private fun initVersion () {
-        VersionState.check(this, true).subscribe({
+        VersionState.check(this, true, {
             if (it != null) {
                 if (it.code > BuildConfig.VERSION_CODE) {
                     resolveNewVersion(it)
-                    return@subscribe
                 }
             }
         }, {
-            val code = try {it.message?.toInt() ?: 99999}catch (_: Throwable) {99999}
-            if (!DialogUtils.error(this, code)) {
+            if (!DialogUtils.error(this, it)) {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
         })

@@ -18,8 +18,8 @@ import io.reactivex.subjects.PublishSubject
 
 class TransactionAdapter(_data: ArrayList<TransactionRes>): RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
     private var data = _data
-    private val _onEnter = PublishSubject.create<Int>()
-    private val _onCopy = PublishSubject.create<Int>()
+    private var onEnterListener: ((Int) -> Unit)? = null
+    private var onCopyListener: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = if (viewType == 0) {
@@ -61,11 +61,11 @@ class TransactionAdapter(_data: ArrayList<TransactionRes>): RecyclerView.Adapter
             statusTV.visibility = View.GONE
         }
         holder.itemView.setOnLongClickListener {
-            _onCopy.onNext(position)
-            return@setOnLongClickListener true
+            onCopyListener?.invoke(position)
+            true
         }
         holder.itemView.setOnClickListener {
-            _onEnter.onNext(position)
+            onEnterListener?.invoke(position)
         }
     }
 
@@ -79,12 +79,12 @@ class TransactionAdapter(_data: ArrayList<TransactionRes>): RecyclerView.Adapter
         return position.toLong()
     }
 
-    fun onEnter(): Observable<Int> {
-        return _onEnter
+    fun setOnTxEnterListener(listener: (Int) -> Unit) {
+        onEnterListener = listener
     }
 
-    fun onCopy(): Observable<Int> {
-        return _onCopy
+    fun setOnTxCopyListener(listener: (Int) -> Unit) {
+        onCopyListener = listener
     }
 
     fun set(newData: ArrayList<TransactionRes>) {

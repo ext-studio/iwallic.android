@@ -33,6 +33,7 @@ object CommonUtils {
 
     const val broadCastBlock = "iwallic_new_block"
     const val broadCastTx = "iwallic_new_tx"
+    const val broadCastAsset = "iwallic_asset"
 
     private val _color = TypedValue()
 
