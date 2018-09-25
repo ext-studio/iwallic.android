@@ -17,6 +17,7 @@ import com.iwallic.app.utils.NeonUtils
 import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.pages.wallet.WalletBackupActivity
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.utils.ACache
 
 class UserFragment : BaseFragment() {
     private lateinit var backupLL: FrameLayout
@@ -62,6 +63,7 @@ class UserFragment : BaseFragment() {
         DialogUtils.confirm(context!!, {
             if (it) {
                 AssetState.cached = null
+                ACache.get(context).clear()
                 NeonUtils.close(context!!)
                 val intent = Intent(context, WalletGuardActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
