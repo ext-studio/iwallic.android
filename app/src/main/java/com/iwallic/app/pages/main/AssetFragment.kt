@@ -1,5 +1,6 @@
 package com.iwallic.app.pages.main
 
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -46,6 +47,13 @@ class AssetFragment : BaseFragment() {
         initBroadCast()
         initAssetBroadCast()
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == CommonUtils.requestBalanceUpdated) {
+            initList()
+        }
     }
 
     override fun onDestroyView() {
@@ -96,7 +104,8 @@ class AssetFragment : BaseFragment() {
         assetAdapter.setOnAssetClickListener {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
-            context?.startActivity(intent)
+            activity?.startActivityForResult(intent, CommonUtils.requestBalanceUpdated)
+            activity?.overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
         }
     }
 

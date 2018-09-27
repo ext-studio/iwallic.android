@@ -1,5 +1,6 @@
 package com.iwallic.app.pages.asset
 
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -51,6 +52,7 @@ class AssetDetailActivity : BaseActivity() {
     private val gson = Gson()
     private var noNeed = false
     private var assetId = ""
+    private var changed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,13 @@ class AssetDetailActivity : BaseActivity() {
                 Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun finish() {
+        if (changed) {
+            setResult(Activity.RESULT_OK)
+        }
+        super.finish()
     }
 
     override fun onDestroy() {
@@ -131,6 +140,16 @@ class AssetDetailActivity : BaseActivity() {
     private fun initBroadCast() {
         broadCast = BlockBroadCast()
         broadCast?.setNewBlockListener { _, _ ->
+            AssetState.list(this, NeonUtils.address(this), true, {
+                asset = it.find {a -> a.asset_id == assetId } ?: return@list
+                titleTV.text = asset.symbol
+                balanceTV.text = asset.balance
+                changed = true
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
             TransactionState.refresh(this, assetId, {
                 txAdapter.set(it)
             }, {
@@ -213,6 +232,16 @@ class AssetDetailActivity : BaseActivity() {
             vibrate()
         }
         txSRL.setOnRefreshListener { _ ->
+            AssetState.list(this, NeonUtils.address(this), true, {
+                asset = it.find {a -> a.asset_id == assetId } ?: return@list
+                titleTV.text = asset.symbol
+                balanceTV.text = asset.balance
+                changed = true
+            }, {
+                if (!DialogUtils.error(this, it)) {
+                    Toast.makeText(this, "$it", Toast.LENGTH_SHORT).show()
+                }
+            })
             TransactionState.refresh(this, assetId, {
                 txSRL.finishRefresh(true)
                 txAdapter.set(it)
