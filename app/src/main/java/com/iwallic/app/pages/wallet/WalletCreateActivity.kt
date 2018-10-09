@@ -170,12 +170,13 @@ class WalletCreateActivity : BaseAuthActivity() {
     private fun resolveEnter() {
         val loader = DialogUtils.loader(this)
         launch {
-            if (NeonUtils.save(baseContext, newWallet!!)) {
+            if (NeonUtils.save(applicationContext, newWallet!!)) {
                 withContext(UI) {
                     loader.dismiss()
                 }
-                val intent = Intent(baseContext, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
                 return@launch
