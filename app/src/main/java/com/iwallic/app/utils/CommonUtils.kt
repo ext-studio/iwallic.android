@@ -26,6 +26,7 @@ object CommonUtils {
 
     const val notificationProgress = 985
     const val notificationCommon = 984
+    const val requestBalanceUpdated = 983
 
     const val listenPeried: Long = 60000
 

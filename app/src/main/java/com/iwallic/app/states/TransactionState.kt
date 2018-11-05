@@ -14,9 +14,6 @@ import com.iwallic.app.utils.HttpUtils
 import com.iwallic.app.utils.SharedPrefUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 
 object TransactionState {
     private const val take = 15

@@ -11,12 +11,13 @@ import com.iwallic.app.models.WalletModel
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.QRCodeUtils
 import com.iwallic.app.utils.NeonUtils
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import android.content.*
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.neon.wallet.Wallet
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WalletCreateActivity : BaseAuthActivity() {
     private lateinit var step1LL: LinearLayout
@@ -134,7 +135,7 @@ class WalletCreateActivity : BaseAuthActivity() {
 
     private fun resolveCreate() {
         val loader = DialogUtils.loader(this, R.string.wallet_create_creating)
-        launch {
+        GlobalScope.launch {
             var done = true
             try {
                 val privateKey = Wallet.generate()
@@ -143,7 +144,7 @@ class WalletCreateActivity : BaseAuthActivity() {
             } catch (e: Exception) {
                 done = false
             }
-            withContext(UI) {
+            withContext(Dispatchers.Main) {
                 loader.dismiss()
                 if (done) {
                     resolveNewWallet()
@@ -169,18 +170,19 @@ class WalletCreateActivity : BaseAuthActivity() {
     }
     private fun resolveEnter() {
         val loader = DialogUtils.loader(this)
-        launch {
-            if (NeonUtils.save(baseContext, newWallet!!)) {
-                withContext(UI) {
+        GlobalScope.launch {
+            if (NeonUtils.save(applicationContext, newWallet!!)) {
+                withContext(Dispatchers.Main) {
                     loader.dismiss()
                 }
-                val intent = Intent(baseContext, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
                 return@launch
             }
-            withContext(UI) {
+            withContext(Dispatchers.Main) {
                 loader.dismiss()
                 Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             }

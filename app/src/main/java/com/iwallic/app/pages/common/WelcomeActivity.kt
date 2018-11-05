@@ -14,8 +14,10 @@ import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.services.DownloadService
 import com.iwallic.app.states.VersionState
 import com.iwallic.app.utils.*
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class WelcomeActivity : BaseAuthActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,8 +68,8 @@ class WelcomeActivity : BaseAuthActivity() {
     }
 
     private fun enter() {
-        launch {
-            delay(1000)
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(1000L)
             if (NeonUtils.wallet(baseContext) == null || NeonUtils.account(baseContext) == null) {
                 startActivity(Intent(baseContext, WalletGuardActivity::class.java))
             } else {

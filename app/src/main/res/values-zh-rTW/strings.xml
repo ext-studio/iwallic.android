@@ -120,6 +120,7 @@
     <string name="error_claim_collecting">上一次轉化操作尚未完成</string>
     <string name="error_version_latest">已經是最新版本了</string>
     <string name="error_rpc">RPC 節點暫不可用，請稍後重試</string>
+    <string name="transaction_transfer_error_rpc_timeout">發送交易至區塊網絡超時，交易仍將可能成功</string>
     <string name="list_loadmore">加載更多數據</string>
     <string name="list_nomore">沒有更多數據</string>
     <string name="list_loading">努力加載中</string>

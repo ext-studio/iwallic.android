@@ -14,6 +14,8 @@ object HttpUtils {
 
     fun post(context: Context?, method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
         Fuel.post(if (SharedPrefUtils.getNet(context) == "test") CommonUtils.testApi else CommonUtils.mainApi)
+            .timeout(30000)
+            .timeoutRead(30000)
             .body(gson.toJson(RequestGoModel(method, params)))
             .responseString { _, _, result ->
                 result.fold({ d ->

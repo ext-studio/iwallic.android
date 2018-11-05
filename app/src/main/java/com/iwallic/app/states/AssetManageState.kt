@@ -11,9 +11,6 @@ import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.HttpUtils
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 
 object AssetManageState {
     private const val take = 15

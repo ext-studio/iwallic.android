@@ -6,9 +6,10 @@ import com.google.gson.reflect.TypeToken
 import com.iwallic.app.models.*
 import com.iwallic.neon.wallet.Wallet
 import io.reactivex.Observable
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object NeonUtils {
     private var cachedAddress: String? = null
@@ -97,10 +98,10 @@ object NeonUtils {
      */
     fun switch(context: Context, agent: WalletAgentModel, pwd: String): Observable<Int> {
         return Observable.create {
-            launch {
+            GlobalScope.launch {
                 val content = FileUtils.readWalletFile(context, agent.file)
                 if (content.isNullOrEmpty()) {
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         it.onNext(99598)
                     }
                     it.onComplete()
@@ -108,7 +109,7 @@ object NeonUtils {
                 }
                 val w = gson.fromJson(content, WalletModel::class.java)
                 if (w == null) {
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         it.onNext(99998)
                     }
                     it.onComplete()
@@ -118,7 +119,7 @@ object NeonUtils {
                     am.address == agent.address
                 }
                 if (a == null) {
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         it.onNext(99597)
                     }
                     it.onComplete()
@@ -126,7 +127,7 @@ object NeonUtils {
                 }
                 val check = Wallet.neP2Decode(a.key, pwd)
                 if (check.isEmpty()) {
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         it.onNext(99599)
                     }
                     it.onComplete()
@@ -135,7 +136,7 @@ object NeonUtils {
                 SharedPrefUtils.setWallet(context, agent._ID)
                 SharedPrefUtils.setAddress(context, agent.address)
                 WalletDBUtils(context).touch(agent._ID)
-                withContext(UI) {
+                withContext(Dispatchers.Main) {
                     it.onNext(0)
                 }
                 it.onComplete()
@@ -221,15 +222,15 @@ object NeonUtils {
 
     fun verify(context: Context, pwd: String, ok: (String) -> Unit, no: (Int) -> Unit) {
         try {
-            launch {
+            GlobalScope.launch {
                 val account = account(context)
                 if (account == null) {
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         no(99999)
                     }
                 } else {
                     val rs = Wallet.neP2Decode(account.key, pwd)
-                    withContext(UI) {
+                    withContext(Dispatchers.Main) {
                         ok(rs)
                     }
                 }

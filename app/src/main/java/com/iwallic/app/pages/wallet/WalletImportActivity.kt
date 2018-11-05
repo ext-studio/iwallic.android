@@ -13,9 +13,10 @@ import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.NeonUtils
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WalletImportActivity : BaseAuthActivity() {
 
@@ -126,13 +127,13 @@ class WalletImportActivity : BaseAuthActivity() {
     }
     private fun resolveImport() {
         val loader = DialogUtils.loader(this, R.string.wallet_import_importing)
-        launch {
+        GlobalScope.launch {
             var done = true
             val w = NeonUtils.import(wif, pwd)
             if (w == null || !NeonUtils.save(baseContext, w)) {
                 done = false
             }
-            withContext(UI) {
+            withContext(Dispatchers.Main) {
                 loader.dismiss()
                 if (done) {
                     val intent = Intent(baseContext, MainActivity::class.java)

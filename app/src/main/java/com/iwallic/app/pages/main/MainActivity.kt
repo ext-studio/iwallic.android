@@ -25,9 +25,10 @@ import com.iwallic.app.models.Pager
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.BlockService
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -62,8 +63,8 @@ class MainActivity : BaseActivity() {
         if (!canExit) {
             canExit = true
             Toast.makeText(this, R.string.main_exit, Toast.LENGTH_SHORT).show()
-            launch (UI) {
-                delay(1500)
+           GlobalScope.launch (Dispatchers.Main) {
+                delay(1500L)
                 canExit = false
             }
         } else {

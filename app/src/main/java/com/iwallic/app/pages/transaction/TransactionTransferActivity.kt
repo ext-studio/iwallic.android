@@ -275,6 +275,7 @@ class TransactionTransferActivity : BaseActivity() {
     private fun resolveError(code: Int) {
         if (!DialogUtils.error(this, code)) {
             Toast.makeText(this, when (code) {
+                1011 -> resources.getString(R.string.transaction_transfer_error_rpc_timeout)
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)
                 99698 -> resources.getString(R.string.transaction_transfer_error_send)
                 99699 -> resources.getString(R.string.transaction_transfer_error_create)
