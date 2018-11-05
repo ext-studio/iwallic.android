@@ -11,7 +11,8 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import com.iwallic.app.R
 import com.iwallic.app.utils.NotificationUtils
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.*
 import java.net.URL
 import java.util.*
@@ -60,7 +61,7 @@ class DownloadService : Service() {
 
     private fun resolve(url: String) {
         val service = this
-        launch {
+        GlobalScope.launch {
             try {
                 canceled = false
                 NotificationUtils.progress(service, "", 0)

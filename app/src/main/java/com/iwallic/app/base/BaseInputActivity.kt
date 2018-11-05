@@ -7,8 +7,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("Registered")
 open class BaseInputActivity: BaseActivity() {
@@ -40,13 +42,13 @@ open class BaseInputActivity: BaseActivity() {
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
-    private fun openKeyboard(view: View, delay: Int = 0) {
-        if (delay == 0) {
+    private fun openKeyboard(view: View, delayTime: Long = 0) {
+        if (delayTime == 0L) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         } else {
-            launch (UI) {
-                kotlinx.coroutines.experimental.delay(delay)
+            GlobalScope.launch (Dispatchers.Main) {
+                delay(delayTime)
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
             }

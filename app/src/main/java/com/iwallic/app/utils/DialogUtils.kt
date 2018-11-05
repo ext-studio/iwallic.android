@@ -15,9 +15,10 @@ import android.view.WindowManager
 import android.widget.EditText
 import com.iwallic.app.models.AssetRes
 import io.reactivex.Observable
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object DialogUtils {
     fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: Int, title: Int? = null, ok: Int? = null, no: Int? = null) {
@@ -75,7 +76,7 @@ object DialogUtils {
         }}权限，请到手机授权管理处允许以正常使用", Toast.LENGTH_SHORT).show()
     }
 
-    fun loader(context: Context, msg: String = ""): Dialog {
+    fun loader(context: Context, msg: String = "", autoClose: Boolean = false): Dialog {
         val dialog: Dialog
         val view = View.inflate(context, R.layout.dialog_loading, null)
         view.findViewById<TextView>(R.id.dialog_loading_text).text = msg
@@ -93,16 +94,18 @@ object DialogUtils {
         dialog.show()
         dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
 
-        launch (UI) {
-            delay(10000)
-            if (dialog.isShowing) {
-                dialog.dismiss()
+        if (autoClose) {
+            GlobalScope.launch (Dispatchers.Main) {
+                delay(10000L)
+                if (dialog.isShowing) {
+                    dialog.dismiss()
+                }
             }
         }
         return dialog
     }
 
-    fun loader(context: Context, msgRes: Int): Dialog {
+    fun loader(context: Context, msgRes: Int, autoClose: Boolean = false): Dialog {
         val dialog: Dialog
         val view = View.inflate(context, R.layout.dialog_loading, null)
         view.findViewById<TextView>(R.id.dialog_loading_text).setText(msgRes)
@@ -120,10 +123,12 @@ object DialogUtils {
         dialog.show()
         dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
 
-        launch (UI) {
-            delay(10000)
-            if (dialog.isShowing) {
-                dialog.dismiss()
+        if (autoClose) {
+            GlobalScope.launch (Dispatchers.Main) {
+                delay(10000L)
+                if (dialog.isShowing) {
+                    dialog.dismiss()
+                }
             }
         }
         return dialog
