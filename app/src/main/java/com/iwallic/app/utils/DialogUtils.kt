@@ -194,16 +194,19 @@ object DialogUtils {
             dialog.create()
             dialog.show()
             dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+            var confirmed = false
             okTV.setOnClickListener {
-                dialog.dismiss()
                 callback?.invoke(true)
+                confirmed = true
+                dialog.dismiss()
             }
             noTV.setOnClickListener {
                 dialog.dismiss()
-                callback?.invoke(false)
             }
             dialog.setOnDismissListener {
-                callback?.invoke(false)
+                if (!confirmed) {
+                    callback?.invoke(false)
+                }
             }
         } else {
             val builder = AlertDialog.Builder(context)
@@ -212,16 +215,19 @@ object DialogUtils {
             val dialog = builder.create()
             dialog.show()
             dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+            var confirmed = false
             okTV.setOnClickListener {
-                dialog.dismiss()
                 callback?.invoke(true)
+                confirmed = true
+                dialog.dismiss()
             }
             noTV.setOnClickListener {
                 dialog.dismiss()
-                callback?.invoke(false)
             }
             dialog.setOnDismissListener {
-                callback?.invoke(false)
+                if (!confirmed) {
+                    callback?.invoke(false)
+                }
             }
         }
     }
