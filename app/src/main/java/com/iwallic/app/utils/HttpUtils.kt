@@ -46,6 +46,8 @@ object HttpUtils {
                 Pair("network", SharedPrefUtils.getNet(context)),
                 Pair("Content-Type", "application/json")
             )
+            .timeout(30000)
+            .timeoutRead(30000)
             .body(gson.toJson(data))
             .responseString { _, _, result ->
                 result.fold({ d ->

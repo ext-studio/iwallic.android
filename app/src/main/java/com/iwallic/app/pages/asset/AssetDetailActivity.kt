@@ -61,7 +61,7 @@ class AssetDetailActivity : BaseActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
         initParams()
         initDOM()
-        initGAS()
+//        initGAS()
         resolveFetchClaim()
         initListener()
         resolveBalance()

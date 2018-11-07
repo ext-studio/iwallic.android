@@ -32,8 +32,6 @@ class TransactionTransferActivity : BaseActivity() {
     private lateinit var successB: Button
     private lateinit var step1LL: LinearLayout
     private lateinit var step2LL: LinearLayout
-    private val gson = Gson()
-    private var wif: String = ""
     private var asset: String = ""
     private var target: String = ""
     private var address: String = ""
@@ -80,7 +78,6 @@ class TransactionTransferActivity : BaseActivity() {
         successB = findViewById(R.id.transaction_transfer_success)
         step1LL = findViewById(R.id.transaction_transfer_step_1)
         step2LL = findViewById(R.id.transaction_transfer_step_2)
-        setStatusBar(findViewById(R.id.app_top_space))
     }
 
     private fun initClick() {
@@ -98,7 +95,7 @@ class TransactionTransferActivity : BaseActivity() {
                 Toast.makeText(this, R.string.transaction_transfer_tips_noChooseAsset_error, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            resolveVerify()
+            resolveTransfer()
         }
         successB.setOnClickListener {
             finish()
@@ -165,58 +162,28 @@ class TransactionTransferActivity : BaseActivity() {
         }
     }
 
-    private fun resolveSend(from: String, to: String, amount: Double) {
-        val loader = DialogUtils.loader(this, R.string.transaction_transfer_sending)
-        if (asset.length == 64) {
-            asset = "0x$asset"
-        }else if (asset.length == 42) {
-            asset = asset.substring(2, asset.length)
-        }
-        when {
-            NeonUtils.check(asset, "asset") -> {
-                Log.i("【transfer】", "asset tx【$asset】*【$amount】to【$target】")
-                NeonUtils.fetchBalance(this, from, asset, { balance ->
-                    val newTx = TransactionModel.forAsset(balance, from, to, amount, asset)
-                    if (newTx == null) {
-                        loader.dismiss()
-                        resolveError(99699)
-                    } else {
-                        newTx.sign(wif)
-                        HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), {
-                            loader.dismiss()
-                            resolveSuccess(newTx.hash())
-                        }, {
-                            loader.dismiss()
-                            resolveError(it)
-                        })
-                    }
-                }, {
-                    loader.dismiss()
-                    resolveError(it)
-                })
-            }
-            NeonUtils.check(asset, "script") -> {
-                Log.i("【transfer】", "token tx【$asset】*【$amount】to【$target】")
-                val newTx = TransactionModel.forToken(asset, from, to, amount)
-                if (newTx == null) {
-                    loader.dismiss()
-                    resolveError(99699)
-                    return
-                }
-                newTx.sign(wif)
-                HttpUtils.post(this, "sendv4rawtransaction", listOf(newTx.serialize(true)), fun(res) {
-                    loader.dismiss()
-                    val rs: Boolean? = gson.fromJson(res, Boolean::class.java)
-                    if (rs == true) {
-                        resolveSuccess(newTx.hash())
-                    } else {
-                        resolveError(99698)
-                    }
-                }, fun(err) {
-                    loader.dismiss()
-                    resolveError(err)
-                })
-            }
+    private fun resolveSend(txid: String, rawTx: String, ok: () -> Unit, no: (Int) -> Unit) {
+        Log.i("【】", "$txid - $rawTx")
+        if (SharedPrefUtils.getNet(this) == "main") {
+            HttpUtils.postPy(this,"/client/transaction/unconfirmed",mapOf(
+                Pair("wallet_address", address),
+                Pair("asset_id", asset),
+                Pair("txid", "0x$txid"),
+                Pair("value", "-$amount"),
+                Pair("signature_transaction", rawTx)
+            ), {
+                Log.i("【Transfer】", "submitted")
+                ok()
+            }, {
+                Log.i("【Transfer】", "submit failed【$it】")
+                no(it)
+            })
+        } else {
+            HttpUtils.post(this, "sendv4rawtransaction", listOf(rawTx), {
+                ok()
+            }, {
+                no(it)
+            })
         }
     }
     
@@ -233,43 +200,79 @@ class TransactionTransferActivity : BaseActivity() {
         }
     }
 
-    private fun resolveVerify() {
-        DialogUtils.password(this) {pwd ->
-            if (pwd.isEmpty()) {
-                return@password
-            }
-            val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
-            NeonUtils.verify(baseContext, pwd, {
-                wif = it
-                loader.dismiss()
-                if (wif.isEmpty()) {
-                    resolveError(99599)
-                } else {
-                    resolveSend(address, target, amount)
+    private fun resolveTransfer() {
+        val gLoader = DialogUtils.loader(this, "正在生成交易", false)
+        resolveTx ({ tx ->
+            gLoader.dismiss()
+            DialogUtils.password(this) {pwd ->
+                if (pwd.isEmpty()) {
+                    return@password
                 }
-            }, {
-                loader.dismiss()
-                resolveError(99999)
-            })
-        }
+                val vLoader = DialogUtils.loader(this, R.string.transaction_transfer_verifying, false)
+                NeonUtils.verify(this, pwd, { wif ->
+                    if (wif.isEmpty()) {
+                        vLoader.dismiss()
+                        resolveError(99599)
+                    } else {
+                        if (!tx.sign(wif)) {
+                            vLoader.dismiss()
+                            resolveError(99699)
+                            return@verify
+                        }
+                        vLoader.dismiss()
+                        val loader = DialogUtils.loader(this, R.string.transaction_transfer_sending, false)
+                        resolveSend(tx.hash(), tx.serialize(true), {
+                            loader.dismiss()
+                            step1LL.visibility = View.GONE
+                            step2LL.visibility = View.VISIBLE
+                            UnconfirmedState.clear(this)
+                        }, {
+                            loader.dismiss()
+                            resolveError(it)
+                        })
+                    }
+                }, {
+                    vLoader.dismiss()
+                    resolveError(99999)
+                })
+            }
+        }, {
+            gLoader.dismiss()
+            resolveError(it)
+        })
     }
 
-    private fun resolveSuccess(txid: String) {
-        if (SharedPrefUtils.getNet(this) == "main") {
-            HttpUtils.postPy(
-                this,
-                "/client/transaction/unconfirmed",
-                mapOf(Pair("wallet_address", address), Pair("asset_id", asset), Pair("txid", "0x$txid"), Pair("value", "-$amount")
-            ), {
-                Log.i("【Transfer】", "submitted 【$txid】")
-//                TxBroadCast.send(this, txid)
-                UnconfirmedState.clear(this)
-            }, {
-                Log.i("【Transfer】", "submit failed【$it】")
-            })
+    private fun resolveTx(ok: (tx: TransactionModel) -> Unit, no: (Int) -> Unit) {
+        if (asset.length == 64) {
+            asset = "0x$asset"
+        }else if (asset.length == 42) {
+            asset = asset.substring(2, asset.length)
         }
-        step1LL.visibility = View.GONE
-        step2LL.visibility = View.VISIBLE
+        when {
+            NeonUtils.check(asset, "asset") -> {
+                NeonUtils.fetchBalance(this, address, asset, { balance ->
+                    val newTx = TransactionModel.forAsset(balance, address, target, amount, asset)
+                    if (newTx == null) {
+                        no(99699)
+                    } else {
+                        ok(newTx)
+                    }
+                }, {
+                    no(it)
+                })
+            }
+            NeonUtils.check(asset, "script") -> {
+                val newTx = TransactionModel.forToken(asset, address, target, amount)
+                if (newTx == null) {
+                    no(99699)
+                } else {
+                    ok(newTx)
+                }
+            }
+            else -> {
+                no(99699)
+            }
+        }
     }
 
     private fun resolveError(code: Int) {
@@ -277,7 +280,7 @@ class TransactionTransferActivity : BaseActivity() {
             Toast.makeText(this, when (code) {
                 1011 -> resources.getString(R.string.transaction_transfer_error_rpc_timeout)
                 1018 -> resources.getString(R.string.transaction_transfer_error_rpc)
-                99698 -> resources.getString(R.string.transaction_transfer_error_send)
+                400000, 99698 -> resources.getString(R.string.transaction_transfer_error_send)
                 99699 -> resources.getString(R.string.transaction_transfer_error_create)
                 99599 -> resources.getString(R.string.error_password)
                 else -> "$code"

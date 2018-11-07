@@ -76,10 +76,15 @@ class TransactionModel {
         }
         return result
     }
-    fun sign(wif: String) {
-        val sign = "40" + Wallet.signature(serialize(), wif)
-        val verify = "21" + Wallet.priv2Pub(Wallet.wif2Priv(wif)) + "ac"
-        scripts.add(ScriptModel(sign, verify))
+    fun sign(wif: String): Boolean {
+        return try {
+            val sign = "40" + Wallet.signature(serialize(), wif)
+            val verify = "21" + Wallet.priv2Pub(Wallet.wif2Priv(wif)) + "ac"
+            scripts.add(ScriptModel(sign, verify))
+            true
+        } catch(_: Throwable) {
+            false
+        }
     }
     fun remark(data: String) {
         attributes.add(AttributeModel(AttrUsageRemark, Hex.fromString(data)))
