@@ -16,6 +16,7 @@ import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.TransactionModel
 import com.iwallic.app.models.UtxoModel
 import com.iwallic.app.states.AssetState
+import com.iwallic.app.states.BlockState
 import com.iwallic.app.states.UnconfirmedState
 import com.iwallic.app.utils.*
 
@@ -163,23 +164,40 @@ class TransactionTransferActivity : BaseActivity() {
     }
 
     private fun resolveSend(txid: String, rawTx: String, ok: () -> Unit, no: (Int) -> Unit) {
-        Log.i("【】", "$txid - $rawTx")
         if (SharedPrefUtils.getNet(this) == "main") {
-            HttpUtils.postPy(this,"/client/transaction/unconfirmed",mapOf(
-                Pair("wallet_address", address),
-                Pair("asset_id", asset),
-                Pair("txid", "0x$txid"),
-                Pair("value", "-$amount"),
-                Pair("signature_transaction", rawTx)
-            ), {
-                Log.i("【Transfer】", "submitted")
-                ok()
+            BlockState.current(this, { block, _ ->
+                HttpUtils.postPy(this,"/client/transaction/unconfirmed",mapOf(
+                        Pair("wallet_address", address),
+                        Pair("asset_id", asset),
+                        Pair("txid", "0x$txid"),
+                        Pair("value", "-$amount"),
+                        Pair("block_height", block.lastBlockIndex),
+                        Pair("signature_transaction", rawTx)
+                ), {
+                    Log.i("【Transfer】", "submitted at ${block.lastBlockIndex}")
+                    ok()
+                }, {
+                    Log.i("【Transfer】", "submit failed【$it】")
+                    no(it)
+                })
             }, {
-                Log.i("【Transfer】", "submit failed【$it】")
-                no(it)
+                HttpUtils.postPy(this,"/client/transaction/unconfirmed",mapOf(
+                        Pair("wallet_address", address),
+                        Pair("asset_id", asset),
+                        Pair("txid", "0x$txid"),
+                        Pair("value", "-$amount"),
+                        Pair("signature_transaction", rawTx)
+                ), {
+                    Log.i("【Transfer】", "submitted")
+                    ok()
+                }, {
+                    Log.i("【Transfer】", "submit failed【$it】")
+                    no(it)
+                })
             })
         } else {
             HttpUtils.post(this, "sendv4rawtransaction", listOf(rawTx), {
+                Log.i("【Transfer】", "submitted directly")
                 ok()
             }, {
                 no(it)
