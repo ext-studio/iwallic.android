@@ -3,10 +3,7 @@ package com.iwallic.app.pages.user
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.pages.main.MainActivity
@@ -40,6 +37,7 @@ class UserSettingNetActivity : BaseActivity() {
         itemTest = findViewById(R.id.user_setting_net_test)
         itemMainChosen = findViewById(R.id.user_setting_net_main_chosen)
         itemTestChosen = findViewById(R.id.user_setting_net_test_chosen)
+        itemTest.visibility = View.GONE
     }
 
     private fun initClick() {
