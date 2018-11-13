@@ -16,7 +16,9 @@ object CommonUtils {
     const val CHANNEL_DOWNLOAD = "com.iwallic.app.download"
     const val ID_DOWNLOAD = 1
     const val pyApi: String = "https://iwallic.forchain.info"
-    const val mainApi: String = "http://101.132.97.9:8001/api/iwallic"
+    const val mainApi: String = "https://api.iwallic.forchain.info/api/iwallic"
+//    const val pyApi: String = "http://101.132.97.9:45005/"
+//    const val mainApi: String = "http://101.132.97.9:8001/api/iwallic"
     const val testApi: String = "http://101.132.97.9:8002/api/iwallic"
 
     const val channelIDProgress = "progress_update"

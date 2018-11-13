@@ -130,17 +130,19 @@ class WalletImportActivity : BaseAuthActivity() {
         GlobalScope.launch {
             var done = true
             val w = NeonUtils.import(wif, pwd)
-            if (w == null || !NeonUtils.save(baseContext, w)) {
+            if (w == null || !NeonUtils.save(applicationContext, w)) {
                 done = false
             }
             withContext(Dispatchers.Main) {
                 loader.dismiss()
                 if (done) {
-                    val intent = Intent(baseContext, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
+                    finish()
                 } else {
-                    Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
                 }
             }
         }

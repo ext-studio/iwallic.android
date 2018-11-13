@@ -3,6 +3,7 @@ package com.iwallic.app.pages.common
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import com.iwallic.app.BuildConfig
@@ -14,6 +15,8 @@ import com.iwallic.app.pages.wallet.WalletGuardActivity
 import com.iwallic.app.services.DownloadService
 import com.iwallic.app.states.VersionState
 import com.iwallic.app.utils.*
+import com.iwallic.neon.hex.Hex
+import com.iwallic.neon.utils.HEX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -28,6 +31,7 @@ class WelcomeActivity : BaseAuthActivity() {
         }
         setContentView(R.layout.activity_welcome)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+//        initTest()
         initVersion()
     }
 
@@ -70,10 +74,10 @@ class WelcomeActivity : BaseAuthActivity() {
     private fun enter() {
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000L)
-            if (NeonUtils.wallet(baseContext) == null || NeonUtils.account(baseContext) == null) {
-                startActivity(Intent(baseContext, WalletGuardActivity::class.java))
+            if (NeonUtils.wallet(applicationContext) == null || NeonUtils.account(applicationContext) == null) {
+                startActivity(Intent(applicationContext, WalletGuardActivity::class.java))
             } else {
-                startActivity(Intent(baseContext, MainActivity::class.java))
+                startActivity(Intent(applicationContext, MainActivity::class.java))
             }
             finish()
         }
@@ -85,6 +89,19 @@ class WelcomeActivity : BaseAuthActivity() {
             finishAffinity()
             System.exit(0)
         }
+    }
+
+    private fun initTest() {
+//        Log.i("HEX", "fromVarInt【${HEX.fromVarInt(635928008)}】")
+        Log.i("【】", "【${Hex.toFixedNum(10000000.0, 8)}】")
+//        Log.i("HEX", "reverse【${HEX.reverse("0xd1b9428a99f7805e4bbfa0f2805bc558e0e48de5")}】")
+//        Log.i("HEX", "reverse【${HEX.reverse("d1b9428a99f7805e4bbfa0f2805bc558e0e48de5")}】")
+//        Log.i("HEX", "toFixedNum【${HEX.toFixedNum(0.1)}】")
+        Log.i("HEX", "toFixedNum【${HEX.toFixedNum(10000000.0)}】")
+//        Log.i("HEX", "fromString【${HEX.fromString("Hello~")}】")
+//        Log.i("HEX", "int2HexInt【${HEX.int2HexInt(10000000)}】")
+//        Log.i("HEX", "xor【${HEX.xor("e0e48de5", "d1b9428a")}】")
+//        Log.i("HEX", "hash256【${HEX.hash256("d1b9428a99f7805e4bbfa0f2805bc558e0e48de5")}】")
     }
 }
 

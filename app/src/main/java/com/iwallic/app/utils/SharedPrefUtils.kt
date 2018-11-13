@@ -56,7 +56,8 @@ object SharedPrefUtils {
         sp.apply()
     }
     fun getNet(context: Context?): String {
-        return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chain_net", "main") ?: "main"
+        return "main"
+//        return context?.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE)?.getString("chain_net", "main") ?: "main"
     }
     fun setNet(context: Context, net: String) {
         context.getSharedPreferences(PREF_APP, Context.MODE_PRIVATE).edit().putString("chain_net", if (net == "main") "main" else "test").apply()

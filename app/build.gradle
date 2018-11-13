@@ -10,8 +10,8 @@ android {
         applicationId "com.iwallic.app"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 15
-        versionName "1.2.0"
+        versionCode 18
+        versionName "1.2.1"
     }
     buildTypes {
         release {
@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-12'
     implementation 'com.qianwen:update-app-kotlin:1.2.3'
 
+    implementation project(':neon')
     implementation files('libs/neon-go.aar')
 }
 kotlin {

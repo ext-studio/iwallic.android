@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+
 -keep class com.iwallic.app.models.**  { *; }
 
 -dontwarn com.bumptech.glide.**
