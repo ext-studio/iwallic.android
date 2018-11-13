@@ -93,14 +93,14 @@ class WalletCreateActivity : BaseAuthActivity() {
             }, R.string.wallet_create_dialog_enter, R.string.dialog_title_primary, R.string.dialog_ok_enter, R.string.dialog_no)
         }
         saveTV.setOnClickListener {
-            Toast.makeText(baseContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
         }
         copyTV.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("WIF", newWif)
             clipboard.primaryClip = clip
             copied = true
-            Toast.makeText(baseContext, R.string.error_copied, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.error_copied, Toast.LENGTH_SHORT).show()
         }
     }
     private fun initInput() {
@@ -149,14 +149,14 @@ class WalletCreateActivity : BaseAuthActivity() {
                 if (done) {
                     resolveNewWallet()
                 } else {
-                    Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
     private fun resolveNewWallet() {
         if (newWallet == null || newWif.isEmpty()) {
-            Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             return
         }
         val qrCode = QRCodeUtils.generate(newWif, this)
@@ -184,7 +184,7 @@ class WalletCreateActivity : BaseAuthActivity() {
             }
             withContext(Dispatchers.Main) {
                 loader.dismiss()
-                Toast.makeText(baseContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
             }
         }
     }

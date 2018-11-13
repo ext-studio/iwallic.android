@@ -124,7 +124,7 @@ class WalletGuardActivity : BaseAuthActivity() {
             if (!it) {
                 return@confirm
             }
-            NeonUtils.remove(baseContext, w)
+            NeonUtils.remove(applicationContext, w)
             adapter.remove(p)
             if (adapter.itemCount == 0) {
                 historyLL.visibility = View.GONE
