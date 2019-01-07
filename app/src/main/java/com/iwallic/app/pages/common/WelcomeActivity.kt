@@ -31,8 +31,12 @@ class WelcomeActivity : BaseAuthActivity() {
         }
         setContentView(R.layout.activity_welcome)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-//        initTest()
-        initVersion()
+
+        if (CommonUtils.debug) {
+            enter()
+        } else {
+            initVersion()
+        }
     }
 
     private fun initVersion () {

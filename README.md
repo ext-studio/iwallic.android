@@ -1,4 +1,5 @@
 # iwallic.android
-iWallic native version for Android
+
+iWallic for Android
 
 **This project is still in development.**
