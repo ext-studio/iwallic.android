@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -64,9 +64,9 @@
                         android:text="@string/activity_user_about_version"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                     <TextView
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:id="@+id/activity_user_about_version_name" />
@@ -99,7 +99,7 @@
                         android:text="@string/activity_user_about_disclaimer"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"
                         android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>

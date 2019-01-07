@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".pages.wallet.WalletBackupActivity">
 

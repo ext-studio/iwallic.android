@@ -48,11 +48,11 @@
                 android:text="@string/activity_transaction_detail_blockheight"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:textSize="@dimen/dimenFont"/>
             <TextView
                 android:id="@+id/transaction_detail_txBlockIndex"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:text="@string/activity_transaction_detail_txid"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:textSize="@dimen/dimenFont" />
             <TextView
                 android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                 android:id="@+id/transaction_detail_txid"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:textSize="@dimen/dimenFont"/>
 
         </LinearLayout>
@@ -110,7 +110,7 @@
                 android:text="@string/activity_transaction_detail_time"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:textSize="@dimen/dimenFont" />
             <TextView
                 android:id="@+id/transaction_detail_txTime"
@@ -118,7 +118,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 android:textSize="@dimen/dimenFont"/>
 
         </LinearLayout>

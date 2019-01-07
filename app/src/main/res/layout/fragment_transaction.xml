@@ -5,7 +5,7 @@
     android:id="@+id/fragment_transaction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     android:orientation="vertical">
     <LinearLayout
         android:id="@+id/app_top_space"
@@ -30,7 +30,7 @@
         android:id="@+id/tx_tab"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        app:tabTextColor="?colorFont3"
+        app:tabTextColor="?colorGrayS"
         android:background="?colorDefault"
         app:tabSelectedTextColor="?colorPrimary"
         app:tabIndicatorColor="?colorPrimary"

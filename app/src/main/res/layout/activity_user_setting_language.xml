@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -82,7 +82,7 @@
                         android:text="@string/user_setting_language_system"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         tools:ignore="HardcodedText" />
                     <ImageView
                         android:contentDescription="@null"
@@ -118,7 +118,7 @@
                         <!--android:text="简体中文"-->
                         <!--android:gravity="center_vertical"-->
                         <!--android:textSize="@dimen/dimenFont"-->
-                        <!--android:textColor="?colorFont"-->
+                        <!--android:textColor="?colorGrayL"-->
                         <!--tools:ignore="HardcodedText" />-->
                     <!--<ImageView-->
                         <!--android:id="@+id/user_setting_lang_cn_chosen"-->
@@ -156,7 +156,7 @@
                         <!--android:text="English"-->
                         <!--android:gravity="center_vertical"-->
                         <!--android:textSize="@dimen/dimenFont"-->
-                        <!--android:textColor="?colorFont"-->
+                        <!--android:textColor="?colorGrayL"-->
                         <!--tools:ignore="HardcodedText" />-->
                     <!--<ImageView-->
                         <!--android:id="@+id/user_setting_lang_en_chosen"-->

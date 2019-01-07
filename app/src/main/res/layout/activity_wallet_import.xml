@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".pages.wallet.WalletImportActivity"
-    android:background="?colorDefault2">
+    android:background="?attr/colorDefaultDark">
     <RelativeLayout
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?colorPrimary">
@@ -69,8 +70,8 @@
                     android:background="?colorDefault"
                     android:padding="@dimen/dimenSpace"
                     android:hint="@string/wallet_import_wif_hint"
-                    android:textColorHint="?colorFont3"
-                    android:textColor="?colorFont"
+                    android:textColorHint="?colorGrayS"
+                    android:textColor="?colorGrayL"
                     android:focusedByDefault="true"
                     android:minLines="3"
                     android:gravity="top|start"
@@ -109,12 +110,12 @@
                 android:ems="10"
                 android:inputType="textPassword"
                 android:background="?colorDefault"
-                android:textColorHint="?colorFont3"
+                android:textColorHint="?colorGrayS"
                 android:textSize="@dimen/dimenFont"
                 android:paddingStart="@dimen/dimenSpace"
                 android:paddingEnd="@dimen/dimenSpace"
                 android:hint="@string/wallet_create_pwd_hint"
-                android:textColor="?colorFont"
+                android:textColor="?colorGrayL"
                 tools:targetApi="o" />
         </LinearLayout>
         <View
@@ -142,12 +143,12 @@
                 android:ems="10"
                 android:hint="@string/wallet_create_confirm_hint"
                 android:inputType="textPassword"
-                android:textColorHint="?colorFont3"
+                android:textColorHint="?colorGrayS"
                 android:paddingStart="@dimen/dimenSpace"
                 android:paddingEnd="@dimen/dimenSpace"
                 android:textSize="@dimen/dimenFont"
                 android:background="?colorDefault"
-                android:textColor="?colorFont" />
+                android:textColor="?colorGrayL" />
         </LinearLayout>
 
         <TextView

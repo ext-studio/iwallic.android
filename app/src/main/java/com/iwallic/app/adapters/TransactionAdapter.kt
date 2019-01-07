@@ -42,7 +42,7 @@ class TransactionAdapter(_data: ArrayList<TransactionRes>): RecyclerView.Adapter
         nameTV.text = data[position].name
         val statusTV = holder.itemView.findViewById<TextView>(R.id.transaction_list_status)
         if (data[position].value.startsWith("-")) {
-            val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorFont)
+            val colorOut = CommonUtils.getAttrColor(holder.itemView.context, R.attr.colorGrayL)
             txidTV.setTextColor(colorOut)
             nameTV.setTextColor(colorOut)
             valueTV.setTextColor(colorOut)

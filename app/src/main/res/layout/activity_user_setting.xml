@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
     tools:context=".pages.user.UserSettingActivity">
@@ -57,7 +57,7 @@
                     android:layout_marginStart="@dimen/dimenSpace"
                     android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
-                        android:drawableTint="?colorFont"
+                        android:drawableTint="?colorGrayL"
                         android:drawableStart="@drawable/icon_language"
                         android:drawablePadding="@dimen/dimenSpace"
                         android:drawableEnd="@drawable/icon_arrowright"
@@ -67,7 +67,7 @@
                         android:text="@string/user_setting_language"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         tools:targetApi="m" />
                 </LinearLayout>
                 <View
@@ -92,7 +92,7 @@
                     android:layout_marginStart="@dimen/dimenSpace"
                     android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
-                        android:drawableTint="?colorFont"
+                        android:drawableTint="?colorGrayL"
                         android:drawableStart="@drawable/icon_skin"
                         android:drawablePadding="@dimen/dimenSpace"
                         android:drawableEnd="@drawable/icon_arrowright"
@@ -102,7 +102,7 @@
                         android:text="@string/user_setting_skin"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         tools:targetApi="m" />
                 </LinearLayout>
                 <View
@@ -127,7 +127,7 @@
                     android:layout_marginStart="@dimen/dimenSpace"
                     android:layout_marginEnd="@dimen/dimenSpace">
                     <TextView
-                        android:drawableTint="?colorFont"
+                        android:drawableTint="?colorGrayL"
                         android:drawableStart="@drawable/icon_net"
                         android:drawablePadding="@dimen/dimenSpace"
                         android:drawableEnd="@drawable/icon_arrowright"
@@ -137,7 +137,7 @@
                         android:text="@string/user_setting_net"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         tools:targetApi="m" />
                 </LinearLayout>
                 <View

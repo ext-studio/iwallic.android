@@ -164,4 +164,5 @@
     <string name="version_title_force">发现重要更新</string>
     <string name="version_no_force">忽略(不推荐)</string>
     <string name="welcome_updating">正在后台进行更新</string>
+    <string name="nav_back">后退</string>
 </resources>

@@ -13,7 +13,7 @@ object HttpUtils {
     private val gson = Gson()
 
     fun post(context: Context?, method: String, params: List<Any> = emptyList(), ok: (res: String) -> Unit, no: (err: Int) -> Unit) {
-        Fuel.post(if (SharedPrefUtils.getNet(context) == "test") CommonUtils.testApi else CommonUtils.mainApi)
+        Fuel.post(CommonUtils.neonApi)
             .timeout(30000)
             .timeoutRead(30000)
             .body(gson.toJson(RequestGoModel(method, params)))

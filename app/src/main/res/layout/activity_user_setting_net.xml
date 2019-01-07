@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -80,7 +80,7 @@
                         android:text="@string/user_setting_net_main"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                     <ImageView
                         android:contentDescription="@null"
                         android:id="@+id/user_setting_net_main_chosen"
@@ -117,7 +117,7 @@
                         android:text="@string/user_setting_net_test"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                     <ImageView
                         android:contentDescription="@null"
                         android:id="@+id/user_setting_net_test_chosen"

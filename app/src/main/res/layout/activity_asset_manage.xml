@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".pages.asset.AssetManageActivity"
-    android:background="?colorDefault2">
+    android:background="?attr/colorDefaultDark">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

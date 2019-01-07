@@ -1,20 +1,26 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="ThemeDefault" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryDefault</item>
-        <item name="colorPrimary">@color/colorPrimaryDefault</item>
-        <item name="colorDanger">@color/colorDangerDefault</item>
-        <item name="colorDark">@color/colorDarkDefault</item>
-        <item name="colorDefault">@color/colorDefaultDefault</item>
-        <item name="colorDefault2">@color/colorDefault2Default</item>
-        <item name="colorLight">@color/colorLightDefault</item>
-        <item name="colorSecondary">@color/colorSecondaryDefault</item>
-        <item name="colorLine">@color/colorLineDefault</item>
-        <item name="colorLine2">@color/colorLine2Default</item>
-        <item name="colorFont">@color/colorFontDefault</item>
-        <item name="colorFont2">@color/colorFont2Default</item>
-        <item name="colorFont3">@color/colorFont3Default</item>
+    <style name="ThemeDefault" parent="ThemeIWallic">
+        <item name="colorDark">@color/colorDark</item>
+        <item name="colorLight">@color/colorLight</item>
+        <item name="colorTransparent">@color/colorTransparent</item>
+
+        <item name="colorPrimary">@color/colorInitPrimary</item>
+        <item name="colorPrimaryDark">@color/colorInitPrimaryDark</item>
+
+        <item name="colorDanger">@color/colorInitDanger</item>
+
+        <item name="colorDefault">@color/colorInitDefault</item>
+        <item name="colorDefaultDark">@color/colorInitDefaultDark</item>
+        <item name="colorLine">@color/colorInitDefaultLine</item>
+
+        <item name="colorSuccess">@color/colorInitSuccess</item>
+
+        <item name="colorGrayL">@color/colorInitGrayL</item>
+        <item name="colorGray">@color/colorInitGray</item>
+        <item name="colorGrayS">@color/colorInitGrayS</item>
+
         <item name="selectorOptionItem">@drawable/selector_optionitem_default</item>
         <item name="colorButtonNormal">@color/colorPrimaryDefault</item>
         <item name="drawableAssetBg">@mipmap/bg_asset</item>
@@ -30,20 +36,26 @@
         <item name="drawableEyeClose">@drawable/icon_eye_close</item>
     </style>
 
-    <style name="ThemeNight" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimaryNight</item>
-        <item name="colorPrimary">@color/colorPrimaryNight</item>
-        <item name="colorDanger">@color/colorDangerNight</item>
-        <item name="colorDark">@color/colorDarkNight</item>
-        <item name="colorDefault">@color/colorDefaultNight</item>
-        <item name="colorDefault2">@color/colorDefault2Night</item>
-        <item name="colorLight">@color/colorLightNight</item>
-        <item name="colorSecondary">@color/colorSecondaryNight</item>
-        <item name="colorLine">@color/colorLineNight</item>
-        <item name="colorLine2">@color/colorLine2Night</item>
-        <item name="colorFont">@color/colorFontNight</item>
-        <item name="colorFont2">@color/colorFont2Night</item>
-        <item name="colorFont3">@color/colorFont3Night</item>
+    <style name="ThemeNight" parent="ThemeIWallic">
+        <item name="colorDark">@color/colorDark</item>
+        <item name="colorLight">@color/colorLight</item>
+        <item name="colorTransparent">@color/colorTransparent</item>
+
+        <item name="colorPrimary">@color/colorNightPrimary</item>
+        <item name="colorPrimaryDark">@color/colorNightPrimaryDark</item>
+
+        <item name="colorDanger">@color/colorNightDanger</item>
+
+        <item name="colorDefault">@color/colorNightDefault</item>
+        <item name="colorDefaultDark">@color/colorNightDefaultDark</item>
+        <item name="colorLine">@color/colorNightDefaultLine</item>
+
+        <item name="colorSuccess">@color/colorNightSuccess</item>
+
+        <item name="colorGrayL">@color/colorNightGrayL</item>
+        <item name="colorGray">@color/colorNightGray</item>
+        <item name="colorGrayS">@color/colorNightGrayS</item>
+
         <item name="selectorOptionItem">@drawable/selector_optionitem_night</item>
         <item name="colorButtonNormal">@color/colorPrimaryNight</item>
         <item name="drawableAssetBg">@mipmap/bg_asset_dark</item>
@@ -57,6 +69,50 @@
         <item name="drawableClick">@drawable/icon_click_dark</item>
         <item name="drawableEye">@drawable/icon_eye_dark</item>
         <item name="drawableEyeClose">@drawable/icon_eye_close_dark</item>
+    </style>
+
+    <style name="ThemeIWallic" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="app_nav">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">?colorPrimary</item>
+    </style>
+    <style name="app_nav_back">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingStart">@dimen/dimenSpaceM</item>
+        <item name="android:paddingEnd">@dimen/dimenSpaceM</item>
+        <item name="android:drawableStart">@drawable/icon_back</item>
+        <item name="android:textColor">?colorDefault</item>
+        <item name="android:textSize">@dimen/dimenFont</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="app_nav_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?colorDefault</item>
+        <item name="android:textSize">@dimen/dimenFontL</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:maxLength">25</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="app_nav_menu">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingStart">@dimen/dimenSpaceM</item>
+        <item name="android:paddingEnd">@dimen/dimenSpaceM</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?colorDefault</item>
+        <item name="android:textSize">@dimen/dimenFont</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_centerVertical">true</item>
     </style>
 
     <style name="PageFullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -97,7 +153,7 @@
     <style name="option_item_imgarrow" parent="@style/option_item_img">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginRight">0dp</item>
-        <item name="android:tint">?colorFont2</item>
+        <item name="android:tint">?colorGray</item>
     </style>
 
     <style name="option_item_text_parent">
@@ -105,7 +161,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginRight">@dimen/dimenMini</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">?colorFont</item>
+        <item name="android:textColor">?colorGrayL</item>
         <item name="android:clickable">false</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:textSize">@dimen/dimenDefault</item>
@@ -114,7 +170,7 @@
     <style name="option_item_text" parent="@style/option_item_text_parent">
         <item name="android:drawablePadding">@dimen/dimenSmall</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">?colorFont</item>
+        <item name="android:textColor">?colorGrayL</item>
     </style>
 
     <!-- 操作项样式end -->

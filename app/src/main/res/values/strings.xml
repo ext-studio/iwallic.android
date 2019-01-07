@@ -163,4 +163,5 @@
     <string name="version_title_force">Important update</string>
     <string name="version_no_force">Not now</string>
     <string name="welcome_updating">Updating in background</string>
+    <string name="nav_back">Back</string>
 </resources>

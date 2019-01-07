@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -66,7 +66,7 @@
                         android:text="@string/activity_user_support_wallet_guide"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                         android:text="@string/activity_user_support_transaction_guide"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
@@ -133,11 +133,11 @@
                         android:text="@string/activity_user_support_blockchain_browser"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?colorFont3"
+                        android:textColor="?colorGrayS"
                         android:textSize="@dimen/dimenFont"
                         android:text="blolys.com"/>
                 </LinearLayout>
@@ -168,12 +168,12 @@
                         android:text="@string/activity_user_support_contact"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont3"
+                        android:textColor="?colorGrayS"
                         android:text="contact@iwallic.com"/>
                 </LinearLayout>
                 <View

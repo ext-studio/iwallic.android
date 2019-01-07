@@ -7,7 +7,7 @@
         android:layout_margin="@dimen/dimenDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?colorFont2"
+        android:textColor="?colorGray"
         android:textSize="@dimen/dimenFont"
         android:text="@string/adapter_pager_nomore"
         android:layout_gravity="center"/>

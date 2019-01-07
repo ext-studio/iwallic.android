@@ -5,7 +5,7 @@
     android:id="@+id/fragment_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
     <LinearLayout
@@ -61,7 +61,7 @@
                         android:text="@string/fragment_user_backup"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"
                         android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>
@@ -94,7 +94,7 @@
                         android:text="@string/fragment_user_setting"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"
                         android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>
@@ -127,7 +127,7 @@
                         android:text="@string/fragment_user_support"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"
                         android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>
@@ -160,7 +160,7 @@
                         android:text="@string/fragment_user_about"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"
                         android:drawableEnd="@drawable/icon_arrowright" />
                 </LinearLayout>
@@ -193,7 +193,7 @@
                         android:text="@string/fragment_user_signout"
                         android:gravity="center_vertical"
                         android:textSize="@dimen/dimenFont"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:drawablePadding="@dimen/dimenSmall"/>
                 </LinearLayout>
                 <View

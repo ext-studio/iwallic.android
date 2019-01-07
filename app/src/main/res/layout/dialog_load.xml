@@ -23,7 +23,7 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:textSize="17sp"
-        android:textColor="?colorFont"
+        android:textColor="?colorGrayL"
         android:textStyle="bold"
         android:layout_gravity="center"/>
 </LinearLayout>

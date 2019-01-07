@@ -10,7 +10,7 @@
         android:padding="@dimen/dimenDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?colorFont"
+        android:textColor="?colorGrayL"
         android:layout_gravity="start|center_vertical"
         android:text="NEO"
         android:textSize="@dimen/dimenDefault"/>

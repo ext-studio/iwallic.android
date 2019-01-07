@@ -8,9 +8,12 @@ abstract class BaseLazyFragment : BaseFragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         showed = isVisibleToUser
-        if (showed && created && should) {
-            onResolve()
-            should = false
+        if (showed && created) {
+            if (should) {
+                onResolve()
+                should = false
+            }
+            onShown()
         }
     }
 
@@ -29,5 +32,6 @@ abstract class BaseLazyFragment : BaseFragment() {
         }
     }
 
-    abstract fun onResolve()
+    open fun onShown() {}
+    open fun onResolve() {}
 }

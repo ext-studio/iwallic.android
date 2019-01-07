@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorDefault2"
+    android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical"
-                        android:textColor="?colorFont" />
+                        android:textColor="?colorGrayL" />
 
                     <ImageView
                         android:contentDescription="@null"
@@ -111,7 +111,7 @@
                         android:layout_height="match_parent"
                         android:background="?colorDefault"
                         android:hint="@string/transaction_transfer_target_hint"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:textSize="@dimen/dimenFont"
                         android:inputType="text"
                         android:maxLength="34"/>
@@ -153,7 +153,7 @@
                         android:background="?colorDefault"
                         android:hint="@string/transaction_transfer_amount_hint"
                         android:inputType="numberDecimal"
-                        android:textColor="?colorFont"
+                        android:textColor="?colorGrayL"
                         android:textSize="@dimen/dimenFont" />
 
                     <TextView

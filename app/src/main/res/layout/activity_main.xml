@@ -6,7 +6,8 @@
     tools:context=".pages.main.MainActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
     <com.iwallic.app.components.NoSwipeViewPager
         android:id="@+id/main_pager"
         android:layout_width="match_parent"
