@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Rect
 import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.view.*
@@ -14,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.iwallic.app.R
-import com.iwallic.app.utils.LocaleUtils
 import com.iwallic.app.utils.SharedPrefUtils
 
 @SuppressLint("Registered")
@@ -32,12 +30,12 @@ open class BaseAuthActivity: AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_leave_this, R.anim.slide_leave_that)
+        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
     }
 
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
-        overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
     }
 
     protected fun copy(text: String, label: String = "iwallic") {

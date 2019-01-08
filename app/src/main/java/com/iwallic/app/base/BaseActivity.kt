@@ -1,7 +1,6 @@
 package com.iwallic.app.base
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -11,14 +10,10 @@ import android.content.pm.PackageManager
 import android.os.*
 import android.support.annotation.Nullable
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import com.iwallic.app.R
 import com.iwallic.app.utils.*
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.iwallic.app.pages.wallet.WalletGuardActivity
 
@@ -60,12 +55,12 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_leave_this, R.anim.slide_leave_that)
+        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
     }
 
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
-        overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
     }
 
     protected fun doIfPermitted(permission: String, callback: () -> Unit) {

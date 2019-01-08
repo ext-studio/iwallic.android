@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -105,7 +104,7 @@ class AssetFragment : BaseFragment() {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
             activity?.startActivityForResult(intent, CommonUtils.requestBalanceUpdated)
-            activity?.overridePendingTransition(R.anim.slide_enter_this, R.anim.slide_enter_that)
+            activity?.overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
         }
     }
 
