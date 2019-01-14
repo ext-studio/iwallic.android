@@ -9,44 +9,65 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import com.iwallic.app.R
+import com.iwallic.app.adapters.AssetAdapter
 import com.iwallic.app.base.BaseActivity
 import com.iwallic.app.base.BaseFragment
 import com.iwallic.app.base.BaseFragmentAdapter
 import com.iwallic.app.components.NoSwipeViewPager
+import com.iwallic.app.models.AssetRes
 import com.iwallic.app.models.Pager
+import com.iwallic.app.pages.asset.AssetManageActivity
+import com.iwallic.app.pages.transaction.TransactionActivity
 import com.iwallic.app.pages.transaction.TransactionReceiveActivity
 import com.iwallic.app.pages.transaction.TransactionTransferActivity
 import com.iwallic.app.services.BlockService
+import com.iwallic.app.states.AssetManageState
+import com.iwallic.app.states.AssetState
+import com.iwallic.app.utils.CommonUtils
+import com.iwallic.app.utils.DialogUtils
+import com.iwallic.app.utils.SharedPrefUtils
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
+    private lateinit var mainD: DrawerLayout
+    private lateinit var navNV: NavigationView
 
-    private lateinit var navBNV: BottomNavigationView
-    private lateinit var toggleIV: ImageView
-    private lateinit var pagerNSVP: NoSwipeViewPager
-    private lateinit var adapter: BaseFragmentAdapter
+    private lateinit var topMenuIV: ImageView
+    private lateinit var topBalanceTV: TextView
+    private lateinit var topNameTV: TextView
+    private lateinit var topManageIV: ImageView
+    private lateinit var pagerSRL: SmartRefreshLayout
+    private lateinit var listRV: RecyclerView
+    private lateinit var adapter: AssetAdapter
 
     private var canExit = false
+    private var address = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        address = SharedPrefUtils.getAddress(this)
         initDOM()
         initNav()
-        initFAB()
-
+        initListen()
+        initList()
         startService(Intent(this, BlockService::class.java))
     }
 
@@ -57,7 +78,12 @@ class MainActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
 //        super.onSaveInstanceState(outState, outPersistentState)
     }
+
     override fun onBackPressed() {
+        if (mainD.isDrawerOpen(GravityCompat.START)) {
+            mainD.closeDrawer(GravityCompat.START)
+            return
+        }
         if (!canExit) {
             canExit = true
             Toast.makeText(this, R.string.main_exit, Toast.LENGTH_SHORT).show()
@@ -76,57 +102,76 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initDOM() {
-        pagerNSVP = findViewById(R.id.main_pager)
-        toggleIV = findViewById(R.id.main_toggle)
-        navBNV = findViewById(R.id.main_navigation)
+        mainD = findViewById(R.id.main_drawer)
+        navNV = findViewById(R.id.main_navigation)
+
+        topBalanceTV = findViewById(R.id.main_top_balance)
+        topManageIV = findViewById(R.id.main_top_manage)
+        topMenuIV = findViewById(R.id.main_top_menu)
+        topNameTV = findViewById(R.id.main_top_name)
+        pagerSRL = findViewById(R.id.main_pager)
+        listRV = findViewById(R.id.main_list)
+
+        adapter = AssetAdapter(arrayListOf())
+        listRV.layoutManager = LinearLayoutManager(this)
+        listRV.adapter = adapter
+    }
+    private fun initListen() {
+        pagerSRL.setOnRefreshListener {
+            initList(true)
+        }
+        topMenuIV.setOnClickListener {
+            mainD.openDrawer(Gravity.START)
+        }
+        topManageIV.setOnClickListener {
+            val intent = Intent(this, AssetManageActivity::class.java)
+            startActivity(intent)
+        }
+    }
+    private fun initList(force: Boolean = false) {
+        AssetState.list(this, address, force, {
+            resolveList(it)
+            pagerSRL.finishRefresh()
+        }, {
+            pagerSRL.finishRefresh()
+            if (!DialogUtils.error(this, it)) {
+                DialogUtils.toast(this, "Error:$it")
+            }
+        })
     }
     private fun initNav() {
-        adapter = BaseFragmentAdapter(supportFragmentManager)
-        adapter.setPage(Pager(R.id.menu_main_asset, AssetFragment()))
-
-        pagerNSVP.adapter = adapter
-        pagerNSVP.currentItem = 0
-        pagerNSVP.offscreenPageLimit = 4
-        navBNV.setOnNavigationItemSelectedListener {
-            val position = adapter.getPosition(it.itemId)
-            if (position < 0) {
-                pagerNSVP.setCurrentItem(adapter.setPage(Pager(it.itemId, resolveNavPage(it.itemId))), false)
-            } else {
-                pagerNSVP.setCurrentItem(position, false)
+        navNV.itemIconTintList = null
+        navNV.setNavigationItemSelectedListener {
+            val intent = when (it.itemId) {
+                R.id.menu_main_transaction -> {
+                    Intent(this, TransactionActivity::class.java)
+                }
+                else -> {
+                    return@setNavigationItemSelectedListener true
+                }
             }
+            startActivity(intent)
+            mainD.closeDrawer(Gravity.START)
             true
         }
     }
-    private fun initFAB() {
-        toggleIV.setOnClickListener { _ ->
-            val dialog = BottomSheetDialog(this)
 
-            val view = View.inflate(this, R.layout.dialog_main_toggle, null)
-            val transfer = view.findViewById<FrameLayout>(R.id.dialog_main_send)
-            val receive = view.findViewById<FrameLayout>(R.id.dialog_main_receive)
-            view.setOnClickListener {
-                dialog.dismiss()
-            }
-            transfer.setOnClickListener {
-                startActivity(Intent(this, TransactionTransferActivity::class.java))
-                dialog.dismiss()
-            }
-            receive.setOnClickListener {
-                startActivity(Intent(this, TransactionReceiveActivity::class.java))
-                dialog.dismiss()
-            }
-            dialog.setContentView(view)
-            dialog.show()
-        }
-    }
+    private fun resolveList(list: ArrayList<AssetRes>) {
+        topNameTV.text = "NEO"
 
-    private fun resolveNavPage(id: Int): BaseFragment {
-        return when(id) {
-            R.id.menu_main_asset -> AssetFragment()
-            R.id.menu_main_transaction -> TransactionFragment()
-            R.id.menu_main_find -> FindFragment()
-            R.id.menu_main_user -> UserFragment()
-            else -> AssetFragment()
+        val balance = list.find {
+            it.asset_id == CommonUtils.NEO
+        }?.balance ?: "0"
+
+        topBalanceTV.text = if (balance == "0.0") "0" else balance
+
+        for (asset in AssetManageState.watch(this)) {
+            if (list.indexOfFirst {
+                it.asset_id == asset.asset_id
+            } < 0) {
+                list.add(asset)
+            }
         }
+        adapter.set(list)
     }
 }

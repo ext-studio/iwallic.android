@@ -19,13 +19,17 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         swipe = intent.getIntExtra("swipe_id", 0)
+        // todo separate to 100% -> 70% -> old page -30%
         window.decorView.translationX = CommonUtils.screenWidth.toFloat()
         animateEnter()
         CommonUtils.log("create to:$swipe")
     }
     override fun startActivity(intent: Intent?) {
         if (linked) {
-            val newSwipe = SwipeBackActivity.push()
+            val newSwipe = SwipeBackActivity.push(
+            (intent?.flags == Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) ||
+                    (intent?.getBooleanExtra("swipe_reset", false) == true)
+            )
             intent?.putExtra("swipe_id", newSwipe)
             swipeDisposable?.dispose()
             swipeDisposable = null
@@ -39,12 +43,15 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         }
         super.startActivity(intent)
         overridePendingTransition(0, 0)
-        animateLeave()
+        animateLeave(true)
     }
 
     override fun startActivityForResult(intent: Intent?, requestCode: Int) {
         if (linked) {
-            val newSwipe = SwipeBackActivity.push()
+            val newSwipe = SwipeBackActivity.push(
+                    (intent?.flags == Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) ||
+                            (intent?.getBooleanExtra("swipe_reset", false) == true)
+            )
             intent?.putExtra("swipe_id", newSwipe)
             swipeDisposable?.dispose()
             swipeDisposable = null
@@ -58,7 +65,8 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         }
         super.startActivityForResult(intent, requestCode)
         overridePendingTransition(0, 0)
-        animateLeave()
+        // todo separate to [new page 70%] -> -30%
+        animateLeave(true)
     }
 
     override fun finish() {
@@ -68,6 +76,7 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
             CommonUtils.log("$swipe")
             SwipeBackActivity.complete(swipe)
             window.decorView.animate().apply {
+                // todo separate to 0 -> 70% -> 100% -> finish
                 x(CommonUtils.screenWidth.toFloat())
                 duration = 200
                 withEndAction {
@@ -94,8 +103,11 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         }
     }
     // 执行离开动画 也就是滑到左侧消失
-    private fun animateLeave() {
+    private fun animateLeave(_delay: Boolean = false) {
         window.decorView.animate().apply {
+            if (_delay) {
+                startDelay = 50
+            }
             x(-CommonUtils.screenWidth*0.3f)
             duration = 200
             start()
@@ -107,8 +119,8 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         // 页面id与监听
         var stack = mutableMapOf<Int, PublishSubject<Float>>()
 
-        fun push(): Int {
-            id = (id + 1) % 987654321 // 防止累加id过大而循环使用，理论上不会重用，若真重用则会丢失前一订阅使前一联动失效
+        fun push(reset: Boolean = false): Int {
+            id = if (reset) 0 else (id + 1) % 987654321 // 防止累加id过大而循环使用，理论上不会重用，若真重用则会丢失前一订阅使前一联动失效
             stack[id] = PublishSubject.create()
             return id
         }

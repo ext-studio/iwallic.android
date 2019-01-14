@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import com.iwallic.app.models.Pager
 
 class BaseFragmentAdapter(manager: FragmentManager): FragmentStatePagerAdapter(manager) {
-    private val pages = arrayListOf<Pager>()
+    private var pages = arrayListOf<Pager>()
     override fun getItem(position: Int): BaseFragment {
         return pages[position].fragment
     }
@@ -20,6 +20,11 @@ class BaseFragmentAdapter(manager: FragmentManager): FragmentStatePagerAdapter(m
 
     fun setPage(page: Pager): Int {
         pages.add(page)
+        notifyDataSetChanged()
+        return pages.size
+    }
+    fun setPages(_pages: ArrayList<Pager>): Int {
+        pages = _pages
         notifyDataSetChanged()
         return pages.size
     }

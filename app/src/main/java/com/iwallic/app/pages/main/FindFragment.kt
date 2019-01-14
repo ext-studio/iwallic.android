@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.base.BaseLazyFragment
 import com.iwallic.app.broadcasts.BlockBroadCast
 import com.iwallic.app.states.BlockState
 import com.iwallic.app.utils.CommonUtils
@@ -17,7 +18,7 @@ import com.iwallic.app.utils.DialogUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FindFragment : BaseFragment() {
+class FindFragment : BaseLazyFragment() {
     private lateinit var heightTV: TextView
     private lateinit var timeTV: TextView
     private var broadCast: BlockBroadCast? = null
@@ -25,9 +26,13 @@ class FindFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_find, container, false)
         initDOM(view)
-        initBlock()
         initBroadCast()
+        notifyCreatedView()
         return view
+    }
+
+    override fun onResolve() {
+        initBlock()
     }
 
     override fun onDestroy() {

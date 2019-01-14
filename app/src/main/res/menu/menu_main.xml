@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
-        android:id="@+id/menu_main_asset"
-        android:icon="@drawable/icon_asset"
-        android:title="@string/navigation_asset_title" />
+        android:id="@+id/menu_main_backup"
+        android:icon="@mipmap/icon_menu_backup"
+        android:title="Wallet Backup"/>
 
     <item
         android:id="@+id/menu_main_transaction"
-        android:icon="@drawable/icon_transaction"
-        android:title="@string/navigation_transaction_title" />
+        android:icon="@mipmap/icon_menu_transaction"
+        android:title="Transactions" />
 
     <item
-        android:title=""
-        android:checkable="false"
-        android:enabled="false"/>
+        android:id="@+id/menu_main_support"
+        android:icon="@mipmap/icon_menu_support"
+        android:title="Support" />
 
     <item
-        android:id="@+id/menu_main_find"
-        android:icon="@drawable/icon_find"
-        android:title="@string/navigation_find_title"/>
+        android:id="@+id/menu_main_about"
+        android:icon="@mipmap/icon_menu_about"
+        android:title="About" />
 
     <item
-        android:id="@+id/menu_main_user"
-        android:icon="@drawable/icon_wallet"
-        android:title="@string/navigation_user_title" />
+        android:id="@+id/menu_main_setting"
+        android:icon="@mipmap/icon_menu_setting"
+        android:title="Settings" />
 
+    <item
+        android:id="@+id/menu_main_close"
+        android:icon="@mipmap/icon_menu_close"
+        android:title="Close Wallet" />
 </menu>

@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseFragment
+import com.iwallic.app.base.BaseLazyFragment
 import com.iwallic.app.pages.user.UserAboutActivity
 import com.iwallic.app.pages.user.UserSettingActivity
 import com.iwallic.app.pages.user.UserSupportActivity
@@ -19,7 +20,7 @@ import com.iwallic.app.pages.wallet.WalletBackupActivity
 import com.iwallic.app.states.AssetState
 import com.iwallic.app.utils.ACache
 
-class UserFragment : BaseFragment() {
+class UserFragment : BaseLazyFragment() {
     private lateinit var backupLL: FrameLayout
     private lateinit var settingLL: FrameLayout
     private lateinit var supportLL: FrameLayout
@@ -30,6 +31,7 @@ class UserFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
         initDOM(view)
         initClick()
+        notifyCreatedView()
         return view
     }
 

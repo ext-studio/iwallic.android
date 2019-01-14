@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/main_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,40 +8,17 @@
     android:background="?colorPrimaryDark"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <com.iwallic.app.components.NoSwipeViewPager
-        android:id="@+id/main_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/main_navigation"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:openDrawer="start">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimenLine"
-        android:layout_above="@+id/main_navigation"
-        android:background="?colorLine"/>
+    <include layout="@layout/fragment_main_asset" />
 
-    <android.support.design.widget.BottomNavigationView
+    <android.support.design.widget.NavigationView
         android:id="@+id/main_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:itemIconTint="@drawable/selector_base_main_navigation"
-        app:itemTextColor="@drawable/selector_base_main_navigation"
-        app:elevation="@dimen/dimenMini"
-        app:menu="@menu/menu_main"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="?colorDefault"
-        app:labelVisibilityMode="labeled">
-        <ImageView
-            android:id="@+id/main_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_add"
-            android:tint="?colorDefault"
-            android:scaleType="fitXY"
-            android:background="@drawable/shape_round_primary"
-            android:contentDescription="@null"
-            android:padding="@dimen/dimenMini"/>
-    </android.support.design.widget.BottomNavigationView>
-</RelativeLayout>
+        app:headerLayout="@layout/component_main_nav"
+        app:menu="@menu/menu_main" />
+</android.support.v4.widget.DrawerLayout>
