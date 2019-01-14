@@ -4,11 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_find"
-    android:background="?colorDefault">
-    <LinearLayout
-        android:id="@+id/app_top_space"
-        style="@style/app_status_bar"
-        android:orientation="horizontal"/>
+    android:background="?colorDefaultDark">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

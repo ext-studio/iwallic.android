@@ -24,4 +24,5 @@
     <attr name="drawableClick" format="reference" />
     <attr name="drawableEye" format="reference" />
     <attr name="drawableEyeClose" format="reference" />
+    <attr name="drawableRoundMini" format="reference" />
 </resources>

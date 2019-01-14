@@ -16,6 +16,7 @@ import com.iwallic.app.adapters.WalletHistoryAdapter
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.models.WalletAgentModel
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.WalletDBUtils
 import com.iwallic.app.utils.NeonUtils
@@ -35,7 +36,6 @@ class WalletGuardActivity : BaseAuthActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_wallet_guard)
         initDOM()
         initListener()
@@ -93,33 +93,33 @@ class WalletGuardActivity : BaseAuthActivity() {
     }
 
     private fun resolveOpen(w: WalletAgentModel) {
-        Log.i("【Wallet】", "open wallet【${w._ID}】")
+        CommonUtils.log("open wallet【${w._ID}】")
         DialogUtils.password(this) { pwd ->
             if (pwd.isEmpty()) {
                 return@password
             }
             val loader = DialogUtils.loader(this, R.string.transaction_transfer_verifying)
-                NeonUtils.switch(this, w, pwd).subscribe ({ rs ->
-                    loader.dismiss()
-                    if (rs == 0) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        startActivity(intent)
-                    } else {
-                        if (!DialogUtils.error(this, rs)) {
-                            Toast.makeText(this, "$rs", Toast.LENGTH_SHORT).show()
-                        }
+            NeonUtils.switch(this, w, pwd).subscribe ({ rs ->
+                loader.dismiss()
+                if (rs == 0) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else {
+                    if (!DialogUtils.error(this, rs)) {
+                        DialogUtils.toast(this, "$rs")
                     }
-                }, {
-                    loader.dismiss()
-                    DialogUtils.error(this, 99999)
-                })
+                }
+            }, {
+                loader.dismiss()
+                DialogUtils.error(this, 99999)
+            })
         }
     }
 
     private fun resolveDel(w: WalletAgentModel, p: Int) {
-        Log.i("【Wallet】", "del wallet at【$p】")
+        CommonUtils.log("del wallet at【$p】")
         DialogUtils.confirm(this, {
             if (!it) {
                 return@confirm

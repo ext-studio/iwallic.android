@@ -18,7 +18,7 @@ import android.widget.Toast
 import com.iwallic.app.pages.wallet.WalletGuardActivity
 
 @SuppressLint("Registered")
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : SwipeBackActivity(true) {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -27,7 +27,6 @@ open class BaseActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            finish()
             return
         }
         resolveTheme()
@@ -53,15 +52,15 @@ open class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
-    }
-
-    override fun startActivity(intent: Intent?) {
-        super.startActivity(intent)
-        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
-    }
+//    override fun finish() {
+//        super.finish()
+//        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
+//    }
+//
+//    override fun startActivity(intent: Intent?) {
+//        super.startActivity(intent)
+//        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
+//    }
 
     protected fun doIfPermitted(permission: String, callback: () -> Unit) {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {

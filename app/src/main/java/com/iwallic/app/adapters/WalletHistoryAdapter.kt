@@ -23,10 +23,10 @@ class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Ada
         holder.itemView.findViewById<TextView>(R.id.adapter_wallet_history_snapshot).text = data[position].snapshot
         holder.itemView.findViewById<TextView>(R.id.adapter_wallet_history_count).text = holder.itemView.context.resources.getString(R.string.wallet_history_count, data[position].count)
         holder.itemView.findViewById<FrameLayout>(R.id.adapter_wallet_history_enter).setOnClickListener {
-            onChooseListener?.invoke(position)
+            onChooseListener?.invoke(holder.adapterPosition)
         }
         holder.itemView.findViewById<ImageView>(R.id.adapter_wallet_history_del).setOnClickListener {
-            onDeleteListener?.invoke(position)
+            onDeleteListener?.invoke(holder.adapterPosition)
         }
     }
 
@@ -54,6 +54,6 @@ class WalletHistoryAdapter(_list: ArrayList<WalletAgentModel>): RecyclerView.Ada
     }
 
     class ViewHolder (
-         listView: LinearLayout
+         listView: ViewGroup
     ): RecyclerView.ViewHolder(listView)
 }

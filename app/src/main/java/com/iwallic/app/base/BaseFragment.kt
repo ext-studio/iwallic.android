@@ -24,7 +24,6 @@ import android.widget.LinearLayout
 import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 
-
 open class BaseFragment: Fragment() {
     protected fun setStatusBarSpace(view: View) {
         val spaceV = view.findViewById<LinearLayout>(R.id.app_top_space)

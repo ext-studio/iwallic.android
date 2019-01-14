@@ -16,7 +16,7 @@ import com.iwallic.app.R
 import com.iwallic.app.utils.SharedPrefUtils
 
 @SuppressLint("Registered")
-open class BaseAuthActivity: AppCompatActivity() {
+open class BaseAuthActivity: SwipeBackActivity(true) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +28,15 @@ open class BaseAuthActivity: AppCompatActivity() {
 //        super.attachBaseContext(LocaleUtils.onAttach(base))
 //    }
 
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
-    }
-
-    override fun startActivity(intent: Intent?) {
-        super.startActivity(intent)
-        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
-    }
+//    override fun finish() {
+//        super.finish()
+//        overridePendingTransition(R.anim.slide_enter_old, R.anim.slide_leave_new)
+//    }
+//
+//    override fun startActivity(intent: Intent?) {
+//        super.startActivity(intent)
+//        overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
+//    }
 
     protected fun copy(text: String, label: String = "iwallic") {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -57,14 +57,14 @@ open class BaseAuthActivity: AppCompatActivity() {
         }
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_DOWN) {
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
-            if (isShouldHideKeyboard(v, ev)) {
+            if (isShouldHideKeyboard(v, event)) {
                 hideKeyboard(v!!.windowToken)
             }
         }
-        return super.dispatchTouchEvent(ev)
+        return super.dispatchTouchEvent(event)
     }
     private fun isShouldHideKeyboard(v: View?, event: MotionEvent): Boolean {
         if (v != null && v is EditText) {
@@ -79,6 +79,7 @@ open class BaseAuthActivity: AppCompatActivity() {
         }
         return false
     }
+
     private fun hideKeyboard(token: IBinder?) {
         if (token != null) {
             val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

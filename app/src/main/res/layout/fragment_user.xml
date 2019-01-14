@@ -8,10 +8,6 @@
     android:background="?attr/colorDefaultDark"
     tools:ignore="EllipsizeMaxLines,RtlHardcoded"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/app_top_space"
-        style="@style/app_status_bar"
-        android:orientation="horizontal"/>
     <RelativeLayout
         android:background="?colorPrimary"
         android:layout_width="match_parent"

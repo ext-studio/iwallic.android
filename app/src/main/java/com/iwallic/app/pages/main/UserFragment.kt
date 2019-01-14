@@ -60,7 +60,7 @@ class UserFragment : BaseFragment() {
     }
 
     private fun resolveSignOut() {
-        DialogUtils.confirm(context!!, {
+        DialogUtils.confirm(context, {
             if (it) {
                 AssetState.cached = null
                 ACache.get(context).clear()

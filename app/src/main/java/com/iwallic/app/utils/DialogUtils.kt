@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
 import android.view.WindowManager
 import android.widget.EditText
@@ -21,59 +22,92 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 object DialogUtils {
-    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: Int, title: Int? = null, ok: Int? = null, no: Int? = null) {
-            val view = View.inflate(context, R.layout.dialog_confirm, null)
-            view.findViewById<TextView>(R.id.dialog_confirm_title).setText(title ?: R.string.dialog_title_primary)
-            view.findViewById<TextView>(R.id.dialog_confirm_msg).setText(body)
-            val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
-            val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
-            okTV.setText(ok ?: R.string.dialog_ok)
-            noTV.setText(no ?: R.string.dialog_no)
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                val dialog = Dialog(context)
-                dialog.setContentView(view)
-                dialog.create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-                okTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(true)
-                }
-                noTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(false)
-                }
-                dialog.setOnDismissListener {
-                    callback?.invoke(false)
-                }
-            } else {
-                val builder = android.support.v7.app.AlertDialog.Builder(context)
-                builder.setCancelable(false)
-                builder.setView(view)
-                val dialog = builder.create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-                okTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(true)
-                }
-                noTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(false)
-                }
-                dialog.setOnDismissListener {
-                    callback?.invoke(false)
+    private var toaster: Toast? = null
+
+    fun confirm(context: Context?, callback: ((Boolean) -> Unit)?, body: Any, title: Any? = null, ok: Any? = null, no: Any? = null) {
+        if (context == null) {
+            return
+        }
+        val dialog = create(context, R.layout.dialog_confirm)
+        val titleTV = dialog.findViewById<TextView>(R.id.dialog_confirm_title)
+        val bodyTV = dialog.findViewById<TextView>(R.id.dialog_confirm_body)
+        val okTV = dialog.findViewById<TextView>(R.id.dialog_confirm_ok)
+        val noTV = dialog.findViewById<TextView>(R.id.dialog_confirm_no)
+        val lineBtn = dialog.findViewById<View>(R.id.dialog_confirm_line_btn)
+        when (body) {
+            is String -> bodyTV.text = body
+            is SpannableString -> bodyTV.text = body
+            is Int -> bodyTV.setText(body)
+            else -> bodyTV.visibility = View.GONE
+        }
+        when (title) {
+            is String -> titleTV.text = title
+            is Int -> titleTV.setText(title)
+            else -> {
+                titleTV.visibility = View.GONE
+                dialog.findViewById<View>(R.id.dialog_confirm_line_title).visibility = View.GONE
+            }
+        }
+        var noBtn: Boolean = false
+        when (ok) {
+            is String -> okTV.text = ok
+            is Int -> okTV.setText(ok)
+            else -> {
+                okTV.visibility = View.GONE
+                lineBtn.visibility = View.GONE
+                noBtn = true
+            }
+        }
+        when (no) {
+            is String -> noTV.text = no
+            is Int -> noTV.setText(no)
+            else -> {
+                noTV.visibility = View.GONE
+                lineBtn.visibility = View.GONE
+                if (noBtn) {
+                    dialog.findViewById<View>(R.id.dialog_confirm_line_body).visibility = View.GONE
                 }
             }
+        }
+        var confirm = false
+        okTV.setOnClickListener {
+            confirm = true
+            dialog.dismiss()
+            callback?.invoke(true)
+        }
+        noTV.setOnClickListener {
+            confirm = false
+            dialog.dismiss()
+        }
+        dialog.setOnDismissListener {
+            if (!confirm) {
+                callback?.invoke(false)
+            }
+        }
     }
 
     fun permission(context: Context?, permission: String) {
-        Toast.makeText(context, "该操作需要${when(permission) {
-            Manifest.permission.CAMERA -> "相机"
-            Manifest.permission.READ_EXTERNAL_STORAGE -> "读取文件"
-            Manifest.permission.WRITE_EXTERNAL_STORAGE -> "读取文件"
-            else -> ""
-        }}权限，请到手机授权管理处允许以正常使用", Toast.LENGTH_SHORT).show()
+        toast(context, R.string.error_failed) // todo tell which permission not granted
+//        Toast.makeText(context, "该操作需要${when(permission) {
+//            Manifest.permission.CAMERA -> "相机"
+//            Manifest.permission.READ_EXTERNAL_STORAGE -> "读取文件"
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE -> "读取文件"
+//            else -> ""
+//        }}权限，请到手机授权管理处允许以正常使用", Toast.LENGTH_SHORT).show()
+    }
+
+    fun toast(context: Context?, msg: String): Toast? {
+        toaster?.cancel()
+        toaster = Toast.makeText(context, msg, Toast.LENGTH_SHORT)
+        toaster?.show()
+        return toaster
+    }
+
+    fun toast(context: Context?, msgRes: Int): Toast? {
+        toaster?.cancel()
+        toaster = Toast.makeText(context, msgRes, Toast.LENGTH_SHORT)
+        toaster?.show()
+        return toaster
     }
 
     fun loader(context: Context, msg: String = "", autoClose: Boolean = false): Dialog {
@@ -132,104 +166,6 @@ object DialogUtils {
             }
         }
         return dialog
-    }
-
-    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: String, title: String = "提示", okStr: String = "确认", noStr: String = "取消") {
-            val view = View.inflate(context, R.layout.dialog_confirm, null)
-            view.findViewById<TextView>(R.id.dialog_confirm_title).text = title
-            view.findViewById<TextView>(R.id.dialog_confirm_msg).text = body
-            val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
-            val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
-            okTV.text = okStr
-            noTV.text = noStr
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                val dialog = Dialog(context)
-                dialog.setContentView(view)
-                dialog.create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-                okTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(true)
-                }
-                noTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(false)
-                }
-                dialog.setOnDismissListener {
-                    callback?.invoke(false)
-                }
-            } else {
-                val builder = AlertDialog.Builder(context)
-                builder.setCancelable(false)
-                builder.setView(view)
-                val dialog = builder.create()
-                dialog.show()
-                dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-                okTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(true)
-                }
-                noTV.setOnClickListener {
-                    dialog.dismiss()
-                    callback?.invoke(false)
-                }
-                dialog.setOnDismissListener {
-                    callback?.invoke(false)
-                }
-            }
-    }
-
-    fun confirm(context: Context, callback: ((Boolean) -> Unit)?, body: String, title: Int, okStr: Int, noStr: Int) {
-        val view = View.inflate(context, R.layout.dialog_confirm, null)
-        view.findViewById<TextView>(R.id.dialog_confirm_title).setText(title)
-        view.findViewById<TextView>(R.id.dialog_confirm_msg).text = body
-        val okTV = view.findViewById<TextView>(R.id.dialog_confirm_ok)
-        val noTV = view.findViewById<TextView>(R.id.dialog_confirm_no)
-        okTV.setText(okStr)
-        noTV.setText(noStr)
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            val dialog = Dialog(context)
-            dialog.setContentView(view)
-            dialog.create()
-            dialog.show()
-            dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-            var confirmed = false
-            okTV.setOnClickListener {
-                callback?.invoke(true)
-                confirmed = true
-                dialog.dismiss()
-            }
-            noTV.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.setOnDismissListener {
-                if (!confirmed) {
-                    callback?.invoke(false)
-                }
-            }
-        } else {
-            val builder = AlertDialog.Builder(context)
-            builder.setCancelable(false)
-            builder.setView(view)
-            val dialog = builder.create()
-            dialog.show()
-            dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
-            var confirmed = false
-            okTV.setOnClickListener {
-                callback?.invoke(true)
-                confirmed = true
-                dialog.dismiss()
-            }
-            noTV.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.setOnDismissListener {
-                if (!confirmed) {
-                    callback?.invoke(false)
-                }
-            }
-        }
     }
 
     fun password(context: Context, ok: (String) -> Unit) {
@@ -322,5 +258,25 @@ object DialogUtils {
             }
         }
         return false
+    }
+
+    /*
+    create compatible dialog with layout
+     */
+    private fun create(context: Context, layout: Int): Dialog {
+        val dialog: Dialog
+        val view = View.inflate(context, layout, null)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            dialog = Dialog(context)
+            dialog.setContentView(view)
+            dialog.create()
+        } else {
+            val builder = android.support.v7.app.AlertDialog.Builder(context)
+            builder.setView(view)
+            dialog = builder.create()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(R.color.colorTransparent)
+        return dialog
     }
 }

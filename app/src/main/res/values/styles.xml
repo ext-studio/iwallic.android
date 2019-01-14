@@ -21,6 +21,8 @@
         <item name="colorGray">@color/colorInitGray</item>
         <item name="colorGrayS">@color/colorInitGrayS</item>
 
+        <item name="drawableRoundMini">@drawable/shape_round_mini_init</item>
+
         <item name="selectorOptionItem">@drawable/selector_optionitem_default</item>
         <item name="colorButtonNormal">@color/colorPrimaryDefault</item>
         <item name="drawableAssetBg">@mipmap/bg_asset</item>
@@ -56,6 +58,8 @@
         <item name="colorGray">@color/colorNightGray</item>
         <item name="colorGrayS">@color/colorNightGrayS</item>
 
+        <item name="drawableRoundMini">@drawable/shape_round_mini_night</item>
+
         <item name="selectorOptionItem">@drawable/selector_optionitem_night</item>
         <item name="colorButtonNormal">@color/colorPrimaryNight</item>
         <item name="drawableAssetBg">@mipmap/bg_asset_dark</item>
@@ -72,9 +76,9 @@
     </style>
 
     <style name="ThemeIWallic" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="app_nav">

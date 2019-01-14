@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("Registered")
 open class BaseInputActivity: BaseActivity() {
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_DOWN) {
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
-            if (isShouldHideKeyboard(v, ev)) {
+            if (isShouldHideKeyboard(v, event)) {
                 hideKeyboard(v!!.windowToken)
             }
         }
-        return super.dispatchTouchEvent(ev)
+        return super.dispatchTouchEvent(event)
     }
     private fun isShouldHideKeyboard(v: View?, event: MotionEvent): Boolean {
         if (v != null && v is EditText) {

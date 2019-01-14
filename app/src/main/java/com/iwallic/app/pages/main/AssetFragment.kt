@@ -98,13 +98,12 @@ class AssetFragment : BaseFragment() {
             initList(true)
         }
         manageIV.setOnClickListener {
-            context?.startActivity(Intent(context!!, AssetManageActivity::class.java))
+            activity?.startActivity(Intent(context!!, AssetManageActivity::class.java))
         }
         assetAdapter.setOnAssetClickListener {
             val intent = Intent(context!!, AssetDetailActivity::class.java)
             intent.putExtra("asset", assetAdapter.getAssetId(it))
             activity?.startActivityForResult(intent, CommonUtils.requestBalanceUpdated)
-            activity?.overridePendingTransition(R.anim.slide_enter_new, R.anim.slide_leave_old)
         }
     }
 

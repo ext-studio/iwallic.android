@@ -3,6 +3,7 @@ package com.iwallic.app.pages.common
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
@@ -22,7 +23,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class WelcomeActivity : BaseAuthActivity() {
+class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isTaskRoot) {
@@ -54,6 +55,11 @@ class WelcomeActivity : BaseAuthActivity() {
             }
             enter()
         })
+    }
+
+    override fun startActivity(intent: Intent?) {
+        super.startActivity(intent)
+        overridePendingTransition(0, R.anim.slide_leave_old)
     }
 
     private fun resolveNewVersion(config: VersionRes) {

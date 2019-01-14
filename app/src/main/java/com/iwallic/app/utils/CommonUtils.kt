@@ -1,6 +1,7 @@
 package com.iwallic.app.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import com.iwallic.app.BuildConfig
@@ -37,6 +38,9 @@ object CommonUtils {
     const val broadCastTx = "iwallic_new_tx"
     const val broadCastAsset = "iwallic_asset"
 
+    val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+    val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
     private var _neonApi: String = ""
 
     val pyApi: String
@@ -65,6 +69,10 @@ object CommonUtils {
                 SharedPrefUtils.getNet(context)
             }
         }
+    }
+
+    fun dp2px(context: Context, dp: Float): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
     }
 
 //     if (SharedPrefUtils.getNet(context) == "test") CommonUtils.testApi else CommonUtils.mainApi"https://api.iwallic.forchain.info/api/iwallic"

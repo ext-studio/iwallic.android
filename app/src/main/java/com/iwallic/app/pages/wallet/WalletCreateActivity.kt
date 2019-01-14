@@ -35,7 +35,7 @@ class WalletCreateActivity : BaseAuthActivity() {
 
     private lateinit var tipTV: TextView
 
-    var newWallet: WalletModel? = null
+    private var newWallet: WalletModel? = null
     private var newWif: String = ""
     private var pwd: String = ""
     private var confirmPwd: String = ""
@@ -73,7 +73,7 @@ class WalletCreateActivity : BaseAuthActivity() {
         }
         createFL.setOnClickListener {
             if (pwd.isEmpty() || confirmPwd.isEmpty()) {
-                Toast.makeText(this, resources.getText(R.string.error_empty), Toast.LENGTH_SHORT).show()
+                DialogUtils.toast(this, R.string.error_empty)
                 return@setOnClickListener
             }
             if (pwd.length < 6 || pwd != this.confirmPwd) {
@@ -81,26 +81,26 @@ class WalletCreateActivity : BaseAuthActivity() {
             }
             resolveCreate()
         }
-        enterFL.setOnClickListener {_ ->
+        enterFL.setOnClickListener {
             if (copied || saved) {
                 resolveEnter()
                 return@setOnClickListener
             }
-            DialogUtils.confirm( this, {
-                if (it) {
+            DialogUtils.confirm( this, { confirm ->
+                if (confirm) {
                     resolveEnter()
                 }
             }, R.string.wallet_create_dialog_enter, R.string.dialog_title_primary, R.string.dialog_ok_enter, R.string.dialog_no)
         }
         saveTV.setOnClickListener {
-            Toast.makeText(applicationContext, R.string.error_incoming, Toast.LENGTH_SHORT).show()
+            DialogUtils.toast(this, R.string.error_incoming)
         }
         copyTV.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("WIF", newWif)
             clipboard.primaryClip = clip
             copied = true
-            Toast.makeText(applicationContext, R.string.error_copied, Toast.LENGTH_SHORT).show()
+            DialogUtils.toast(this, R.string.error_copied)
         }
     }
     private fun initInput() {
@@ -146,19 +146,15 @@ class WalletCreateActivity : BaseAuthActivity() {
             }
             withContext(Dispatchers.Main) {
                 loader.dismiss()
-                if (done) {
+                if (done && newWallet != null && newWif.isNotEmpty()) {
                     resolveNewWallet()
                 } else {
-                    Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+                    DialogUtils.toast(applicationContext, R.string.error_failed)
                 }
             }
         }
     }
     private fun resolveNewWallet() {
-        if (newWallet == null || newWif.isEmpty()) {
-            Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
-            return
-        }
         val qrCode = QRCodeUtils.generate(newWif, this)
         if (qrCode != null) {
             tipTV.setText(R.string.wallet_create_tip_new)
@@ -174,17 +170,16 @@ class WalletCreateActivity : BaseAuthActivity() {
             if (NeonUtils.save(applicationContext, newWallet!!)) {
                 withContext(Dispatchers.Main) {
                     loader.dismiss()
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
-                return@launch
-            }
-            withContext(Dispatchers.Main) {
-                loader.dismiss()
-                Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
+            } else {
+                withContext(Dispatchers.Main) {
+                    loader.dismiss()
+                    DialogUtils.toast(applicationContext, R.string.error_failed)
+                }
             }
         }
     }

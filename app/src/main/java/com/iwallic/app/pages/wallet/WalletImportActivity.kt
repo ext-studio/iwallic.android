@@ -11,6 +11,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseAuthActivity
 import com.iwallic.app.pages.main.MainActivity
+import com.iwallic.app.utils.CommonUtils
 import com.iwallic.app.utils.DialogUtils
 import com.iwallic.app.utils.NeonUtils
 import kotlinx.coroutines.Dispatchers
@@ -43,15 +44,15 @@ class WalletImportActivity : BaseAuthActivity() {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents != null) {
-                Log.i("【WalletImport】", "scanned【${result.contents}】")
+                CommonUtils.log("scanned【${result.contents}】")
                 if (NeonUtils.check(result.contents, "wif")) {
                     wif = result.contents
                     wifET.setText(result.contents)
                 } else {
-                    Toast.makeText(this, R.string.error_scan_wif, Toast.LENGTH_SHORT).show()
+                    DialogUtils.toast(this, R.string.error_scan_wif)
                 }
             } else {
-                Log.i("【WalletImport】", "scan cancelled")
+                CommonUtils.log("scan cancelled")
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -140,7 +141,6 @@ class WalletImportActivity : BaseAuthActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-                    finish()
                 } else {
                     Toast.makeText(applicationContext, R.string.error_failed, Toast.LENGTH_SHORT).show()
                 }
