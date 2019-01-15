@@ -27,6 +27,6 @@
 
     <item
         android:id="@+id/menu_main_close"
-        android:icon="@mipmap/icon_menu_close"
+        android:icon="@drawable/icon_signout"
         android:title="Close Wallet" />
 </menu>
