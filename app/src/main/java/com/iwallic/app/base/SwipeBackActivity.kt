@@ -19,9 +19,11 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         swipe = intent.getIntExtra("swipe_id", 0)
-        // todo separate to 100% -> 70% -> old page -30%
-        window.decorView.translationX = CommonUtils.screenWidth.toFloat()
-        animateEnter()
+        if (swipe > 0) {
+            window.decorView.translationX = CommonUtils.screenWidth.toFloat()
+            animateEnter()
+            next(swipe, -2f)
+        }
         CommonUtils.log("create to:$swipe")
     }
     override fun startActivity(intent: Intent?) {
@@ -43,7 +45,6 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         }
         super.startActivity(intent)
         overridePendingTransition(0, 0)
-        animateLeave(true)
     }
 
     override fun startActivityForResult(intent: Intent?, requestCode: Int) {
@@ -65,8 +66,6 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
         }
         super.startActivityForResult(intent, requestCode)
         overridePendingTransition(0, 0)
-        // todo separate to [new page 70%] -> -30%
-        animateLeave(true)
     }
 
     override fun finish() {
@@ -76,9 +75,8 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
             CommonUtils.log("$swipe")
             SwipeBackActivity.complete(swipe)
             window.decorView.animate().apply {
-                // todo separate to 0 -> 70% -> 100% -> finish
                 x(CommonUtils.screenWidth.toFloat())
-                duration = 200
+                duration = 300
                 withEndAction {
                     super.finish()
                     overridePendingTransition(0, 0)
@@ -98,18 +96,15 @@ open class SwipeBackActivity(private val linked: Boolean = false): AppCompatActi
     private fun animateEnter() {
         window.decorView.animate().apply {
             x(0f)
-            duration = 200
+            duration = 300
             start()
         }
     }
     // 执行离开动画 也就是滑到左侧消失
-    private fun animateLeave(_delay: Boolean = false) {
+    private fun animateLeave(top: Boolean = false) {
         window.decorView.animate().apply {
-            if (_delay) {
-                startDelay = 50
-            }
             x(-CommonUtils.screenWidth*0.3f)
-            duration = 200
+            duration = 300
             start()
         }
     }

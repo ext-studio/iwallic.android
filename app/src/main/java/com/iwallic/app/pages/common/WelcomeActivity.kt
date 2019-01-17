@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.iwallic.app.BuildConfig
 import com.iwallic.app.R
 import com.iwallic.app.base.BaseAuthActivity
+import com.iwallic.app.base.SwipeBackActivity
 import com.iwallic.app.models.VersionRes
 import com.iwallic.app.pages.main.MainActivity
 import com.iwallic.app.pages.wallet.WalletGuardActivity
@@ -59,7 +60,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
-        overridePendingTransition(0, R.anim.slide_leave_old)
+        overridePendingTransition(0, 0)
     }
 
     private fun resolveNewVersion(config: VersionRes) {
@@ -83,7 +84,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun enter() {
         GlobalScope.launch(Dispatchers.Main) {
-            delay(1000L)
+            delay(3000L)
             if (NeonUtils.wallet(applicationContext) == null || NeonUtils.account(applicationContext) == null) {
                 startActivity(Intent(applicationContext, WalletGuardActivity::class.java))
             } else {

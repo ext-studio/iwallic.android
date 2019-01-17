@@ -1,7 +1,4 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:shareInterpolator="false">
-    <translate
-        android:fromXDelta="0" android:toXDelta="100%p"
-        android:fromYDelta="0" android:toYDelta="0"
-        android:duration="200" />
+    <translate android:delay="3000" />
 </set>
